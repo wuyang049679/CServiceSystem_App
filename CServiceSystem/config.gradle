@@ -1,0 +1,56 @@
+
+def supportVersion = "28.0.0"
+ext {
+    //android开发版本配置
+    android = [
+            compileSdkVersion: 28,
+            buildToolsVersion: "28.0.0",
+            applicationId    : "com.hecong.cssystem",
+            minSdkVersion    : 17,
+            targetSdkVersion : 28,
+            versionCode      : 1,
+            versionName      : "1.0",
+    ]
+
+    //support配置
+    support = [
+            constraintLayout      : "com.android.support.constraint:constraint-layout:1.1.3",
+            multidex              : "com.android.support:multidex:1.0.3",
+            supportAppcompatV7    : "com.android.support:appcompat-v7:${supportVersion}",//得到宏定义字符串，要用双引号
+            supportV4             : "com.android.support:support-v4:${supportVersion}",
+            design                : "com.android.support:design:${supportVersion}",
+            recyclerview          : "com.android.support:recyclerview-v7:${supportVersion}",
+            cardview              : "com.android.support:cardview-v7:${supportVersion}",
+            gridlayout            : "com.android.support:gridlayout-v7:${supportVersion}",
+            annotations           : "com.android.support:support-annotations:${supportVersion}",
+            vectorDrawable        : "com.android.support:support-vector-drawable:${supportVersion}",
+            animatedVectorDrawable: "com.android.support:animated-vector-drawable:${supportVersion}"
+    ]
+    //依赖第三方配置
+    dependencies = [
+            multidex            : "com.android.support:multidex:1.0.0",
+            autosize            : "me.jessyan:autosize:1.0.6",
+            butterknife         : "com.jakewharton:butterknife:10.1.0",
+            butterknife_compiler: "com.jakewharton:butterknife-compiler:10.1.0",
+            converter           : "com.squareup.retrofit2:converter-gson:2.4.0",
+            retrofit            : "com.squareup.retrofit2:retrofit:2.4.0",
+            adapter_rxjava      : "com.squareup.retrofit2:adapter-rxjava:2.3.0",
+            retrofit2_rxjava2   : "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0",
+            rxjava              : "io.reactivex.rxjava2:rxjava:2.2.2",
+            rxandroid           : "io.reactivex.rxjava2:rxandroid:2.1.0",
+            interceptor         : "com.squareup.okhttp3:logging-interceptor:3.5.0",
+            eventbus            : "org.greenrobot:eventbus:3.1.1",
+            immersionbar        : "com.gyf.immersionbar:immersionbar:2.3.2-beta01",
+            permission          : "com.yanzhenjie:permission:2.0.0-rc12",
+            adapterHelper       : "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.41",
+            smartrefresh        : "com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-15",
+            zxing               : "cn.yipianfengye.android:zxing-library:2.2",
+            facebook            : "com.facebook.fresco:fresco:1.13.0",
+            popwindow           : "com.github.pinguo-zhouwei:CustomPopwindow:2.1.1",
+            easypermissions     : "pub.devrel:easypermissions:3.0.0",
+            fastjson            : "com.alibaba:fastjson:1.2.59"
+
+    ]
+}
+
+

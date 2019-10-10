@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">合从</string>
+    <string name="text_empty">还没有数据呢！</string>
+    <string name="text_retry">重新加载</string>
+    <string name="act_start_user">邮箱/手机</string>
+    <string name="act_start_password">密码</string>
+    <string name="act_login_dl">登录</string>
+    <string name="login_chat_btn">微信登录</string>
+    <string name="act_login_wjmm">忘记密码?</string>
+</resources>
