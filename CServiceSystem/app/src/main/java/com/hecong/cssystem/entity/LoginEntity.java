@@ -12,10 +12,20 @@ public class LoginEntity {
      */
 
     private int _suc;
+    private int _err;
     private String hash;
     private InfoBean info;
     private String validity;
     private String aihecong_version;
+
+
+    public int get_err() {
+        return _err;
+    }
+
+    public void set_err(int _err) {
+        this._err = _err;
+    }
 
     public int get_suc() {
         return _suc;

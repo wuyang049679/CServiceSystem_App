@@ -63,7 +63,7 @@ public final class ToastUtils {
 
     public static void showShort(String message) {
         Toast toast = Toast.makeText(BaseApplication.getContext(),message,Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
         toast.show();
     }
 

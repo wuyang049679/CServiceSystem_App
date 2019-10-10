@@ -2,6 +2,7 @@ package com.hecong.cssystem.api;
 
 
 import com.hecong.cssystem.base.BaseEntity;
+import com.hecong.cssystem.entity.LoginEntity;
 import com.hecong.cssystem.entity.MineEntity;
 
 import io.reactivex.Observable;
@@ -27,5 +28,12 @@ public interface Apistore {
     @POST("app/goods/list")
     Observable<BaseEntity<MineEntity>> example(@Body RequestBody body);
 
+    /**
+     * 登录操作
+     * @param body
+     * @return
+     */
+    @POST("account/login")
+    Observable<BaseEntity<LoginEntity>> toLogin(@Body RequestBody body);
 
 }

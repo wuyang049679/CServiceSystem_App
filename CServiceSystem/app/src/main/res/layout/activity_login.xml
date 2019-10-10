@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:id="@+id/act_lin"
     tools:context=".activity.LoginActivity">
 
     <LinearLayout
@@ -25,7 +27,10 @@
             android:src="@drawable/logo"
             android:layout_width="60dp"
             android:layout_height="60dp" />
-        <EditText
+        <com.hecong.cssystem.wight.AddAndSubEditText
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
             android:id="@+id/username"
             android:textSize="16sp"
             android:layout_marginTop="45dp"
@@ -37,7 +42,10 @@
             android:background="@color/black_d5"
             android:layout_width="match_parent"
             android:layout_height="0.7dp"/>
-        <EditText
+        <com.hecong.cssystem.wight.AddAndSubEditText
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:imeOptions="actionGo"
             android:id="@+id/password"
             android:layout_marginTop="25dp"
             android:textSize="16sp"
@@ -50,7 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="0.7dp"/>
 
-        <Button
+        <LinearLayout
+            android:gravity="center"
             android:id="@+id/btn_login"
             android:textSize="16sp"
             android:textColor="@color/white"
@@ -58,7 +67,23 @@
             android:layout_marginTop="25dp"
             android:background="@drawable/login_btn"
             android:layout_width="match_parent"
-            android:layout_height="45dp" />
+            android:layout_height="45dp">
+            <TextView
+                android:id="@+id/login_tv"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:text="@string/act_login_dl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ProgressBar
+                android:indeterminateDuration="1000"
+                style="@style/progressBar_custom_drawable"
+                android:visibility="gone"
+                android:id="@+id/progress_login"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/btn_chat_login"
             android:textSize="16sp"
@@ -70,6 +95,7 @@
             android:layout_height="45dp" />
 
         <TextView
+            android:visibility="gone"
             android:textSize="16sp"
             android:textColor="@color/black_bf"
             android:layout_marginTop="30dp"

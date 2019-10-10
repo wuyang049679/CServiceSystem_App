@@ -26,7 +26,7 @@ public class MainActivityPresenter extends BasePresenterIm<MainActivityContract.
 
         mainActivityModel.forexample(version).subscribe(new RxSubscribe<MineEntity>() {
             @Override
-            protected void onSuccess(MineEntity mineEntity) {
+            protected void onSuccess(MineEntity mineEntity,String hash) {
                 mView.showContentView();
                 mView.showSuccess(mineEntity);
             }

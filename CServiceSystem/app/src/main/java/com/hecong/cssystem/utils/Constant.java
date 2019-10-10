@@ -25,5 +25,8 @@ public class Constant {
     public static int LOCALRESOURCE = 2;
 
 
-
+    /**
+     * 本地登录认证的hash值
+     */
+    public static String HASH="login_hash";
 }

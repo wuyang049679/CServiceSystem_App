@@ -8,13 +8,13 @@ package com.hecong.cssystem.api;
 public class Address {
 
     private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.TEST;
-    public static final String H5_URL = "http://m.carecnn.com/";
+    public static final String H5_URL = "https://api.aihecong.com/";
 
 
     /**
      * baseUrl
      */
-    public static String BASEURL = "http://47.111.170.19/";
+    public static String BASEURL = "https://api.aihecong.com/";
 
 
     static {
@@ -28,22 +28,22 @@ public class Address {
         switch (serverEnvironment) {
             // 测试环境
             case TEST:
-                BASEURL = "http://47.111.170.19/";
+                BASEURL = "https://api.aihecong.com/";
 
                 break;
             // 线上环境
             case ONLINE:
-                BASEURL = "http://47.111.170.19/";
+                BASEURL = "https://api.aihecong.com/";
 
                 break;
             // 预生产环
             case PRE_ONLINE:
 
-                BASEURL = "http://47.111.170.19/";
+                BASEURL = "https://api.aihecong.com/";
                 break;
             // 压力测试环境
             case STRESS_TEST:
-                BASEURL = "http://47.111.170.19/";
+                BASEURL = "https://api.aihecong.com/";
                 break;
             default:
         }

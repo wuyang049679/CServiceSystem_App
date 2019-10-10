@@ -20,7 +20,7 @@ public abstract class RxSubscribe<T> implements Observer<BaseEntity<T>> {
     public RxSubscribe() {
     }
 
-    protected abstract void onSuccess(T t);
+    protected abstract void onSuccess(T t,String hash);
 
 
     protected abstract void onFailed(int code, String msg);
@@ -36,19 +36,18 @@ public abstract class RxSubscribe<T> implements Observer<BaseEntity<T>> {
 
     @Override
     public void onNext(BaseEntity<T> baseModel) {
-        Log.i("onNext",baseModel.toString());
-        Integer resultCode = null;
-         if (baseModel.code != null) {
-            resultCode = baseModel.code;
-            if (resultCode==200){
-                onSuccess(baseModel.data);
-            }else {
-                onFailed(baseModel.code,baseModel.msg);
-            }
+        if (baseModel.get_err()!=null){
+      //  判断返回数据是为_err如果为_err直接返回异常
+            onFailed(baseModel.get_err(),"网络服务异常");
         }else {
-            onFailed(-1,"访问服务器异常");
-        }
+        if (baseModel.get_suc()!=null&&baseModel.getHash()!=null){
+       // 如果为suc正常返回数据
+            onSuccess(baseModel.info,baseModel.getHash());
 
+        }else {
+            onFailed(1000,"数据异常");
+        }
+        }
     }
 
     @Override

@@ -1,20 +1,33 @@
 package com.hecong.cssystem.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.base.BaseActivity;
+import com.hecong.cssystem.contract.LoginActivityContract;
+import com.hecong.cssystem.entity.LoginEntity;
+import com.hecong.cssystem.presenter.LoginActivityPresenter;
+import com.hecong.cssystem.utils.Constant;
+import com.hecong.cssystem.utils.ValidateUtils;
+import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
+import com.hecong.cssystem.utils.android.ToastUtils;
+import com.hecong.cssystem.wight.AddAndSubEditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEntity> implements LoginActivityContract.View {
 
 
     @BindView(R.id.username)
@@ -22,9 +35,18 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.password)
     EditText password;
     @BindView(R.id.btn_login)
-    Button btnLogin;
+    LinearLayout btnLogin;
     @BindView(R.id.btn_chat_login)
     Button btnChatLogin;
+    @BindView(R.id.login_tv)
+    TextView loginTv;
+    @BindView(R.id.progress_login)
+    ProgressBar progressLogin;
+
+    @Override
+    public LoginActivityPresenter getPresenter() {
+        return new LoginActivityPresenter();
+    }
 
     @Override
     protected void reloadActivity() {
@@ -33,13 +55,13 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected View injectTarget() {
-        return null;
+        return findViewById(R.id.act_lin);
     }
 
     @Override
     protected void initData() {
 
-	String ss="测试";
+        String ss = "测试";
     }
 
     @Override
@@ -48,7 +70,19 @@ public class LoginActivity extends BaseActivity {
         ImmersionBar.with(this)
                 .statusBarColor(R.color.white)
                 .init();
-        initListener();
+        AddAndSubEditText.TextChangeListener textChangeListener = new AddAndSubEditText.TextChangeListener(btnLogin);
+        //监听输入不为空
+        textChangeListener.addAllEditText(username, password);
+
+        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i== EditorInfo.IME_ACTION_GO){
+                    checkInput();
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -57,8 +91,18 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public void showDataSuccess(Object datas) {
+    public void showDataSuccess(LoginEntity datas) {
+        SharedPreferencesUtils.setParam(Constant.HASH, datas.getHash());
+        ToastUtils.showShort("hash:" + datas.getHash());
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
+    @Override
+    public void showDataError(String errorMessage) {
+        super.showDataError(errorMessage);
+        isLoading(false);
     }
 
     @Override
@@ -68,34 +112,53 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
-    private void initListener() {
-        TextChange textChange = new TextChange();
-        username.addTextChangedListener(textChange);
-        password.addTextChangedListener(textChange);
-    }
 
-    private class TextChange implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (username.getText().toString().length() > 0 && password.getText().toString().length() > 0) {
-                btnLogin.setBackground(getResources().getDrawable(R.drawable.login_btn_t));
-                btnLogin.setEnabled(true);
-            } else {
-                btnLogin.setBackground(getResources().getDrawable(R.drawable.login_btn_f));
-                btnLogin.setEnabled(false);
-            }
+    /**
+     * 登录点击事件
+     *
+     * @param view
+     */
+    @OnClick({R.id.btn_login, R.id.btn_chat_login})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_login:
+                checkInput();
+                break;
+            case R.id.btn_chat_login:
+                break;
         }
     }
+
+    /**
+     * 用户输入校验
+     */
+    private void checkInput() {
+        String usernames = username.getText().toString();
+        String passwords = password.getText().toString();
+        if (ValidateUtils.isPhone(usernames) || ValidateUtils.isEmail(usernames)) {
+            isLoading(true);
+            mPresenter.pLogin(usernames, passwords);
+        } else {
+            ToastUtils.showShort("请输入正确的邮箱或手机");
+        }
+    }
+
+    /**
+     * 是否是加载中状态
+     * @param isLoading
+     */
+    private void isLoading(boolean isLoading) {
+
+        if (isLoading){
+            loginTv.setVisibility(View.GONE);
+            progressLogin.setVisibility(View.VISIBLE);
+            AddAndSubEditText.isLoading=true;
+        }else {
+            loginTv.setVisibility(View.VISIBLE);
+            progressLogin.setVisibility(View.GONE);
+            AddAndSubEditText.isLoading=false;
+        }
+    }
+
 
 }
