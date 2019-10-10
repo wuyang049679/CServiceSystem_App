@@ -39,6 +39,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void initData() {
 
+	String ss="测试";
     }
 
     @Override
