@@ -2,6 +2,7 @@ package com.hecong.cssystem.ui.fragment;
 
 import android.os.Bundle;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.base.BaseFragment;
 
@@ -33,7 +34,10 @@ public class ChatListFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-
+        ImmersionBar.with(this)
+                .statusBarColor(R.color.theme_app)
+                .titleBar(R.id.chat_list_include)
+                .init();
     }
 
     @Override

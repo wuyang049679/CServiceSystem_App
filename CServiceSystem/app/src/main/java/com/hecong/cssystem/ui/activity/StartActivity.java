@@ -41,10 +41,11 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 
        hash= (String) SharedPreferencesUtils.getParam(Constant.HASH,"");
         Log.i("TAG","首次：" +hash);
-       if (hash!=null){
-           mPresenter.pCheckLogin(hash);
-       }else {
+       if (hash==null){
            showDataError("请登录");
+       }else {
+           startActivity(MainActivity.class);
+           finish();
        }
 
     }
@@ -65,15 +66,15 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 
     @Override
     public void showDataSuccess(LoginEntity datas) {
-        @SuppressLint("HandlerLeak") Handler handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        };
-        handler.sendEmptyMessageDelayed(1,500);//延时发送，第二个参数跟的毫秒
+//        @SuppressLint("HandlerLeak") Handler handler = new Handler(){
+//            @Override
+//            public void handleMessage(Message msg) {
+//                Intent intent = new Intent(StartActivity.this, MainActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//        };
+//        handler.sendEmptyMessageDelayed(1,500);//延时发送，第二个参数跟的毫秒
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.hecong.cssystem.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -41,6 +42,8 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
     @BindView(R.id.progress_login)
     ProgressBar progressLogin;
 
+    private String usernames;
+    private String passwords;
     @Override
     public LoginActivityPresenter getPresenter() {
         return new LoginActivityPresenter();
@@ -58,7 +61,15 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
 
     @Override
     protected void initData() {
-
+        //自动登录密码自动填充
+        String user = (String) SharedPreferencesUtils.getParam(Constant.USERNAME, "");
+        String pass = (String) SharedPreferencesUtils.getParam(Constant.PASSWORD, "");
+        if (!TextUtils.isEmpty(user)){
+            username.setText(user);
+        }
+        if (!TextUtils.isEmpty(pass)){
+            password.setText(pass);
+        }
     }
 
     @Override
@@ -90,6 +101,8 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
     @Override
     public void showDataSuccess(LoginEntity datas) {
         SharedPreferencesUtils.setParam(Constant.HASH, datas.getHash());
+        SharedPreferencesUtils.setParam(Constant.USERNAME, usernames);
+        SharedPreferencesUtils.setParam(Constant.PASSWORD, passwords);
         ToastUtils.showShort("hash:" + datas.getHash());
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
@@ -130,8 +143,8 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
      * 用户输入校验
      */
     private void checkInput() {
-        String usernames = username.getText().toString().trim();
-        String passwords = password.getText().toString();
+        usernames = username.getText().toString().trim();
+        passwords = password.getText().toString();
         if (ValidateUtils.isPhone(usernames) || ValidateUtils.isEmail(usernames)) {
             isLoading(true);
             mPresenter.pLogin(usernames, passwords);

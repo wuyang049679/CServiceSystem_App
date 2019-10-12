@@ -5,7 +5,7 @@
     android:layout_height="50dp"
     android:elevation="4dp"
 
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/theme_app">
 
     <LinearLayout
         android:id="@+id/backLayout"

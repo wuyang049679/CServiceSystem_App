@@ -1,7 +1,11 @@
 package com.hecong.cssystem.ui.activity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,11 +15,14 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.base.BaseActivity;
 import com.hecong.cssystem.contract.MainActivityContract;
+import com.hecong.cssystem.entity.LoginEntity;
 import com.hecong.cssystem.entity.MineEntity;
 import com.hecong.cssystem.presenter.MainActivityPresenter;
 import com.hecong.cssystem.ui.fragment.ChatListFragment;
 import com.hecong.cssystem.ui.fragment.MineFragment;
 import com.hecong.cssystem.ui.fragment.VisitorListFragment;
+import com.hecong.cssystem.utils.Constant;
+import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
 import com.next.easynavigation.constant.Anim;
 import com.next.easynavigation.view.EasyNavigationBar;
 
@@ -28,7 +35,7 @@ import butterknife.ButterKnife;
 /**
  * @author wuyang
  */
-public class MainActivity extends BaseActivity<MainActivityPresenter, MineEntity> implements MainActivityContract.View {
+public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntity> implements MainActivityContract.View {
 
 
     @BindView(R.id.easyNavigationBar)
@@ -61,14 +68,15 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, MineEntity
 
     @Override
     protected void initData() {
+        //进行登录验证
+        String hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
+         mPresenter.pCheckLogin(hash);
 
     }
 
     @Override
     protected void initView() {
-        ImmersionBar.with(this)
-                .statusBarColor(R.color.theme_app)
-                .init();
+
         fragments.add(ChatListFragment.newInstance());
         fragments.add(VisitorListFragment.newInstance());
         fragments.add(MineFragment.newInstance());
@@ -102,15 +110,19 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, MineEntity
     }
 
     @Override
-    public void showDataSuccess(MineEntity datas) {
+    public void showDataSuccess(LoginEntity datas) {
 
     }
-
 
     @Override
-    public void showSuccess(MineEntity mineEntity) {
-
+    public void showDataError(String errorMessage) {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+//        overridePendingTransition(R.anim.activity_open,R.anim.activity_close);
+        finish();
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

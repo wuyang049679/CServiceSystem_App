@@ -3,6 +3,7 @@ package com.hecong.cssystem.presenter;
 import com.hecong.cssystem.base.BasePresenterIm;
 import com.hecong.cssystem.base.RxSubscribe;
 import com.hecong.cssystem.contract.MainActivityContract;
+import com.hecong.cssystem.entity.LoginEntity;
 import com.hecong.cssystem.entity.MineEntity;
 import com.hecong.cssystem.model.MainActivityModel;
 
@@ -21,14 +22,13 @@ public class MainActivityPresenter extends BasePresenterIm<MainActivityContract.
         this.mainActivityModel=new MainActivityModel();
     }
 
-    @Override
-    public void pexample(String version) {
 
-        mainActivityModel.forexample(version).subscribe(new RxSubscribe<MineEntity>() {
+    @Override
+    public void pCheckLogin(String hash) {
+        mainActivityModel.checkLogin(hash).subscribe(new RxSubscribe<LoginEntity>() {
             @Override
-            protected void onSuccess(MineEntity mineEntity,String hash) {
-                mView.showContentView();
-                mView.showSuccess(mineEntity);
+            protected void onSuccess(LoginEntity loginEntity, String hash) {
+
             }
 
             @Override
@@ -38,7 +38,6 @@ public class MainActivityPresenter extends BasePresenterIm<MainActivityContract.
 
             @Override
             public void onSubscribe(Disposable d) {
-                mView.showLoadingView();
                 addSubscription(d);
             }
         });

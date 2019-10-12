@@ -29,4 +29,9 @@ public class Constant {
      * 本地登录认证的hash值
      */
     public static String HASH="login_hash";
+    /**
+     * 用户名和密码
+     */
+    public static String USERNAME="_username";
+    public static String PASSWORD="_password";
 }
