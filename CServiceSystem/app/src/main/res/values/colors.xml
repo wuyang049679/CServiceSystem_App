@@ -6,7 +6,13 @@
     <color name="theme_app">#2196f3</color>
     <color name="white">#FFFFFF</color>
     <color name="black_666">#666666</color>
+    <color name="black_999">#999999</color>
     <color name="black_d5">#d5d5d5</color>
     <color name="black_bf">#bfbfbf</color>
     <color name="green_btn">#23D160</color>
+    <color name="green_btn_h">#20bc56</color>
+    <color name="blue_btn">#209cee</color>
+    <color name="blue_btn_h">#118fe4</color>
+    <color name="black_line">#e1e1e1</color>
+
 </resources>

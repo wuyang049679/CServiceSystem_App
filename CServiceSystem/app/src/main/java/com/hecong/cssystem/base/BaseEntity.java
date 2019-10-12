@@ -16,6 +16,15 @@ public class BaseEntity<T> {
     private Integer _err;
     private Integer _suc;
     private String hash;
+    private String text;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public Integer get_err() {
         return _err;

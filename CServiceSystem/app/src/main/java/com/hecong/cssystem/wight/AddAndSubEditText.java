@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -277,12 +278,12 @@ public class AddAndSubEditText extends EditText implements View.OnFocusChangeLis
      * 以及输入框后面的X的可见性，X点击删除输入框的内容
      */
     public static class TextChangeListener {
-        private LinearLayout button;
+        private Button button;
         private EditText[] editTexts;
         private boolean isShow;
         private boolean isCheck, hasCheckBox;
 
-        public TextChangeListener(LinearLayout button) {
+        public TextChangeListener(Button button) {
             this.button = button;
             hasCheckBox = true;
         }
@@ -324,8 +325,10 @@ public class AddAndSubEditText extends EditText implements View.OnFocusChangeLis
             }
             if (checkAllEdit()){//没值禁止点击
                 button.setEnabled(true);
+                button.setBackgroundResource(R.drawable.login_btn);
             }else {
                 button.setEnabled(false);
+                button.setBackgroundResource(R.drawable.login_btn_f);
             }
         }
 
@@ -346,7 +349,7 @@ public class AddAndSubEditText extends EditText implements View.OnFocusChangeLis
                         Log.i("TAG", "所有edittext有值了");
                         if (!isLoading) {
                             button.setEnabled(true);
-                            button.setBackgroundResource(R.drawable.login_btn_t);
+                            button.setBackgroundResource(R.drawable.login_btn);
                         }
                     } else {
                         if (!isLoading) {
@@ -361,7 +364,7 @@ public class AddAndSubEditText extends EditText implements View.OnFocusChangeLis
                         Log.i("TAG", "所有edittext有值了");
                         if (!isLoading) {
                             button.setEnabled(true);
-                            button.setBackgroundResource(R.drawable.login_btn_t);
+                            button.setBackgroundResource(R.drawable.login_btn);
                         }
                     } else {
                         if (!isLoading) {

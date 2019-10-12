@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager {
     private static Apistore apistore;
-    private static int TIME_OUT = 10000;
+    private static int TIME_OUT = 10;
     public static Context appContext = BaseApplication.getContext();
     public static ClearableCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(appContext));
 
@@ -35,7 +35,8 @@ public class ApiManager {
         synchronized (ApiManager.class) {
             if (apistore == null) {
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                        .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+                        .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+                        .readTimeout(TIME_OUT,TimeUnit.SECONDS)
                         .cookieJar(cookieJar)
 //                        .addInterceptor(new VerifyLoginInterceptor())
 //                        .addInterceptor(new LogInterceptor(false))

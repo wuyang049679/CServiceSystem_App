@@ -32,7 +32,11 @@ public class LoginActivityPresenter extends BasePresenterIm<LoginActivityContrac
             @Override
             protected void onFailed(int code, String msg) {
                 mView.showDataError(msg);
-                ToastUtils.showShort("用户名或密码错误");
+                if (code==1000) {
+                    ToastUtils.showShort(msg);
+                }else {
+                    ToastUtils.showShort(msg);
+                }
             }
 
             @Override

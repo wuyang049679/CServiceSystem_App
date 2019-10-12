@@ -18,6 +18,7 @@ public class LoginActivityModel implements LoginActivityContract.Model {
         RequestBody requestBody = builder
                 .params("account",username)
                 .params("password",password)
+                .params("mode","app")
                 .build();
         return ApiManager.getApistore().toLogin(requestBody).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

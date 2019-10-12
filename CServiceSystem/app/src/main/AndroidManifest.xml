@@ -22,9 +22,12 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.LoginActivity"/>
-        <activity android:name=".activity.MainActivity" /> <!-- 自动适配-设计稿尺寸 -->
+        <!--解决由于 Android P 限制了明文流量的网络请求，非加密的流量请求都会被系统禁止掉 android:usesCleartextTraffic="true"-->
+
+        <activity android:name=".ui.activity.LoginActivity"/>
+        <activity android:name=".ui.activity.MainActivity" /> <!-- 自动适配-设计稿尺寸 -->
         <meta-data
             android:name="design_width_in_dp"
             android:value="375" />
@@ -41,7 +44,7 @@
             android:name="notch.config"
             android:value="portrait|landscape" />
 
-        <activity android:name=".activity.StartActivity">
+        <activity android:name=".ui.activity.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

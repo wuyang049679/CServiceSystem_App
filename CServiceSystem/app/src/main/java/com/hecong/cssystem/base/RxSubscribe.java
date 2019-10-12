@@ -45,22 +45,23 @@ public abstract class RxSubscribe<T> implements Observer<BaseEntity<T>> {
             onSuccess(baseModel.info,baseModel.getHash());
 
         }else {
-            onFailed(1000,"数据异常");
+            onFailed(baseModel.get_suc(),baseModel.getText());
         }
         }
     }
 
     @Override
     public void onError(Throwable t) {
+        onFailed(1000,"网络错误");
         Log.i("onError",t.toString());
-        if (t instanceof ConnectException) {
-            //网络连接失败
-            onFailed(403, t.getMessage());
-        } else if (t instanceof HttpException) {
-            HttpException ex = (HttpException) t;
-            onFailed(ex.code(), ex.message());
-        } else {
-            onFailed(405, t.getMessage());
-        }
+//        if (t instanceof ConnectException) {
+//            //网络连接失败
+//            onFailed(403, t.getMessage());
+//        } else if (t instanceof HttpException) {
+//            HttpException ex = (HttpException) t;
+//            onFailed(ex.code(), ex.message());
+//        } else {
+//            onFailed(405, t.getMessage());
+//        }
     }
 }
