@@ -6,4 +6,21 @@
     <include
         android:id="@+id/chat_list_include"
         layout="@layout/public_common_title"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/message_from_server"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/server_connection_status"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/send_message_button"
+        android:text="发送新消息"/>
+
 </LinearLayout>

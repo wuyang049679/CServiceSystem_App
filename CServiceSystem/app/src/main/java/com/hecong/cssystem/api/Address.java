@@ -7,14 +7,14 @@ package com.hecong.cssystem.api;
 
 public class Address {
 
-    private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.ONLINE;
-    public static final String H5_URL = "https://api.aihecong.com/";
+    private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.TEST;
+    public static final String SOCKET_URL = "https://api.aihecong.com/";
 
 
     /**
      * baseUrl
      */
-    public static String BASEURL = "http://192.168.0.104:16999/";
+    public static String BASEURL = "http://192.168.0.105:16999/";
 
 
     static {
@@ -28,7 +28,7 @@ public class Address {
         switch (serverEnvironment) {
             // 测试环境
             case TEST:
-                BASEURL = "http://192.168.0.104:16999/";
+                BASEURL = "http://192.168.0.105:16999/";
 
                 break;
             // 线上环境

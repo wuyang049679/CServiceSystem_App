@@ -48,7 +48,8 @@ ext {
             facebook            : "com.facebook.fresco:fresco:1.13.0",
             popwindow           : "com.github.pinguo-zhouwei:CustomPopwindow:2.1.1",
             easypermissions     : "pub.devrel:easypermissions:3.0.0",
-            fastjson            : "com.alibaba:fastjson:1.2.59"
+            fastjson            : "com.alibaba:fastjson:1.2.59",
+            socket              : "io.socket:socket.io-client:1.0.0"
 
     ]
 }

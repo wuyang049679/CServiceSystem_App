@@ -37,6 +37,7 @@ public class ApiManager {
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
                         .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
                         .readTimeout(TIME_OUT,TimeUnit.SECONDS)
+                        .writeTimeout(TIME_OUT,TimeUnit.SECONDS)
                         .cookieJar(cookieJar)
 //                        .addInterceptor(new VerifyLoginInterceptor())
 //                        .addInterceptor(new LogInterceptor(false))
