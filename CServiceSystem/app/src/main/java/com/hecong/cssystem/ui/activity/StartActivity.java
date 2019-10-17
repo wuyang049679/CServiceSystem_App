@@ -1,22 +1,20 @@
 package com.hecong.cssystem.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.base.BaseActivity;
+import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.contract.StartActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
 import com.hecong.cssystem.presenter.StartActivityPresenter;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
 
-public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEntity> implements StartActivityContract.View {
+public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEntity.DataBean> implements StartActivityContract.View {
 
 
     private String hash;
@@ -38,15 +36,15 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 
     @Override
     protected void initData() {
-
-       hash= (String) SharedPreferencesUtils.getParam(Constant.HASH,"");
-        Log.i("TAG","首次：" +hash);
-       if (hash==null){
-           showDataError("请登录");
-       }else {
-           startActivity(MainActivity.class);
-           finish();
-       }
+        //判断本地是否有hash来验证是否登录过
+        hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
+        if (TextUtils.isEmpty(hash)) {
+            showDataError("请登录");
+        } else {
+            BaseApplication.setHash(hash);
+            startActivity(MainActivity.class);
+            finish();
+        }
 
     }
 
@@ -64,24 +62,19 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 
     }
 
-    @Override
-    public void showDataSuccess(LoginEntity datas) {
-//        @SuppressLint("HandlerLeak") Handler handler = new Handler(){
-//            @Override
-//            public void handleMessage(Message msg) {
-//                Intent intent = new Intent(StartActivity.this, MainActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        };
-//        handler.sendEmptyMessageDelayed(1,500);//延时发送，第二个参数跟的毫秒
-    }
 
     @Override
     public void showDataError(String errorMessage) {
         Intent intent = new Intent(StartActivity.this, LoginActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.activity_open,R.anim.activity_close);
+        overridePendingTransition(R.anim.activity_open, R.anim.activity_close);
         finish();
+    }
+
+
+
+    @Override
+    public void showDataSuccess(LoginEntity.DataBean datas) {
+
     }
 }

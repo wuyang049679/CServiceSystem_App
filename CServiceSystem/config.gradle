@@ -42,14 +42,15 @@ ext {
             eventbus            : "org.greenrobot:eventbus:3.1.1",
             immersionbar        : "com.gyf.immersionbar:immersionbar:2.3.2-beta01",
             permission          : "com.yanzhenjie:permission:2.0.0-rc12",
-            adapterHelper       : "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.41",
+            adapterHelper       : "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.47",
             smartrefresh        : "com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-15",
             zxing               : "cn.yipianfengye.android:zxing-library:2.2",
             facebook            : "com.facebook.fresco:fresco:1.13.0",
             popwindow           : "com.github.pinguo-zhouwei:CustomPopwindow:2.1.1",
             easypermissions     : "pub.devrel:easypermissions:3.0.0",
             fastjson            : "com.alibaba:fastjson:1.2.59",
-            socket              : "io.socket:socket.io-client:1.0.0"
+            socket              : "io.socket:socket.io-client:1.0.0",//socket.io推送常连接
+            swipelayout         : "com.daimajia.swipelayout:library:1.2.0@aar"//侧滑删除
 
     ]
 }

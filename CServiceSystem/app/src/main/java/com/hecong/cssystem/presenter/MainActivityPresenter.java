@@ -4,7 +4,6 @@ import com.hecong.cssystem.base.BasePresenterIm;
 import com.hecong.cssystem.base.RxSubscribe;
 import com.hecong.cssystem.contract.MainActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
-import com.hecong.cssystem.entity.MineEntity;
 import com.hecong.cssystem.model.MainActivityModel;
 
 import io.reactivex.disposables.Disposable;
@@ -25,9 +24,9 @@ public class MainActivityPresenter extends BasePresenterIm<MainActivityContract.
 
     @Override
     public void pCheckLogin(String hash) {
-        mainActivityModel.checkLogin(hash).subscribe(new RxSubscribe<LoginEntity>() {
+        mainActivityModel.checkLogin(hash).subscribe(new RxSubscribe<LoginEntity.DataBean>() {
             @Override
-            protected void onSuccess(LoginEntity loginEntity, String hash) {
+            protected void onSuccess(LoginEntity.DataBean loginEntity) {
 
             }
 

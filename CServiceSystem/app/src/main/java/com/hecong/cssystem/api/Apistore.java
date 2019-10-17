@@ -3,13 +3,13 @@ package com.hecong.cssystem.api;
 
 import com.hecong.cssystem.base.BaseEntity;
 import com.hecong.cssystem.entity.LoginEntity;
-import com.hecong.cssystem.entity.MineEntity;
+import com.hecong.cssystem.entity.MessageDialogEntity;
+
+import java.util.HashMap;
 
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
-import retrofit2.http.Body;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
+import retrofit2.http.GET;
+import retrofit2.http.QueryMap;
 
 /**
  * The interface Apistore.
@@ -20,20 +20,18 @@ public interface Apistore {
 
 
     /**
-     * 示例接口
-     * @param body
+     * 登录操作
+     * @param map
      * @return
      */
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    @POST("app/goods/list")
-    Observable<BaseEntity<MineEntity>> example(@Body RequestBody body);
+    @GET("account/login")
+    Observable<BaseEntity<LoginEntity.DataBean>> toLogin(@QueryMap HashMap<String, String> map);
 
     /**
-     * 登录操作
-     * @param body
+     * 获取对话列表
+     * @param map
      * @return
      */
-    @POST("account/login")
-    Observable<BaseEntity<LoginEntity>> toLogin(@Body RequestBody body);
-
+    @GET("dialog/get")
+    Observable<BaseEntity<MessageDialogEntity.DataBean>> showMessageDialog(@QueryMap HashMap<String, String> map);
 }

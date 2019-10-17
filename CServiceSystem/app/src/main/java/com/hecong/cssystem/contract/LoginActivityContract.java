@@ -8,10 +8,10 @@ import io.reactivex.Observable;
 
 public interface LoginActivityContract {
     interface Model {
-        Observable<BaseEntity<LoginEntity>> login(String username,String password);
+        Observable<BaseEntity<LoginEntity.DataBean>> login(String username,String password);
     }
 
-    interface View extends BaseView<LoginEntity> {
+    interface View extends BaseView<LoginEntity.DataBean> {
 
     }
 

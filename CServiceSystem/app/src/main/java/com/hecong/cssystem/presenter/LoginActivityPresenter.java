@@ -5,7 +5,6 @@ import com.hecong.cssystem.base.RxSubscribe;
 import com.hecong.cssystem.contract.LoginActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
 import com.hecong.cssystem.model.LoginActivityModel;
-import com.hecong.cssystem.utils.android.ToastUtils;
 
 import io.reactivex.disposables.Disposable;
 
@@ -20,23 +19,16 @@ public class LoginActivityPresenter extends BasePresenterIm<LoginActivityContrac
     @Override
     public void pLogin(String username, String password) {
 
-        activityModel.login(username,password).subscribe(new RxSubscribe<LoginEntity>() {
+        activityModel.login(username,password).subscribe(new RxSubscribe<LoginEntity.DataBean>() {
             @Override
-            protected void onSuccess(LoginEntity loginEntity,String hash) {
-//                if (hash!=null) {
-                    loginEntity.setHash(hash);
+            protected void onSuccess(LoginEntity.DataBean loginEntity) {
                     mView.showDataSuccess(loginEntity);
-//                }
             }
 
             @Override
             protected void onFailed(int code, String msg) {
                 mView.showDataError(msg);
-                if (code==1000) {
-                    ToastUtils.showShort(msg);
-                }else {
-                    ToastUtils.showShort(msg);
-                }
+
             }
 
             @Override

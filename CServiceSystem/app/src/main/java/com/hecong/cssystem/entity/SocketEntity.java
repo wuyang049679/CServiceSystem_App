@@ -1,18 +1,28 @@
 package com.hecong.cssystem.entity;
 
-public class SocketEntity {
+public class SocketEntity<T> {
 
     /**
      * _suc : 1
      */
 
-    private int _suc;
+    private String act;
+    private T message;
 
-    public int get_suc() {
-        return _suc;
+
+    public T getMessage() {
+        return message;
     }
 
-    public void set_suc(int _suc) {
-        this._suc = _suc;
+    public void setMessage(T message) {
+        this.message = message;
+    }
+
+    public String getAct() {
+        return act;
+    }
+
+    public void setAct(String act) {
+        this.act = act;
     }
 }

@@ -3,6 +3,7 @@ package com.hecong.cssystem.api;
 
 import android.content.Context;
 
+import com.hecong.cssystem.api.Exception.LoggingInterceptor;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.hecong.cssystem.api.persistentcookie.ClearableCookieJar;
 import com.hecong.cssystem.api.persistentcookie.PersistentCookieJar;
@@ -39,8 +40,7 @@ public class ApiManager {
                         .readTimeout(TIME_OUT,TimeUnit.SECONDS)
                         .writeTimeout(TIME_OUT,TimeUnit.SECONDS)
                         .cookieJar(cookieJar)
-//                        .addInterceptor(new VerifyLoginInterceptor())
-//                        .addInterceptor(new LogInterceptor(false))
+                        .addInterceptor(new LoggingInterceptor())
                         .build();
                 //创建retrofit实例对象
                 Retrofit retrofit = new Retrofit.Builder()

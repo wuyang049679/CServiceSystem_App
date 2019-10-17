@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.base.BaseActivity;
+import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.contract.LoginActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
 import com.hecong.cssystem.presenter.LoginActivityPresenter;
@@ -27,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEntity> implements LoginActivityContract.View {
+public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEntity.DataBean> implements LoginActivityContract.View {
 
 
     @BindView(R.id.username)
@@ -99,11 +100,11 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
     }
 
     @Override
-    public void showDataSuccess(LoginEntity datas) {
+    public void showDataSuccess(LoginEntity.DataBean datas) {
         SharedPreferencesUtils.setParam(Constant.HASH, datas.getHash());
         SharedPreferencesUtils.setParam(Constant.USERNAME, usernames);
         SharedPreferencesUtils.setParam(Constant.PASSWORD, passwords);
-        ToastUtils.showShort("hash:" + datas.getHash());
+        BaseApplication.setHash(datas.getHash());
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

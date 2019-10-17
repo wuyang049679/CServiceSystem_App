@@ -1,29 +1,21 @@
 package com.hecong.cssystem.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.base.BaseActivity;
 import com.hecong.cssystem.contract.MainActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
-import com.hecong.cssystem.entity.MineEntity;
 import com.hecong.cssystem.presenter.MainActivityPresenter;
 import com.hecong.cssystem.ui.fragment.ChatListFragment;
 import com.hecong.cssystem.ui.fragment.MineFragment;
 import com.hecong.cssystem.ui.fragment.VisitorListFragment;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
-import com.next.easynavigation.constant.Anim;
 import com.next.easynavigation.view.EasyNavigationBar;
 
 import java.util.ArrayList;
@@ -35,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * @author wuyang
  */
-public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntity> implements MainActivityContract.View {
+public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntity.DataBean> implements MainActivityContract.View {
 
 
     @BindView(R.id.easyNavigationBar)
@@ -110,7 +102,7 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
     }
 
     @Override
-    public void showDataSuccess(LoginEntity datas) {
+    public void showDataSuccess(LoginEntity.DataBean datas) {
 
     }
 

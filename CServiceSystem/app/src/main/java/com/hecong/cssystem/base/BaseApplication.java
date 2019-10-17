@@ -18,7 +18,7 @@ public class BaseApplication extends MultiDexApplication {
     private static BaseApplication application = null;
     private static Context mContext;
     //用户id，用户唯一标识
-    private static String uid ="10001";
+    private static String hash =null;
     private Set<Activity> allActivities;
 
     @Override
@@ -76,15 +76,16 @@ public class BaseApplication extends MultiDexApplication {
      * 得到登录用户id
      * @return
      */
-    public static String getUID() {
-        return uid;
+    public static String getHash() {
+        return hash;
     }
-
     /**
      * 设置用户id
-     * @param userID
+     * @param hash
      */
-    public static void setUID(String userID) {
-        uid = userID;
+    public static void setHash(String hash) {
+        BaseApplication.hash = hash;
     }
+
+
 }

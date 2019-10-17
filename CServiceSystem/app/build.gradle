@@ -65,5 +65,6 @@ dependencies {
     implementation rootProject.ext.dependencies.popwindow
     implementation rootProject.ext.dependencies.easypermissions
     implementation rootProject.ext.dependencies.fastjson
+    implementation rootProject.ext.dependencies.swipelayout
     implementation (rootProject.ext.dependencies.socket){exclude group: 'org.json', module: 'json' }
 }

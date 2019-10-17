@@ -24,10 +24,17 @@ package com.hecong.cssystem.utils.socket;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.hecong.cssystem.api.Address;
+import com.hecong.cssystem.entity.SocketEntity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -45,13 +52,31 @@ public class EventServiceImpl implements EventService {
     private static final String EVENT_CONNECT_ERROR = Socket.EVENT_CONNECT_ERROR;
     private static final String EVENT_CONNECT_TIMEOUT = Socket.EVENT_CONNECT_TIMEOUT;
     private static final String EVENT_NEW_MESSAGE = "client";
-
+    //消息类型
+    private static final String MESSAGE_LOGINSUC = "loginSuc";
+    private static final String MESSAGE_JOIN = "join";
+    private static final String MESSAGE_LEAVE = "leave";
+    private static final String MESSAGE_SERVICELEAVE = "serviceLeave";
+    private static final String MESSAGE_NEW = "message";
+    private static final String MESSAGE_NEWDIALOG = "newdialog";
+    private static final String MESSAGE_INPUTING = "inputing";
+    private static final String MESSAGE_ONLINE = "online";
+    private static final String MESSAGE_OFFLINE = "offline";
+    private static final String MESSAGE_RECEPTION = "reception";
+    private static final String MESSAGE_SERVICEONLY = "serviceOnly";
+    private static final String MESSAGE_REALTIME_ADD = "realtime_add";
+    private static final String MESSAGE_REALTIME_MODIFY = "realtime_modify";
+    private static final String MESSAGE_REALTIME_DEL = "realtime_del";
+    private static final String MESSAGE_STATEUPATE = "stateUpate";
+    private static final String MESSAGE_UPATEDIALOG = "upateDialog";
+    private static final String MESSAGE_REPORT_STATE = "report_state";
     private static EventService INSTANCE;
     private static EventListener mEventListener;
     private static Socket mSocket;
 
     // Prevent direct instantiation
-    private EventServiceImpl() {}
+    private EventServiceImpl() {
+    }
 
     /**
      * Returns single instance of this class, creating it if necessary.
@@ -68,7 +93,8 @@ public class EventServiceImpl implements EventService {
 
     /**
      * Connect to the server.
-     *  连接服务器socket
+     * 连接服务器socket
+     *
      * @param hash
      * @throws URISyntaxException
      */
@@ -80,7 +106,7 @@ public class EventServiceImpl implements EventService {
         opts.transports = new String[]{WebSocket.NAME};
         opts.reconnection = true;
         opts.reconnectionAttempts = -1;
-        mSocket = IO.socket(Address.SOCKET_URL+"?type=service&hash="+hash);
+        mSocket = IO.socket(Address.SOCKET_URL + "?type=service&hash=" + hash);
         // Register the incoming events and their listeners
         // on the socket.
         mSocket.on(EVENT_CONNECT, onConnect);
@@ -93,7 +119,6 @@ public class EventServiceImpl implements EventService {
 
     /**
      * Disconnect from the server.
-     *
      */
     @Override
     public void disconnect() {
@@ -137,7 +162,6 @@ public class EventServiceImpl implements EventService {
 
     /**
      * Send typing event to the server.
-     *
      */
     @Override
     public void onTyping() {
@@ -146,7 +170,6 @@ public class EventServiceImpl implements EventService {
 
     /**
      * Send stop typing event to the server.
-     *
      */
     @Override
     public void onStopTyping() {
@@ -155,7 +178,7 @@ public class EventServiceImpl implements EventService {
 
     /**
      * Set eventListener.
-     *
+     * <p>
      * When server sends events to the socket, those events are passed to the
      * RemoteDataSource -> Repository -> Presenter -> View using EventListener.
      *
@@ -193,10 +216,90 @@ public class EventServiceImpl implements EventService {
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            Log.i(TAG, "call: onNewMessage");
-            if (mEventListener != null) mEventListener.onNewMessage(args);
+
+            for (int i = 0; i < args.length; i++) {
+                Log.i(TAG, "call: onNewMessage" + args);
+                if (args[i] instanceof Ack) {
+                    try {
+                        //回复服务器_suc，连接权限
+                        Ack ack = (Ack) args[i];
+                        JSONObject obj = new JSONObject();
+                        obj.put("_suc", 1);
+                        ack.call(obj);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Gson gson = new Gson();
+                    SocketEntity message = gson.fromJson((JsonElement) args[i], SocketEntity.class);
+                    uploadDate(message);
+                }
+            }
         }
     };
+
+    /**
+     * 根据消息类型更新数据
+     *
+     * @param
+     */
+    private void uploadDate(SocketEntity message) {
+
+        switch (message.getAct()) {
+            //连接成功
+            case MESSAGE_LOGINSUC:
+                if (mEventListener != null) mEventListener.onNewMessage(message);
+                break;
+            //加入房间
+            case MESSAGE_JOIN:
+                break;
+            //结束对话后退出房间
+            case MESSAGE_LEAVE:
+                break;
+            //只有客服能收到的退出房间消息
+            case MESSAGE_SERVICELEAVE:
+                break;
+            //收到新消息
+            case MESSAGE_NEW:
+                break;
+            //新对话加入
+            case MESSAGE_NEWDIALOG:
+                break;
+            //接收顾客输入的文字
+            case MESSAGE_INPUTING:
+                break;
+            //顾客上线
+            case MESSAGE_ONLINE:
+                break;
+            //顾客离线
+            case MESSAGE_OFFLINE:
+                break;
+            //对话被接待
+            case MESSAGE_RECEPTION:
+                break;
+            //客服账号登录唯一性验证
+            case MESSAGE_SERVICEONLY:
+                break;
+            //实时访客增加
+            case MESSAGE_REALTIME_ADD:
+                break;
+            //实时访客修改
+            case MESSAGE_REALTIME_MODIFY:
+                break;
+            //实时访客删除
+            case MESSAGE_REALTIME_DEL:
+                break;
+            //客服在线状态变化
+            case MESSAGE_STATEUPATE:
+                break;
+            //更新对话（团队协作可能更新）
+            case MESSAGE_UPATEDIALOG:
+                break;
+            //收到客服汇报的在线状态
+            case MESSAGE_REPORT_STATE:
+                break;
+        }
+    }
 
 
 }

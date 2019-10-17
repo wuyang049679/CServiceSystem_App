@@ -4,22 +4,22 @@ import com.hecong.cssystem.api.ApiManager;
 import com.hecong.cssystem.base.BaseEntity;
 import com.hecong.cssystem.contract.StartActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
-import com.hecong.cssystem.utils.RequestBodyBuilder;
+import com.hecong.cssystem.utils.Constant;
+
+import java.util.HashMap;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.RequestBody;
 
 public class StartActivityModel implements StartActivityContract.Model {
     @Override
-    public Observable<BaseEntity<LoginEntity>> checkLogin(String hash) {
-        RequestBodyBuilder.Builder builder = new RequestBodyBuilder.Builder();
-        RequestBody requestBody = builder
-                .params("mode","app")
-                .params("hash",hash)
-                .build();
-        return ApiManager.getApistore().toLogin(requestBody).subscribeOn(Schedulers.io())
+    public Observable<BaseEntity<LoginEntity.DataBean>> checkLogin(String hash) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("mode","app");
+        hashMap.put(Constant.KEY_HASH, hash);
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        return ApiManager.getApistore().toLogin(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

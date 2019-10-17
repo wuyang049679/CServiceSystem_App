@@ -34,4 +34,16 @@ public class Constant {
      */
     public static String USERNAME="_username";
     public static String PASSWORD="_password";
+    /**
+     * 请求类型key
+     */
+    public static String REQUEST_TYPE="request_type";
+    public static String KEY_HASH="hash";
+
+    /**
+     * get请求的常用value
+     */
+    public static String STANDARD="standard";
+
+
 }

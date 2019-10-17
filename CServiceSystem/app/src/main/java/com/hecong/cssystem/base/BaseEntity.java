@@ -3,59 +3,48 @@ package com.hecong.cssystem.base;
 public class BaseEntity<T> {
 
     public Integer type;
-    public Integer code;
+    public int code;
     public String msg;
-    public T payLoad;
     public T data;
-    public T info;
     private int size;
     private int current;
     private int total;
     private int pages;
-    private String version;
-    private Integer _err;
-    private Integer _suc;
     private String hash;
-    private String text;
+    private String aihecong_version;
+    private String region;
 
-    public String getText() {
-        return text;
+
+    public Integer getType() {
+        return type;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public Integer get_err() {
-        return _err;
+    public int getCode() {
+        return code;
     }
 
-    public T getInfo() {
-        return info;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public void setInfo(T info) {
-        this.info = info;
+    public String getMsg() {
+        return msg;
     }
 
-    public String getHash() {
-        return hash;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public T getData() {
+        return data;
     }
 
-    public void set_err(Integer _err) {
-        this._err = _err;
-    }
-
-    public Integer get_suc() {
-        return _suc;
-    }
-
-    public void set_suc(Integer _suc) {
-        this._suc = _suc;
+    public void setData(T data) {
+        this.data = data;
     }
 
     public int getSize() {
@@ -90,51 +79,27 @@ public class BaseEntity<T> {
         this.pages = pages;
     }
 
-    public String getVersion() {
-        return version;
+    public String getHash() {
+        return hash;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
-    public int getCode() {
-        return code;
+    public String getAihecong_version() {
+        return aihecong_version;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setAihecong_version(String aihecong_version) {
+        this.aihecong_version = aihecong_version;
     }
 
-    public T getData() {
-        return data;
+    public String getRegion() {
+        return region;
     }
 
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public T getPayLoad() {
-        return payLoad;
-    }
-
-    public void setPayLoad(T payLoad) {
-        this.payLoad = payLoad;
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

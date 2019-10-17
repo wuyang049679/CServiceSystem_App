@@ -18,9 +18,9 @@ public class StartActivityPresenter extends BasePresenterIm<StartActivityContrac
 
     @Override
     public void pCheckLogin(String hash) {
-        startActivityModel.checkLogin(hash).subscribe(new RxSubscribe<LoginEntity>() {
+        startActivityModel.checkLogin(hash).subscribe(new RxSubscribe<LoginEntity.DataBean>() {
             @Override
-            protected void onSuccess(LoginEntity loginEntity, String hash) {
+            protected void onSuccess(LoginEntity.DataBean loginEntity) {
                 mView.showDataSuccess(loginEntity);
             }
 

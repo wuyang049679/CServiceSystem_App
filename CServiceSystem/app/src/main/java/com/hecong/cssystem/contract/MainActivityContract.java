@@ -4,7 +4,6 @@ package com.hecong.cssystem.contract;
 import com.hecong.cssystem.base.BaseEntity;
 import com.hecong.cssystem.base.BaseView;
 import com.hecong.cssystem.entity.LoginEntity;
-import com.hecong.cssystem.entity.MineEntity;
 
 import io.reactivex.Observable;
 
@@ -15,10 +14,10 @@ import io.reactivex.Observable;
  */
 public interface MainActivityContract {
     interface Model {
-        Observable<BaseEntity<LoginEntity>> checkLogin(String hash);
+        Observable<BaseEntity<LoginEntity.DataBean>> checkLogin(String hash);
     }
 
-    interface View extends BaseView<LoginEntity> {
+    interface View extends BaseView<LoginEntity.DataBean> {
 
     }
 

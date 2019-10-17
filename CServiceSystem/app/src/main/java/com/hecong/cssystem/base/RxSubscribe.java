@@ -2,10 +2,6 @@ package com.hecong.cssystem.base;
 
 import android.util.Log;
 
-import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
-
-import java.net.ConnectException;
-
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -20,7 +16,7 @@ public abstract class RxSubscribe<T> implements Observer<BaseEntity<T>> {
     public RxSubscribe() {
     }
 
-    protected abstract void onSuccess(T t,String hash);
+    protected abstract void onSuccess(T t);
 
 
     protected abstract void onFailed(int code, String msg);
@@ -36,28 +32,29 @@ public abstract class RxSubscribe<T> implements Observer<BaseEntity<T>> {
 
     @Override
     public void onNext(BaseEntity<T> baseModel) {
-        if (baseModel.get_err()!=null){
-      //  判断返回数据是为_err如果为_err直接返回异常
-            onFailed(baseModel.get_err(),"网络服务异常");
-        }else {
-        if (baseModel.get_suc()!=null&&baseModel.getHash()!=null){
-       // 如果为suc正常返回数据
-            onSuccess(baseModel.info,baseModel.getHash());
 
+        //code等于200为请求成功操作
+        if (baseModel.code == 200) {
+            onSuccess(baseModel.data);
+        } else if (baseModel.code == 10003) {
+            onFailed(baseModel.code,baseModel.msg);
+          //登录权限过期或失效
         }else {
-            onFailed(baseModel.get_suc(),baseModel.getText());
+            //请求失败
+            onFailed(baseModel.code,"网络错误");
         }
-        }
+
     }
 
     @Override
     public void onError(Throwable t) {
-        onFailed(1000,"网络错误");
-        Log.i("onError",t.toString());
-//        if (t instanceof ConnectException) {
-//            //网络连接失败
-//            onFailed(403, t.getMessage());
-//        } else if (t instanceof HttpException) {
+        onFailed(0, "网络错误:0x1");
+        Log.i("onError", t.toString());
+        if (t instanceof IllegalStateException) {
+            //类型转换异常
+            onFailed(1, t.getMessage());
+        }
+//        else if (t instanceof HttpException) {
 //            HttpException ex = (HttpException) t;
 //            onFailed(ex.code(), ex.message());
 //        } else {

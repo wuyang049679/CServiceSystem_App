@@ -7,8 +7,8 @@ package com.hecong.cssystem.api;
 
 public class Address {
 
-    private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.TEST;
-    public static final String SOCKET_URL = "https://api.aihecong.com/";
+    private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.ONLINE;
+    public static  String SOCKET_URL = "https://socket.aihecong.com/";
 
 
     /**
@@ -29,12 +29,12 @@ public class Address {
             // 测试环境
             case TEST:
                 BASEURL = "http://192.168.0.105:16999/";
-
+                SOCKET_URL="https://192.168.0.105:17106/";
                 break;
             // 线上环境
             case ONLINE:
                 BASEURL = "https://api.aihecong.com/";
-
+                SOCKET_URL="https://socket.aihecong.com/";
                 break;
             // 预生产环
             case PRE_ONLINE:
@@ -72,9 +72,6 @@ public class Address {
         }
     }
 
-    /**
-     * 健康资讯文章
-     */
-    public static final String HEALTHLECTUREURL = BASEURL + "app/tag/article/list/healthLecture/";
+
 
 }
