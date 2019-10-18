@@ -67,4 +67,5 @@ dependencies {
     implementation rootProject.ext.dependencies.fastjson
     implementation rootProject.ext.dependencies.swipelayout
     implementation (rootProject.ext.dependencies.socket){exclude group: 'org.json', module: 'json' }
+    implementation 'com.hyman:flowlayout-lib:1.1.2'
 }

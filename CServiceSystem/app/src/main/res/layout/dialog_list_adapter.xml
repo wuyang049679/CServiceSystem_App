@@ -1,46 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.daimajia.swipe.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
-
-    android:layout_margin="5dp"
-    android:layout_height="60dp">
+    android:background="@color/white"
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:gravity="center"
-        android:padding="10dp"
-        android:background="@drawable/login_btn"
         android:layout_width="80dp"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:textColor="@color/colorAccent"
-            android:layout_gravity="center"
-            android:text="删除"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:background="@drawable/login_chat_btn"
-        android:gravity="center">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            fresco:placeholderImage="@mipmap/logo"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp" />
+        android:background="@drawable/login_btn"
+        android:gravity="center"
+      >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="列表" />
+            android:text="删除"
+            android:textColor="@color/colorAccent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        tools:ignore="MissingConstraints"
+        android:layout_width="match_parent"
+        android:layout_height="74dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simple_drawViews"
+            android:layout_marginLeft="10dp"
+            fresco:layout_constraintLeft_toLeftOf="parent"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            fresco:layout_constraintTop_toTopOf="parent"
+            fresco:placeholderImage="@mipmap/ic_launcher"
+            android:layout_gravity="center_vertical"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            fresco:roundBottomLeft="true"
+            fresco:roundBottomRight="true"
+            fresco:roundTopLeft="false"
+            fresco:roundTopRight="false"
+            fresco:roundedCornerRadius="30dp"
+             />
+        <Space
+            android:id="@+id/id_space"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginRight="9dp"
+            android:background="@color/colorAccent"
+            fresco:layout_constraintRight_toRightOf="@id/simple_drawViews"
+            fresco:layout_constraintTop_toTopOf="@id/simple_drawViews"
+            />
+
+        <TextView
+            fresco:layout_constraintLeft_toRightOf="@id/id_space"
+            fresco:layout_constraintBottom_toTopOf="@id/id_space"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:background="@drawable/oval_red"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            />
+
+
+        <TextView
+            android:id="@+id/update_time"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="10dp"
+            fresco:layout_constraintTop_toTopOf="parent"
+            fresco:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="10dp"
+            android:textSize="13sp"
+            android:textColor="@color/black_cc"
+            android:text="10-18 11:21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <androidx.constraintlayout.widget.Barrier
+            fresco:constraint_referenced_ids="update_time"
+            fresco:barrierDirection="left"
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="15dp"
+            fresco:layout_constraintTop_toTopOf="parent"
+            fresco:layout_constraintRight_toLeftOf="@id/barrier"
+            fresco:layout_constraintLeft_toRightOf="@id/simple_drawViews"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:singleLine="true"
+            fresco:layout_constraintHorizontal_weight="0.5"
+            android:textSize="16sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="列表将军澳空间发卡机地方了骄傲的风口浪尖" />
+        <TextView
+            android:singleLine="true"
+            android:layout_marginBottom="15dp"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            fresco:layout_constraintLeft_toRightOf="@id/simple_drawViews"
+            android:layout_marginLeft="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/black_999"
+            android:text="测试字体大小颜色"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="12dp"
+            fresco:layout_constraintRight_toRightOf="parent"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="接待"
+            android:textColor="@color/white"
+            android:background="@drawable/green_btn"
+            android:layout_width="50dp"
+            android:layout_height="25dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+     <com.zhy.view.flowlayout.TagFlowLayout
+         fresco:max_select="0"
+         android:id="@+id/flowLayout"
+         android:paddingHorizontal="5dp"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+     </com.zhy.view.flowlayout.TagFlowLayout>
+        <View
+            android:layout_marginLeft="10dp"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"/>
     </LinearLayout>
 
 </com.daimajia.swipe.SwipeLayout>

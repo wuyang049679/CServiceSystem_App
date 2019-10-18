@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="title"
+            android:text="@string/dialog_loading"
             android:textColor="@color/white"
             android:textSize="18sp" />
     </LinearLayout>

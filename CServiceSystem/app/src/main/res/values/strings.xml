@@ -7,4 +7,6 @@
     <string name="act_login_dl">登录</string>
     <string name="login_chat_btn">微信登录</string>
     <string name="act_login_wjmm">忘记密码?</string>
+    <string name="dialog_list">对话</string>
+    <string name="dialog_loading">加载中...</string>
 </resources>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +35,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     TextView conmonTitleTextView;
     @BindView(R.id.chat_recycler)
     RecyclerView chatRecycler;
+
 
     private DialogListAdapter dialogListAdapter;
     private ServerConnection mServerConnection;
@@ -73,12 +75,11 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 .statusBarColor(R.color.theme_app)
                 .titleBar(R.id.chat_list_include)
                 .init();
-
-        listBeans=new ArrayList<>();
-        dialogListAdapter=new DialogListAdapter(listBeans);
-        LinearLayoutManager layoutParams=new LinearLayoutManager(getActivity());
+        conmonTitleTextView.setText(getResources().getString(R.string.dialog_list));
+        listBeans = new ArrayList<>();
+        dialogListAdapter = new DialogListAdapter(listBeans);
+        LinearLayoutManager layoutParams = new LinearLayoutManager(getActivity());
         chatRecycler.setLayoutManager(layoutParams);
-        chatRecycler.setHasFixedSize(true);
         chatRecycler.setAdapter(dialogListAdapter);
 
     }
@@ -97,6 +98,21 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public void showDataError(String errorMessage) {
