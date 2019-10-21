@@ -239,7 +239,7 @@ public class MessageDialogEntity {
             private boolean assignBeBusy;
             private boolean assignGrade;
             private CustomerBean customer;
-            private List<?> tag;
+            private List<String> tag;
 
             public String getId() {
                 return id;
@@ -369,11 +369,11 @@ public class MessageDialogEntity {
                 this.customer = customer;
             }
 
-            public List<?> getTag() {
+            public List<String> getTag() {
                 return tag;
             }
 
-            public void setTag(List<?> tag) {
+            public void setTag(List<String> tag) {
                 this.tag = tag;
             }
 
@@ -595,6 +595,25 @@ public class MessageDialogEntity {
                 private boolean black;
                 private AttCardBean attCard;
                 private List<?> tag;
+                private String head;
+                private String name;
+
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public String getHead() {
+                    return head;
+                }
+
+                public void setHead(String head) {
+                    this.head = head;
+                }
 
                 public String getId() {
                     return id;

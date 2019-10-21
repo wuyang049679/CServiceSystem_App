@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * TimeUtils
@@ -742,4 +744,98 @@ public class DateUtils {
 	public static String getCurrentTimeInString(SimpleDateFormat dateFormat) {
 		return getTime(getCurrentTimeInLong(), dateFormat);
 	}
+
+
+	/**
+	 * 2018-08-05T16:00:00.000Z转为yyyy-MM-dd
+	 */
+
+	public static String getDateFormat(String create_time){
+
+		String format = "2019-10-21";
+		if (create_time != null && create_time != "NULL" && create_time != "") {
+			if (isDate(create_time)) {
+				format = create_time;
+			} else {
+				//转换日期格式(将Mon Jun 18 2018 00:00:00 GMT+0800 (中国标准时间) 转换成yyyy-MM-dd)
+				create_time = create_time.replace("Z", " UTC");
+				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+				Date d = null;//Mon Mar 06 00:00:00 CST 2017
+				try {
+					d = sdf1.parse(create_time);
+					format= formationDate(d);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+//				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//				format = sdf.format(d);//2017-03-06
+			}
+		}
+
+		return format;
+	}
+	/**
+	 * 判断日期格式和范围
+	 */
+	private static boolean isDate(String date)
+	{
+
+		String rexp = "^((\\d{2}(([02468][048])|([13579][26]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(([02468][1235679])|([13579][01345789]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|(1[0-9])|(2[0-8]))))))";
+		Pattern pat = Pattern.compile(rexp);
+		Matcher mat = pat.matcher(date);
+		boolean dateType = mat.matches();
+		return dateType;
+	}
+
+	/**
+	 * 获取时间差
+	 * @param date_create
+	 * @return
+	 */
+	public static String formationDate(Date date_create) {
+		String dateString = null;
+		// 获取系统当前时间
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date now = new Date();
+		try {
+			Date date = date_create;
+			long endTime = now.getTime();
+			long currentTime = date.getTime();
+			// 计算两个时间点相差的秒数
+			long seconds = (endTime - currentTime);
+			if (seconds < 60 * 60 * 24 * 1000){
+				//当天时间显示时分
+				dateString = new SimpleDateFormat("HH:mm").format(date);
+			}else if (date.getYear() != now.getYear()){
+				//超过一年显示年月日
+				dateString = new SimpleDateFormat("yyyy-MM-dd").format(date.getTime());
+			}else {
+				//其余都显示
+				dateString = new SimpleDateFormat("MM-dd HH:mm").format(date);
+			}
+//			if (seconds < 10 * 1000) {
+////				dateString = "刚刚";
+//			} else if (seconds < 60 * 1000) {
+////				dateString = seconds / 1000 + "秒前";
+//			} else if (seconds < 60 * 60 * 1000) {
+////				dateString = seconds / 1000 / 60 + "分钟前";
+//			} else if (seconds < 60 * 60 * 24 * 1000) {
+////				dateString = seconds / 1000 / 60 / 60 + "小时前";
+//			} else if (seconds < 60 * 60 * 24 * 1000 * 30L) {
+////				dateString = seconds / 1000 / 60 / 60 / 24 + "天前";
+//				//今年并且大于30天显示具体月日
+//			} else if (date.getYear() == now.getYear()) {
+//				dateString = new SimpleDateFormat("MM-dd").format(date.getTime());
+//				//大于今年显示年月日
+//			} else if (date.getYear() != now.getYear()) {
+//				dateString = new SimpleDateFormat("yyyy-MM-dd").format(date.getTime());
+//			} else {
+//				dateString = new SimpleDateFormat("yyyy-MM-dd").format(date);
+//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dateString;
+	}
+
 }

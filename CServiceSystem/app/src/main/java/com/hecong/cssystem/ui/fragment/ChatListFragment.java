@@ -18,7 +18,6 @@ import com.hecong.cssystem.entity.MessageDialogEntity;
 import com.hecong.cssystem.presenter.ChatListFragmentPresenter;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
-import com.hecong.cssystem.utils.android.ToastUtils;
 import com.hecong.cssystem.utils.socket.ServerConnection;
 
 import java.util.ArrayList;
@@ -40,8 +39,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     private DialogListAdapter dialogListAdapter;
     private ServerConnection mServerConnection;
     private List<MessageDialogEntity.DataBean.ListBean> listBeans;
-    int mCounter = 0;
-
+    int mCounter = 0;//总的条数
+    int limit=20;//限制每次访问多少条第一设置20条
+    int skip=0;//跳过已获取的条数
     public static ChatListFragment newInstance() {
         Bundle args = new Bundle();
         ChatListFragment fragment = new ChatListFragment();
@@ -89,7 +89,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         String hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
         mServerConnection = new ServerConnection(SERVER_URL + hash);
         mServerConnection.connect(this);
-        mPresenter.pShowMessageDialog(500, 0);
+        mPresenter.pShowMessageDialog(limit, skip);
     }
 
     @Override
@@ -140,8 +140,22 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     @Override
     public void showDialogList(MessageDialogEntity.DataBean messageEntity) {
-        ToastUtils.showShort("对话列表长度：" + messageEntity.getList().size());
-        listBeans.addAll(messageEntity.getList());
-        dialogListAdapter.notifyDataSetChanged();
+
+        if (messageEntity.getList()!=null&&messageEntity.getList().size()!=0){
+            List<MessageDialogEntity.DataBean.ListBean> list = messageEntity.getList();
+            listBeans.addAll(list);
+            skip=listBeans.size();
+            mCounter=listBeans.size();
+            conmonTitleTextView.setText(getResources().getString(R.string.dialog_list)+"("+listBeans.size()+")");
+            dialogListAdapter.notifyDataSetChanged();
+
+            if (list.size()==limit){
+                //第二次请求将限制条数扩大到150
+                limit=150;
+                mPresenter.pShowMessageDialog(limit,skip);
+            }
+
+        }
+
     }
 }

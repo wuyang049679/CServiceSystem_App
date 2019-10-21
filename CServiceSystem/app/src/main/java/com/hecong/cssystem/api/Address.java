@@ -8,9 +8,16 @@ package com.hecong.cssystem.api;
 public class Address {
 
     private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.ONLINE;
+
+    /**
+     * 推送服务器地址
+     */
     public static  String SOCKET_URL = "https://socket.aihecong.com/";
 
-
+    /**
+     * 图片服务器地址
+     */
+    public static  String IMG_URL = "https://socket.aihecong.com/";
     /**
      * baseUrl
      */
@@ -38,12 +45,13 @@ public class Address {
                 break;
             // 预生产环
             case PRE_ONLINE:
-
-                BASEURL = "https://api.aihecong.com/";
+                BASEURL = "http://192.168.0.105:16999/";
+                SOCKET_URL="https://192.168.0.105:17106/";
                 break;
             // 压力测试环境
             case STRESS_TEST:
-                BASEURL = "https://api.aihecong.com/";
+                BASEURL = "http://192.168.0.105:16999/";
+                SOCKET_URL="https://192.168.0.105:17106/";
                 break;
             default:
         }

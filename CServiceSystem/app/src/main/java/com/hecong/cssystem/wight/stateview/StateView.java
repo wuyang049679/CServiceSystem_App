@@ -370,7 +370,7 @@ public class StateView extends View {
 
     private DraweeController getDiyController(Context context, int imgRes) {
         //更改加载中动图的资源
-        Uri uri = UriUtils.getUri(Constant.LOCALRESOURCE, imgRes, context);
+        Uri uri = UriUtils.getUri(Constant.LOCALRESOURCE, imgRes);
         //特殊注明,draweeController是不可以被多个drawview同时使用的,因为使用过一次就会被回收了
         return Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
@@ -436,7 +436,7 @@ public class StateView extends View {
      */
     private DraweeController getDraweeController(Context context) {
         //更改加载中动图的资源
-        Uri uri = UriUtils.getUri(Constant.LOCALRESOURCE, R.drawable.loading, context);
+        Uri uri = UriUtils.getUri(Constant.LOCALRESOURCE, R.drawable.loading);
         //特殊注明,draweeController是不可以被多个drawview同时使用的,因为使用过一次就会被回收了
         return Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
