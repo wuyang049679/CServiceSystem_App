@@ -34,20 +34,35 @@
         android:layout_height="62dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/simple_drawViews"
             android:layout_marginLeft="10dp"
+            android:id="@+id/simple_drawViews"
             fresco:layout_constraintLeft_toLeftOf="parent"
             fresco:layout_constraintBottom_toBottomOf="parent"
-            fresco:placeholderImage="@mipmap/test"
-            android:layout_gravity="center_vertical"
+            fresco:backgroundImage="@mipmap/test"
             android:layout_width="48dp"
             android:layout_height="48dp"
             fresco:roundBottomLeft="true"
             fresco:roundBottomRight="true"
             fresco:roundTopLeft="true"
             fresco:roundTopRight="true"
-            fresco:roundedCornerRadius="3dp"
-             />
+            fresco:roundedCornerRadius="3dp" />
+
+        <LinearLayout
+            android:id="@+id/img_lin"
+            android:background="@drawable/login_btn"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            fresco:layout_constraintLeft_toLeftOf="parent"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+            <ImageView
+                android:id="@+id/img_icon"
+                android:src="@mipmap/chrome"
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
+        </LinearLayout>
+
         <Space
             android:id="@+id/id_space"
             android:layout_width="0dp"

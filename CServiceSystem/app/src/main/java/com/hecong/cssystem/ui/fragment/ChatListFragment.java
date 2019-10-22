@@ -3,11 +3,13 @@ package com.hecong.cssystem.ui.fragment;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.adapter.DialogListAdapter;
@@ -15,17 +17,21 @@ import com.hecong.cssystem.api.Address;
 import com.hecong.cssystem.base.BaseFragment;
 import com.hecong.cssystem.contract.ChatListFragmentContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
+import com.hecong.cssystem.entity.OffLineEntity;
 import com.hecong.cssystem.presenter.ChatListFragmentPresenter;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
+import com.hecong.cssystem.utils.socket.EventListener;
+import com.hecong.cssystem.utils.socket.EventServiceImpl;
 import com.hecong.cssystem.utils.socket.ServerConnection;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, MessageDialogEntity.DataBean> implements ChatListFragmentContract.View, ServerConnection.ServerListener {
+public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, MessageDialogEntity.DataBean> implements ChatListFragmentContract.View, EventListener {
 
     private final String SERVER_URL = Address.SOCKET_URL + "?type=service&hash=";
     @BindView(R.id.backLayout)
@@ -42,6 +48,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     int mCounter = 0;//总的条数
     int limit=20;//限制每次访问多少条第一设置20条
     int skip=0;//跳过已获取的条数
+
+    private int updateIndex=0;//需要更新对话的下标
     public static ChatListFragment newInstance() {
         Bundle args = new Bundle();
         ChatListFragment fragment = new ChatListFragment();
@@ -87,8 +95,13 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     @Override
     protected void initData(Bundle savedInstanceState) {
         String hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
-        mServerConnection = new ServerConnection(SERVER_URL + hash);
-        mServerConnection.connect(this);
+        try {
+            EventServiceImpl.getInstance().connect(hash);
+            EventServiceImpl.getInstance().setEventListener(this);
+        } catch (URISyntaxException e) {
+            Toast.makeText(getActivity(), "Failed to connect to chat server.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
         mPresenter.pShowMessageDialog(limit, skip);
     }
 
@@ -125,17 +138,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     }
 
 
-    @Override
-    public void onNewMessage(String message) {
 
-    }
-
-    @Override
-    public void onStatusChange(ServerConnection.ConnectionStatus status) {
-        String statusMsg = (status == ServerConnection.ConnectionStatus.CONNECTED ?
-                "已连接" : "未连接");
-
-    }
 
 
     @Override
@@ -156,6 +159,84 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             }
 
         }
+
+    }
+
+    @Override
+    public void onConnect(Object... args) {
+
+    }
+
+    @Override
+    public void onDisconnect(Object... args) {
+
+    }
+
+    @Override
+    public void onConnectError(Object... args) {
+
+    }
+
+    @Override
+    public void onConnectTimeout(Object... args) {
+
+    }
+
+    @Override
+    public void onNewMessage(Object... args) {
+
+    }
+
+    @Override
+    public void onUserJoined(Object... args) {
+
+    }
+
+    @Override
+    public void onUserLeft(Object... args) {
+
+    }
+
+    @Override
+    public void onTyping(Object... args) {
+
+    }
+
+    @Override
+    public void onStopTyping(Object... args) {
+
+    }
+
+    @Override
+    public void onUserState(Object... args) {
+
+    }
+
+    @Override
+    public void onOffLine(Object... args) {
+
+        Gson gson=new Gson();
+        OffLineEntity offLineEntity = gson.fromJson(args[0].toString(), OffLineEntity.class);
+        if (offLineEntity!=null){
+            String customId=offLineEntity.getCustomerId();
+            for (int i = 0; i < listBeans.size(); i++) {
+                if (listBeans.get(i).getCustomerId().equals(customId)){
+                    listBeans.get(i).setCustomerOffTime("下线了");
+                    updateIndex=i;
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                         dialogListAdapter.notifyItemChanged(updateIndex);
+                        }
+                    });
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void onLine(Object... args) {
 
     }
 }

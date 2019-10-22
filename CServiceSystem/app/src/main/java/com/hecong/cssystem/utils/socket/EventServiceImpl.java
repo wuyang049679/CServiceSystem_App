@@ -25,7 +25,6 @@ package com.hecong.cssystem.utils.socket;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.hecong.cssystem.api.Address;
 import com.hecong.cssystem.entity.SocketEntity;
 
@@ -100,6 +99,10 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void connect(String hash) throws URISyntaxException {
+        //判断是否已连接，如果连接重新连接
+        if (mSocket!=null&&mSocket.connected()){
+            mSocket.disconnect();
+        }
         IO.Options opts = new IO.Options();
         opts.forceNew = true;
         opts.secure = true;
@@ -116,7 +119,15 @@ public class EventServiceImpl implements EventService {
         mSocket.on(EVENT_NEW_MESSAGE, onNewMessage);
         mSocket.connect();
     }
+    /**
+     * 加入房间
+     * @param roomId
+     */
+    @Override
+    public void joinRoom(String roomId) {
 
+        if (mSocket!=null)mSocket.emit("join",roomId);
+    }
     /**
      * Disconnect from the server.
      */
@@ -218,10 +229,10 @@ public class EventServiceImpl implements EventService {
         public void call(final Object... args) {
 
             for (int i = 0; i < args.length; i++) {
-                Log.i(TAG, "call: onNewMessage" + args);
+                Log.i(TAG, "call: onNewMessage" + args[i]);
                 if (args[i] instanceof Ack) {
                     try {
-                        //回复服务器_suc，连接权限
+                        //回复服务器_suc，获取连接权限
                         Ack ack = (Ack) args[i];
                         JSONObject obj = new JSONObject();
                         obj.put("_suc", 1);
@@ -230,9 +241,7 @@ public class EventServiceImpl implements EventService {
                         e.printStackTrace();
                     }
                 } else {
-                    Gson gson = new Gson();
-                    SocketEntity message = gson.fromJson((JsonElement) args[i], SocketEntity.class);
-                    uploadDate(message);
+                    uploadDate(args[i].toString());
                 }
             }
         }
@@ -243,9 +252,10 @@ public class EventServiceImpl implements EventService {
      *
      * @param
      */
-    private void uploadDate(SocketEntity message) {
-
-        switch (message.getAct()) {
+    private void uploadDate(String message) {
+        Gson gson = new Gson();
+        SocketEntity data = gson.fromJson(message, SocketEntity.class);
+        switch (data.getAct()) {
             //连接成功
             case MESSAGE_LOGINSUC:
                 if (mEventListener != null) mEventListener.onNewMessage(message);
@@ -270,9 +280,11 @@ public class EventServiceImpl implements EventService {
                 break;
             //顾客上线
             case MESSAGE_ONLINE:
+                if (mEventListener != null) mEventListener.onLine(message);
                 break;
             //顾客离线
             case MESSAGE_OFFLINE:
+                if (mEventListener != null) mEventListener.onOffLine(message);
                 break;
             //对话被接待
             case MESSAGE_RECEPTION:

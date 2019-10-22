@@ -34,6 +34,8 @@ public interface EventService {
 
     void disconnect();
 
+    void joinRoom(String roomId);
+
     void setEventListener(EventListener listener);
 
 //    Flowable<ChatMessage> sendMessage(ChatMessage chatMessage);

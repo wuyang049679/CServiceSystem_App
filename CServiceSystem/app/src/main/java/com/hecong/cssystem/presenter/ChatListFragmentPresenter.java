@@ -82,4 +82,19 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
     public void onStopTyping(Object... args) {
 
     }
+
+    @Override
+    public void onUserState(Object... args) {
+
+    }
+
+    @Override
+    public void onOffLine(Object... args) {
+
+    }
+
+    @Override
+    public void onLine(Object... args) {
+
+    }
 }

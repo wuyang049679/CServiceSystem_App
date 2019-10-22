@@ -20,7 +20,7 @@ import okhttp3.OkHttpClient;
 
 
 public class ServerConnection {
-    private Socket mSocket;
+    public Socket mSocket;
     private String TGA = "TGA";
 
     public enum ConnectionStatus {
@@ -173,7 +173,6 @@ public class ServerConnection {
                     try {
                         obj.put("_suc", 1);
                         ack.call(obj);
-                        joinRoom();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -186,9 +185,9 @@ public class ServerConnection {
         }
     };
 
-    private void joinRoom() {
+    public void joinRoom(String roomId) {
 
-        mSocket.emit("join", "5da56df82a91b28c743199b1");
+        mSocket.emit("join", roomId);
     }
 
 }

@@ -45,4 +45,10 @@ public interface EventListener {
     void onTyping(Object... args);
 
     void onStopTyping(Object... args);
+
+    void onUserState(Object... args);
+
+    void onOffLine(Object... args);
+
+    void onLine(Object... args);
 }

@@ -3,7 +3,8 @@ package com.hecong.cssystem.adapter;
 import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.hecong.cssystem.entity.MessageDialogEntity;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.DateUtils;
 import com.hecong.cssystem.utils.UriUtils;
+import com.hecong.cssystem.utils.socket.EventServiceImpl;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -28,36 +30,89 @@ import java.util.List;
 public class DialogListAdapter extends BaseQuickAdapter<MessageDialogEntity.DataBean.ListBean, BaseViewHolder> {
 
     public DialogListAdapter(@Nullable List<MessageDialogEntity.DataBean.ListBean> data) {
-        super( R.layout.dialog_list_adapter,data);
+        super(R.layout.dialog_list_adapter, data);
     }
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MessageDialogEntity.DataBean.ListBean item) {
-        SimpleDraweeView draweeView=helper.getView(R.id.simple_drawViews);
-        TagFlowLayout flowLayout = helper.getView(R.id.flowLayout);
-        TextView title=helper.getView(R.id.dialog_item_title);
-        TextView ponit_tv=helper.getView(R.id.msg_count_tv);
-        TextView last_time=helper.getView(R.id.update_time);
-        TextView content=helper.getView(R.id.tv_content);
-        Button button=helper.getView(R.id.btn_jd);
-        
-        draweeView.setImageURI(UriUtils.getUri(Constant.ONLINEPIC, item.getCustomer().getHead()));
-        setTitle(item,title);
-        setMsgPoint(item,ponit_tv);
-        setUpdateTime(item,last_time);
-        setContent(item,content);
-        setTagList(item,flowLayout);
+        EventServiceImpl.getInstance().joinRoom(item.getCustomerId());
+        setTitle(item, helper);
+        setMsgPoint(item,helper);
+        setUpdateTime(item, helper);
+        setContent(item, helper);
+        setTagList(item, helper);
+        setImageView(item,helper);
 
     }
 
     /**
-     * 设置标签
+     * 设置图片
      * @param item
-     * @param flowLayout
+     * @param helper
      */
-    private void setTagList(MessageDialogEntity.DataBean.ListBean item, TagFlowLayout flowLayout) {
+    private void setImageView(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
+        SimpleDraweeView draweeView = helper.getView(R.id.simple_drawViews);
+        LinearLayout img_lin = helper.getView(R.id.img_lin);
+        ImageView img = helper.getView(R.id.img_icon);
+        int resId=0;
+        if (item.getSource().equals("web")||item.getSource().equals("link")){
 
-        if (item.getTag()!=null&&item.getTag().size()!=0) {
+            switch (item.getDevice().getType()) {
+                case "Desktop":
+                    resId=setDeskTop(item);
+                    break;
+                case "Android":
+                    resId=R.mipmap.android;
+                    break;
+                case "IOS":
+                    resId=R.mipmap.ios;
+                    break;
+            }
+        }
+        if (item.getCustomer().getHead()!=null){
+            img_lin.setVisibility(View.GONE);
+            draweeView.setImageURI(UriUtils.getUri(Constant.ONLINEPIC, item.getCustomer().getHead()));
+        }else {
+            img_lin.setVisibility(View.VISIBLE);
+            img.setImageResource(resId);
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setGradientType(GradientDrawable.RECTANGLE);
+            drawable.setCornerRadius(6);
+            if (item.getCustomerOffTime()==null){
+            drawable.setColor(mContext.getResources().getColor(R.color.theme_app));
+            }else {
+            drawable.setColor(mContext.getResources().getColor(R.color.black_cc));
+            }
+            img_lin.setBackground(drawable);
+        }
+    }
+
+    /**
+     * 设置浏览器类型图标
+     * @param item
+     */
+    private int setDeskTop(MessageDialogEntity.DataBean.ListBean item) {
+        String browser = item.getDevice().getBrowser();
+        if (browser.contains("weixin")) return R.mipmap.weixin;
+        if (item.getDevice().getSystem().equals("Mac")) return R.mipmap.mac;
+        if (browser.contains("Safari")) return R.mipmap.safari;
+        if (browser.contains("IE")) return R.mipmap.ie;
+        if (browser.contains("Edge")) return R.mipmap.edge;
+        if (browser.contains("Firefox")) return R.mipmap.firefox;
+        if (browser.contains("Chrome")) return R.mipmap.chrome;
+        if (browser.contains("Opera")) return R.mipmap.opera;
+        return R.mipmap.desktop;
+    }
+
+    /**
+     * 设置标签
+     *  @param item
+     * @param helper
+     */
+    private void setTagList(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
+        TagFlowLayout flowLayout = helper.getView(R.id.flowLayout);
+        if (item.getTag() != null && item.getTag().size() != 0) {
             flowLayout.setAdapter(new TagAdapter<String>(item.getTag()) {
                 @Override
                 public View getView(FlowLayout parent, int position, String s) {
@@ -84,10 +139,12 @@ public class DialogListAdapter extends BaseQuickAdapter<MessageDialogEntity.Data
 
     /**
      * 更新最新消息内容
-     * @param item
-     * @param content
+     *  @param item
+     * @param helper
      */
-    private void setContent(MessageDialogEntity.DataBean.ListBean item, TextView content) {
+    private void setContent(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
+        TextView content = helper.getView(R.id.tv_content);
+
         //消息类型
 //        export const MessageSketch = (contents, type) => {
 //            if(type == 'evaluate')contents = '[顾客已评价]'
@@ -107,44 +164,44 @@ public class DialogListAdapter extends BaseQuickAdapter<MessageDialogEntity.Data
 //            return contents;
 //        }
         String sendType = item.getLastMsg().getType();
-        String contents="";
-        switch (sendType){
+        String contents = "";
+        switch (sendType) {
 
             case "evaluate":
-                contents="[顾客已评价]";
-            break;
+                contents = "[顾客已评价]";
+                break;
             case "form":
-                contents="[表单]";
+                contents = "[表单]";
                 break;
             case "image":
-                contents="[图片]";
+                contents = "[图片]";
                 break;
             case "voice":
-                contents="[语音]";
+                contents = "[语音]";
                 break;
             case "menu":
-                contents="[菜单]";
+                contents = "[菜单]";
                 break;
             case "video":
-                contents="[视频]";
+                contents = "[视频]";
                 break;
             case "card":
-                contents="[卡片]";
+                contents = "[卡片]";
                 break;
             case "file":
-                Gson gson=new Gson();
+                Gson gson = new Gson();
                 FileEntity fileEntity = gson.fromJson(item.getLastMsg().getContents(), FileEntity.class);
-                contents="[文件] "+fileEntity.getName();
-                if (fileEntity.getType().indexOf("video/")==0){
-                contents="[视频]";
+                contents = "[文件] " + fileEntity.getName();
+                if (fileEntity.getType().indexOf("video/") == 0) {
+                contents = "[视频]";
                 }
                 break;
             case "html":
-                contents= item.getLastMsg().getContents().replace("/<[^>]+>/g","");
+                contents = item.getLastMsg().getContents().replace("/<[^>]+>/g", "");
                 break;
             case "text":
-                if (item.getLastMsg().getContents()!=null) {
-                    contents = item.getLastMsg().getContents().replace("/[\\r\\n]/g", " ");
+                if (item.getLastMsg().getContents() != null) {
+                 contents = item.getLastMsg().getContents().replace("/[\\r\\n]/g", " ");
                 }
                 break;
         }
@@ -154,32 +211,34 @@ public class DialogListAdapter extends BaseQuickAdapter<MessageDialogEntity.Data
 
     /**
      * 设置最后更新时间
-     * @param item
-     * @param last_time
+     *  @param item
+     * @param helper
      */
-    private void setUpdateTime(MessageDialogEntity.DataBean.ListBean item, TextView last_time) {
-        if (item.getLastMsg().getTime()!=null){
+    private void setUpdateTime(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
+        TextView last_time = helper.getView(R.id.update_time);
+        if (item.getLastMsg().getTime() != null) {
             last_time.setText(DateUtils.getDateFormat(item.getLastMsg().getTime()));
-        }else {
+        } else {
             last_time.setText(DateUtils.getDateFormat(item.getAddtime()));
         }
     }
 
     /**
      * 设置未读消息红点
-     * @param item
-     * @param ponit_tv
+     *  @param item
+     * @param helper
      */
-    private void setMsgPoint(MessageDialogEntity.DataBean.ListBean item, TextView ponit_tv) {
+    private void setMsgPoint(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
+        TextView ponit_tv = helper.getView(R.id.msg_count_tv);
         //设置未读消息数
-        if (item.getUnreadNum()==0){
+        if (item.getUnreadNum() == 0) {
             ponit_tv.setVisibility(View.GONE);
-        }else {
+        } else {
             ponit_tv.setVisibility(View.VISIBLE);
-            ponit_tv.setText(item.getUnreadNum());
-            if (item.getUnreadNum()>9){
+            ponit_tv.setText(item.getUnreadNum()+"");
+            if (item.getUnreadNum() > 9) {
                 ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.radius_red));
-            }else {
+            } else {
                 ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.oval_red));
             }
         }
@@ -187,30 +246,31 @@ public class DialogListAdapter extends BaseQuickAdapter<MessageDialogEntity.Data
 
     /**
      * 设置标题title  地址和名称
-     * @param item
-     * @param title
+     *  @param item
+     * @param helper
      */
-    private void setTitle(MessageDialogEntity.DataBean.ListBean item,TextView title) {
+    private void setTitle(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
+        TextView title = helper.getView(R.id.dialog_item_title);
         //设置对话title
-        String tv_title=null;
-        if (item.getAddress()==null||TextUtils.isEmpty(item.getAddress())){
+        String tv_title = null;
+        if (item.getAddress() == null || TextUtils.isEmpty(item.getAddress())) {
             title.setText("未知地址");
-            tv_title="未知地址";
-        }else {
-            tv_title=item.getAddress();
+            tv_title = "未知地址";
+        } else {
+            tv_title = item.getAddress();
         }
         //当来源为web和link是显示地址如果不是则不显示地址
-        if (item.getCustomer().getName()!=null){
-            if (item.getSource().equals("web")||item.getSource().equals("link")) {
+        if (item.getCustomer().getName() != null) {
+            if (item.getSource().equals("web") || item.getSource().equals("link")) {
                 tv_title = tv_title + " " + item.getCustomer().getName();
-            }else {
-                tv_title=item.getCustomer().getName();
+            } else {
+                tv_title = item.getCustomer().getName();
             }
-        }else {
-            if (item.getSource().equals("web")||item.getSource().equals("link")) {
+        } else {
+            if (item.getSource().equals("web") || item.getSource().equals("link")) {
                 tv_title = tv_title + " #" + item.getCustomer().getNumberId();
-            }else {
-                tv_title="#"+item.getCustomer().getNumberId();
+            } else {
+                tv_title = "#" + item.getCustomer().getNumberId();
             }
         }
         title.setText(tv_title);

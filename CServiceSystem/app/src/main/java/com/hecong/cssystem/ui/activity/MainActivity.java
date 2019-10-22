@@ -90,6 +90,7 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
                 //分割线高度  默认1px
                 .lineColor(getResources().getColor(R.color.black_line))
                 .mode(EasyNavigationBar.MODE_NORMAL)
+                .hasPadding(true)//fragment列表底部重叠，部分看不到
                 .build();
        easyNavigationBar.setMsgPointCount(0, 9);
        easyNavigationBar.setMsgPointCount(1, 19);
