@@ -32,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -72,6 +74,8 @@ public class EventServiceImpl implements EventService {
     private static EventService INSTANCE;
     private static EventListener mEventListener;
     private static Socket mSocket;
+
+    private List<String> roomList;
 
     // Prevent direct instantiation
     private EventServiceImpl() {
@@ -125,8 +129,12 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void joinRoom(String roomId) {
-
-        if (mSocket!=null)mSocket.emit("join",roomId);
+        if (roomList==null)roomList=new ArrayList<>();
+        if (!roomList.contains(roomId)) {
+            if (mSocket != null) mSocket.emit("join", roomId);
+            roomList.add(roomId);
+        }
+        Log.i(TAG, "roomId: "+roomId);
     }
     /**
      * Disconnect from the server.
@@ -258,7 +266,7 @@ public class EventServiceImpl implements EventService {
         switch (data.getAct()) {
             //连接成功
             case MESSAGE_LOGINSUC:
-                if (mEventListener != null) mEventListener.onNewMessage(message);
+                if (mEventListener != null) mEventListener.onLogSuc(message);
                 break;
             //加入房间
             case MESSAGE_JOIN:

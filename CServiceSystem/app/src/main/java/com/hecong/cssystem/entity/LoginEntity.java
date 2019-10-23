@@ -68,6 +68,15 @@ public class LoginEntity {
         private String hash;
         private InfoBean info;
         private String validity;
+        private String text;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
 
         public int get_suc() {
             return _suc;

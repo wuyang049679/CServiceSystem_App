@@ -48,11 +48,13 @@ public abstract class RxSubscribe<T> implements Observer<BaseEntity<T>> {
 
     @Override
     public void onError(Throwable t) {
-        onFailed(0, "网络错误:0x1");
+
         Log.i("onError", t.toString());
         if (t instanceof IllegalStateException) {
             //类型转换异常
             onFailed(1, t.getMessage());
+        }else {
+            onFailed(0, "网络错误:0x1");
         }
 //        else if (t instanceof HttpException) {
 //            HttpException ex = (HttpException) t;

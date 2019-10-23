@@ -97,4 +97,9 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
     public void onLine(Object... args) {
 
     }
+
+    @Override
+    public void onLogSuc(Object... args) {
+
+    }
 }

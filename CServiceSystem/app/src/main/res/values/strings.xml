@@ -9,4 +9,5 @@
     <string name="act_login_wjmm">忘记密码?</string>
     <string name="dialog_list">对话</string>
     <string name="dialog_loading">加载中...</string>
+    <string name="dialog_close">结束</string>
 </resources>

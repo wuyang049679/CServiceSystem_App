@@ -22,13 +22,16 @@ public class LoginActivityPresenter extends BasePresenterIm<LoginActivityContrac
         activityModel.login(username,password).subscribe(new RxSubscribe<LoginEntity.DataBean>() {
             @Override
             protected void onSuccess(LoginEntity.DataBean loginEntity) {
-                    mView.showDataSuccess(loginEntity);
+                if (loginEntity.get_suc()!=0) {
+                mView.showDataSuccess(loginEntity);
+                }else {
+                onFailed(0,loginEntity.getText());
+                }
             }
 
             @Override
             protected void onFailed(int code, String msg) {
                 mView.showDataError(msg);
-
             }
 
             @Override

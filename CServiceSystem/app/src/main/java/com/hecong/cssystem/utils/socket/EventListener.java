@@ -51,4 +51,6 @@ public interface EventListener {
     void onOffLine(Object... args);
 
     void onLine(Object... args);
+
+    void onLogSuc(Object... args);
 }

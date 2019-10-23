@@ -9,6 +9,16 @@ public class OffLineEntity {
 
     private String act;
     private String customerId;
+    private String currentUrl;
+
+
+    public String getCurrentUrl() {
+        return currentUrl;
+    }
+
+    public void setCurrentUrl(String currentUrl) {
+        this.currentUrl = currentUrl;
+    }
 
     public String getAct() {
         return act;

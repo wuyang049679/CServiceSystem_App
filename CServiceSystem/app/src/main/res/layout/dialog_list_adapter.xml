@@ -9,21 +9,25 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/close_btn"
         android:layout_width="80dp"
         android:layout_height="match_parent"
-        android:background="@drawable/login_btn"
+        android:background="@color/red"
         android:gravity="center"
       >
 
         <TextView
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="删除"
-            android:textColor="@color/colorAccent" />
+            android:text="@string/dialog_close"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout
+        android:clickable="true"
+        android:background="@drawable/item_down_bg"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -38,7 +42,8 @@
             android:id="@+id/simple_drawViews"
             fresco:layout_constraintLeft_toLeftOf="parent"
             fresco:layout_constraintBottom_toBottomOf="parent"
-            fresco:backgroundImage="@mipmap/test"
+            fresco:backgroundImage="@mipmap/chrome"
+            fresco:progressBarImage="@mipmap/chrome"
             android:layout_width="48dp"
             android:layout_height="48dp"
             fresco:roundBottomLeft="true"

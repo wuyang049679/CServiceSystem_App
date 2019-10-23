@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
@@ -27,22 +27,27 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.List;
 
-public class DialogListAdapter extends BaseQuickAdapter<MessageDialogEntity.DataBean.ListBean, BaseViewHolder> {
+public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEntity.DataBean.ListBean, BaseViewHolder> {
 
     public DialogListAdapter(@Nullable List<MessageDialogEntity.DataBean.ListBean> data) {
-        super(R.layout.dialog_list_adapter, data);
+        super(data);
+        addItemType(Constant.NOTRECEIVED,R.layout.dialog_list_noreceived_adapter);
+        addItemType(Constant.HAVERECEIVED,R.layout.dialog_list_adapter);
+        addItemType(Constant.COLLEAGUE,R.layout.dialog_list_colleague_adapter);
     }
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MessageDialogEntity.DataBean.ListBean item) {
-        EventServiceImpl.getInstance().joinRoom(item.getCustomerId());
-        setTitle(item, helper);
-        setMsgPoint(item,helper);
-        setUpdateTime(item, helper);
-        setContent(item, helper);
-        setTagList(item, helper);
-        setImageView(item,helper);
-
+        if (item.getItemType()==Constant.HAVERECEIVED) {
+            EventServiceImpl.getInstance().joinRoom(item.getCustomerId());
+            helper.addOnClickListener(R.id.close_btn);
+            setTitle(item, helper);
+            setMsgPoint(item, helper);
+            setUpdateTime(item, helper);
+            setContent(item, helper);
+            setTagList(item, helper);
+            setImageView(item, helper);
+        }
     }
 
     /**

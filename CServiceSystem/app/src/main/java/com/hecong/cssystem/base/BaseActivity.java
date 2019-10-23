@@ -11,6 +11,7 @@ import android.view.View;
 import androidx.fragment.app.FragmentActivity;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.hecong.cssystem.utils.android.ToastUtils;
 import com.hecong.cssystem.wight.CustomDialog;
 import com.hecong.cssystem.wight.stateview.StateView;
 
@@ -246,7 +247,7 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends Fragmen
      * 短暂显示Toast提示(来自String)
      **/
     public void showShortToast(String text) {
-//        ToastUtils.show( text);
+                ToastUtils.showShort( text);
     }
 
     /**

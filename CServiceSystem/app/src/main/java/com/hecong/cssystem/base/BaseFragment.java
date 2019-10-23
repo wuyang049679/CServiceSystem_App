@@ -27,7 +27,7 @@ import io.reactivex.annotations.Nullable;
  */
 
 public abstract class BaseFragment<T extends BasePresenterIm, V> extends Fragment implements BaseView<V> {
-    public String TAG = "xy_fragment";
+    public String TAG = "TAG";
     protected View rootView;
     private StateView mStateView;
     public T mPresenter;

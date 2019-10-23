@@ -1,5 +1,7 @@
 package com.hecong.cssystem.entity;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.util.List;
 
 public class MessageDialogEntity {
@@ -202,7 +204,7 @@ public class MessageDialogEntity {
             }
         }
 
-        public static class ListBean {
+        public static class ListBean implements MultiItemEntity {
             /**
              * id : 5da56df82a91b28c743199b2
              * customerId : 5da56df82a91b28c743199b1
@@ -240,7 +242,7 @@ public class MessageDialogEntity {
             private boolean assignGrade;
             private CustomerBean customer;
             private List<String> tag;
-
+            private int itemtype;
             public String getId() {
                 return id;
             }
@@ -375,6 +377,19 @@ public class MessageDialogEntity {
 
             public void setTag(List<String> tag) {
                 this.tag = tag;
+            }
+
+            public int getItemtype() {
+                return itemtype;
+            }
+
+            public void setItemtype(int itemtype) {
+                this.itemtype = itemtype;
+            }
+
+            @Override
+            public int getItemType() {
+                return itemtype;
             }
 
             public static class DeviceBean {

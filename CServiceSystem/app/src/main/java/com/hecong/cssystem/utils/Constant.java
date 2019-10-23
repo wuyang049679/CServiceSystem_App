@@ -45,5 +45,11 @@ public class Constant {
      */
     public static String STANDARD="standard";
 
+    /**
+     * 对话列表类型
+     */
 
+    public static final int NOTRECEIVED=1;//未接待类型
+    public static final int HAVERECEIVED=2;//已接待
+    public static final int COLLEAGUE=3;//同事的对话
 }

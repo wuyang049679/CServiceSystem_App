@@ -113,6 +113,7 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
     @Override
     public void showDataError(String errorMessage) {
         super.showDataError(errorMessage);
+        showShortToast(errorMessage);
         isLoading(false);
     }
 
