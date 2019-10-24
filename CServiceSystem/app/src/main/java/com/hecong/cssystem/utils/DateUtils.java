@@ -775,6 +775,31 @@ public class DateUtils {
 		return format;
 	}
 	/**
+	 * 2018-08-05T16:00:00.000Z获取data
+	 */
+
+	public static Date getDate(String create_time){
+
+		Date format =null;
+		if (create_time != null && create_time != "NULL" && create_time != "") {
+
+				//转换日期格式(将Mon Jun 18 2018 00:00:00 GMT+0800 (中国标准时间) 转换成yyyy-MM-dd)
+				create_time = create_time.replace("Z", " UTC");
+				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+
+				try {
+					format = sdf1.parse(create_time);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+//				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//				format = sdf.format(d);//2017-03-06
+
+		}
+
+		return format;
+	}
+	/**
 	 * 判断日期格式和范围
 	 */
 	private static boolean isDate(String date)

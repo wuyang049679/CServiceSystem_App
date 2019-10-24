@@ -13,12 +13,12 @@ import androidx.annotation.Nullable;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.gson.Gson;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.entity.FileEntity;
 import com.hecong.cssystem.entity.MessageDialogEntity;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.DateUtils;
+import com.hecong.cssystem.utils.JsonParseUtils;
 import com.hecong.cssystem.utils.UriUtils;
 import com.hecong.cssystem.utils.socket.EventServiceImpl;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -194,8 +194,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
                 contents = "[卡片]";
                 break;
             case "file":
-                Gson gson = new Gson();
-                FileEntity fileEntity = gson.fromJson(item.getLastMsg().getContents(), FileEntity.class);
+                FileEntity fileEntity=JsonParseUtils.parseToObject(item.getLastMsg().getContents(), FileEntity.class);
                 contents = "[文件] " + fileEntity.getName();
                 if (fileEntity.getType().indexOf("video/") == 0) {
                 contents = "[视频]";

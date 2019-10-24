@@ -47,6 +47,7 @@ public class BaseApplication extends MultiDexApplication {
     private void init() {
         //Fecbook初始化
         Fresco.initialize(this);
+        //Gson初始化
     }
 
     /**

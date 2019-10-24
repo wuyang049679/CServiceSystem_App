@@ -243,6 +243,23 @@ public class MessageDialogEntity {
             private CustomerBean customer;
             private List<String> tag;
             private int itemtype;
+            private int unCount;//未接待个数
+
+            public int getUnCount() {
+                return unCount;
+            }
+
+            public void setUnCount(int unCount) {
+                this.unCount = unCount;
+            }
+
+            public ListBean() {
+            }
+
+            public ListBean(int itemtype) {
+                this.itemtype = itemtype;
+            }
+
             public String getId() {
                 return id;
             }
