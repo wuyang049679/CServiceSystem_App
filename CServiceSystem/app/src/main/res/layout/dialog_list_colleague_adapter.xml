@@ -57,6 +57,7 @@
             />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/msg_count_tv"
             fresco:layout_constraintLeft_toRightOf="@id/id_space"
             fresco:layout_constraintBottom_toTopOf="@id/id_space"

@@ -52,4 +52,10 @@ public class Constant {
     public static final int NOTRECEIVED=1;//未接待类型
     public static final int HAVERECEIVED=2;//已接待
     public static final int COLLEAGUE=3;//同事的对话
+    /**
+     * 对话列表数据类型
+     */
+    public static final String NOTRECEIVED_LIST="not_received_list";//未接待类型
+    public static final String HAVERECEIVED_LIST="have_received_list";//已接待
+    public static final String COLLEAGUE_LIST="colleague_list";//同事的对话
 }

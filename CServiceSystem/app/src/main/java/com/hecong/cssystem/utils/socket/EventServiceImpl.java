@@ -130,7 +130,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void joinRoom(String roomId) {
         if (roomList==null)roomList=new ArrayList<>();
-        if (!roomList.contains(roomId)) {
+        if (!roomList.contains(roomId)) {//已经加入过了就不再重新加入
             if (mSocket != null) mSocket.emit("join", roomId);
             roomList.add(roomId);
         }

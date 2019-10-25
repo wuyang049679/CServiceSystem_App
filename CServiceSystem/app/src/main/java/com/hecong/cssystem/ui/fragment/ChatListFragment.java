@@ -21,6 +21,7 @@ import com.hecong.cssystem.contract.ChatListFragmentContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
 import com.hecong.cssystem.entity.OffLineEntity;
 import com.hecong.cssystem.presenter.ChatListFragmentPresenter;
+import com.hecong.cssystem.ui.activity.NotReceivedActivity;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.DateUtils;
 import com.hecong.cssystem.utils.JsonParseUtils;
@@ -28,6 +29,7 @@ import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
 import com.hecong.cssystem.utils.socket.EventListener;
 import com.hecong.cssystem.utils.socket.EventServiceImpl;
 
+import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,10 +107,18 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         chatRecycler.setLayoutManager(layoutParams);
         chatRecycler.setAdapter(dialogListAdapter);
         dialogListAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            if (view.getId()==R.id.close_btn) {
-                listUIBeans.remove(position);
-                dialogListAdapter.notifyItemRemoved(position);
+            switch (view.getId()){
+                case R.id.dialog_no_received_lin:
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable(Constant.NOTRECEIVED_LIST, (Serializable) notListBean);
+                    startActivity(NotReceivedActivity.class,bundle);
+                    break;
+                case R.id.close_btn:
+                    listUIBeans.remove(position);
+                    dialogListAdapter.notifyItemRemoved(position);
+                    break;
             }
+
 
         });
     }
@@ -170,9 +180,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
             listBeans.addAll(list);
             skip=listBeans.size();
-            mCounter=listBeans.size();
-            conmonTitleTextView.setText(getResources().getString(R.string.dialog_list)+"("+mCounter+")");
-
+            for (MessageDialogEntity.DataBean.ListBean listBean : list) {
+                if (listBean.getState().equals("active")){
+                    mCounter++;
+                }
+                conmonTitleTextView.setText(getResources().getString(R.string.dialog_list) + "(" + mCounter + ")");
+            }
 
             if (list.size()==limit){
                 if (limit==20){
@@ -198,7 +211,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     private void refreshUI(List<MessageDialogEntity.DataBean.ListBean> list) {
         listUIBeans.clear();
-        //先按时间倒序排序
+        //先置顶排序后按时间倒序排序
         listSort(list);
         //数据分类 为接待/已经待/同事的对话
         for (MessageDialogEntity.DataBean.ListBean listBean : list) {
@@ -211,8 +224,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         }
         //添加到UI list集合
         if (notListBean.size()!=0){  //如果有未接待的先添加未接待集合
-            //将未接待 的最后一条数据添加到UI  list
-            MessageDialogEntity.DataBean.ListBean bean = notListBean.get(notListBean.size() - 1);
+            //将未接待 的最新一条数据添加到UI  list
+            MessageDialogEntity.DataBean.ListBean bean = notListBean.get(0);
             bean.setItemtype(Constant.NOTRECEIVED);
             int unReadNum=0;
             for (MessageDialogEntity.DataBean.ListBean listBean : notListBean) {
@@ -232,28 +245,55 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     }
 
     /**
-     * 按lastMsgTime排序
+     * 按照top顶置操作排序
+     * @param beanList
+     * @return
+     */
+    private List<MessageDialogEntity.DataBean.ListBean> topSort(List<MessageDialogEntity.DataBean.ListBean> beanList) {
+
+//        beanList.
+        return null;
+    }
+
+    /**
+     * 先置顶排序后按lastMsgTime排序
      * @param listBeans
      */
-    private List<MessageDialogEntity.DataBean.ListBean> listSort(List<MessageDialogEntity.DataBean.ListBean> listBeans) {
+    private void listSort(List<MessageDialogEntity.DataBean.ListBean> listBeans) {
 
         Collections.sort(listBeans, (o1, o2) -> {
             try {
                 Date dt1 = DateUtils.getDate(o1.getLastMsg().getTime());
                 Date dt2 = DateUtils.getDate(o2.getLastMsg().getTime());
-                if (dt1.getTime() > dt2.getTime()) {
-                    return 1;
-                } else if (dt1.getTime()>dt2.getTime()) {
+                //先置顶排序后时间倒序排序
+                if (o1.isTop()&&o2.isTop()){  //同时为top时根据时间倒序判断是否交换位置
+                    if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }else if (o1.isTop()){
                     return -1;
-                } else {
-                    return 0;
+                }else if (o2.isTop()){
+                    return 1;
+                }else {
+                    //时间排序
+                    if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return 0;
         });
-        return listBeans;
+
     }
 
     @Override

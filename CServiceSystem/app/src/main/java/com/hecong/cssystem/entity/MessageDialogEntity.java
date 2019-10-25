@@ -1,10 +1,13 @@
 package com.hecong.cssystem.entity;
 
+
+
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MessageDialogEntity {
+public class MessageDialogEntity implements Serializable{
 
 
     /**
@@ -61,7 +64,7 @@ public class MessageDialogEntity {
         this.region = region;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable{
         /**
          * _suc : 1
          * list : [{"id":"5da56df82a91b28c743199b2","customerId":"5da56df82a91b28c743199b1","serviceId":"5da52c30d26268107e3140d1","addtime":"2019-10-15T06:58:00.075Z","state":"active","top":false,"source":"web","address":"四川成都","device":{"type":"Desktop","browser":"Chrome 77.0.3865.120","system":"Win10","width":"1920","height":"1080","ip":"171.15.228.85","url":{"current":"{\"url\":\"http://192.168.0.105:8888/phpwww/metinfo/?entId=81\",\"title\":\"网站关键词-网站名称\"}","entrance":"{\"url\":\"http://192.168.0.105:8888/phpwww/metinfo/?entId=81\",\"title\":\"网站关键词-网站名称\"}"}},"lastMsg":{"time":"2019-10-15T07:34:46.278Z","contents":"555555","type":"text","sendType":"customer"},"msgNumber":{"response":0,"customer":10,"service":0,"total":10},"tag":[],"customerOffTime":"2019-10-15T10:23:26.543Z","unreadNum":10,"assignBeBusy":false,"assignGrade":false,"customer":{"id":"5da56df82a91b28c743199b1","numberId":3,"uniqueId":"1571122689778","tag":[],"card":{},"many":1,"addtime":"2019-10-15T06:58:00.053Z","address":{"city":"成都","region":"四川","country":"中国"},"black":false,"attCard":{"ID":"1571122689778"}}},{"id":"5da562f6d26268107e31413a","customerId":"5da562f6d26268107e314139","serviceId":"5da52c30d26268107e3140d1","addtime":"2019-10-15T06:11:02.132Z","state":"active","top":false,"source":"web","address":"四川成都","device":{"type":"Desktop","browser":"Chrome 77.0.3865.120","system":"Win10","width":"1920","height":"1080","ip":"116.13.146.150","url":{"current":"{\"url\":\"http://192.168.0.105:8888/phpwww/metinfo/?entId=81\",\"title\":\"网站关键词-网站名称\"}","entrance":"{\"url\":\"http://192.168.0.105:8888/phpwww/metinfo/?entId=81\",\"title\":\"网站关键词-网站名称\"}"}},"lastMsg":{"time":"2019-10-15T06:23:51.346Z","contents":"11111111111112222222222222222222","type":"text","sendType":"customer"},"msgNumber":{"response":0,"customer":2,"service":0,"total":2},"tag":[],"customerOffTime":"2019-10-15T06:57:53.368Z","unreadNum":2,"assignBeBusy":false,"assignGrade":false,"customer":{"id":"5da562f6d26268107e314139","numberId":2,"uniqueId":"1571119856581","tag":[],"card":{},"many":1,"addtime":"2019-10-15T06:11:02.110Z","address":{"city":"成都","region":"四川","country":"中国"},"black":false,"attCard":{"ID":"1571119856581"}}},{"id":"5da56120d26268107e31412c","customerId":"5da56120d26268107e31412b","serviceId":"5da52c30d26268107e3140d1","addtime":"2019-10-15T06:03:12.080Z","state":"active","top":false,"source":"web","address":"四川成都","device":{"type":"Desktop","browser":"Chrome 77.0.3865.120","system":"Win10","width":"1920","height":"1080","ip":"118.114.120.66","url":{"current":"{\"url\":\"http://192.168.0.105:8888/phpwww/metinfo/?entId=81\",\"title\":\"网站关键词-网站名称\"}","entrance":"{\"url\":\"http://192.168.0.105:8888/phpwww/metinfo/?entId=81\",\"title\":\"网站关键词-网站名称\"}","source":"DirectEntry"}},"lastMsg":{"time":"2019-10-15T06:08:10.655Z","contents":"1111","type":"text","sendType":"customer"},"msgNumber":{"response":0,"customer":7,"service":0,"total":7},"tag":[],"customerOffTime":"2019-10-15T06:10:40.322Z","unreadNum":7,"assignBeBusy":false,"assignGrade":false,"customer":{"id":"5da56120d26268107e31412b","numberId":1,"uniqueId":"1571119400015","tag":[],"card":{},"many":1,"addtime":"2019-10-15T06:03:12.057Z","address":{"city":"成都","region":"四川","country":"中国"},"black":false,"attCard":{"ID":"1571119400015"}}}]
@@ -126,7 +129,7 @@ public class MessageDialogEntity {
             this.list = list;
         }
 
-        public static class AutoEndBean {
+        public static class AutoEndBean implements Serializable{
             /**
              * time : 720
              * state : true
@@ -152,7 +155,7 @@ public class MessageDialogEntity {
             }
         }
 
-        public static class OffEndBean {
+        public static class OffEndBean implements Serializable{
             /**
              * time : 600
              * state : false
@@ -178,7 +181,7 @@ public class MessageDialogEntity {
             }
         }
 
-        public static class SessionBean {
+        public static class SessionBean implements Serializable{
             /**
              * hash : d28a3d2ea15f4433e7af654618dd3078
              * validity : 864000000
@@ -204,7 +207,7 @@ public class MessageDialogEntity {
             }
         }
 
-        public static class ListBean implements MultiItemEntity {
+        public static class ListBean implements MultiItemEntity ,Serializable{
             /**
              * id : 5da56df82a91b28c743199b2
              * customerId : 5da56df82a91b28c743199b1
@@ -409,7 +412,7 @@ public class MessageDialogEntity {
                 return itemtype;
             }
 
-            public static class DeviceBean {
+            public static class DeviceBean implements Serializable{
                 /**
                  * type : Desktop
                  * browser : Chrome 77.0.3865.120
@@ -484,7 +487,7 @@ public class MessageDialogEntity {
                     this.url = url;
                 }
 
-                public static class UrlBean {
+                public static class UrlBean implements Serializable{
                     /**
                      * current : {"url":"http://192.168.0.105:8888/phpwww/metinfo/?entId=81","title":"网站关键词-网站名称"}
                      * entrance : {"url":"http://192.168.0.105:8888/phpwww/metinfo/?entId=81","title":"网站关键词-网站名称"}
@@ -511,7 +514,7 @@ public class MessageDialogEntity {
                 }
             }
 
-            public static class LastMsgBean {
+            public static class LastMsgBean implements Serializable{
                 /**
                  * time : 2019-10-15T07:34:46.278Z
                  * contents : 555555
@@ -557,7 +560,7 @@ public class MessageDialogEntity {
                 }
             }
 
-            public static class MsgNumberBean {
+            public static class MsgNumberBean implements Serializable{
                 /**
                  * response : 0
                  * customer : 10
@@ -603,7 +606,7 @@ public class MessageDialogEntity {
                 }
             }
 
-            public static class CustomerBean {
+            public static class CustomerBean implements Serializable{
                 /**
                  * id : 5da56df82a91b28c743199b1
                  * numberId : 3
@@ -727,10 +730,10 @@ public class MessageDialogEntity {
                     this.tag = tag;
                 }
 
-                public static class CardBean {
+                public static class CardBean implements Serializable{
                 }
 
-                public static class AddressBean {
+                public static class AddressBean implements Serializable{
                     /**
                      * city : 成都
                      * region : 四川
@@ -766,7 +769,7 @@ public class MessageDialogEntity {
                     }
                 }
 
-                public static class AttCardBean {
+                public static class AttCardBean implements Serializable{
                     /**
                      * ID : 1571122689778
                      */

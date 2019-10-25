@@ -38,8 +38,8 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MessageDialogEntity.DataBean.ListBean item) {
-        if (item.getItemType()==Constant.HAVERECEIVED) {
-            EventServiceImpl.getInstance().joinRoom(item.getCustomerId());
+        EventServiceImpl.getInstance().joinRoom(item.getCustomerId());
+        if (item.getItemType()==Constant.HAVERECEIVED) {//已接待
             helper.addOnClickListener(R.id.close_btn);
             setTitle(item, helper);
             setMsgPoint(item, helper);
@@ -47,6 +47,13 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             setContent(item, helper);
             setTagList(item, helper);
             setImageView(item, helper);
+        }
+        if (item.getItemType()==Constant.NOTRECEIVED){//未接待
+            helper.addOnClickListener(R.id.dialog_no_received_lin);
+            setTitle(item, helper);
+            setMsgPoint(item, helper);
+            setUpdateTime(item, helper);
+            setContent(item, helper);
         }
     }
 
@@ -209,8 +216,31 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
                 }
                 break;
         }
-        content.setText(contents);
 
+        switch (item.getItemType()){
+            case Constant.HAVERECEIVED:
+                content.setText(contents);
+                break;
+            case Constant.NOTRECEIVED:
+                //当来源为web和link是显示地址如果不是则不显示地址
+                if (item.getSource().equals("web") || item.getSource().equals("link")) {
+                    if (item.getCustomer().getName() != null) {
+                        contents = item.getAddress() + "  " + item.getCustomer().getName() + ": " + contents;
+                    } else {
+                        contents = item.getAddress() + " #" + item.getCustomer().getNumberId() + ": " + contents;
+                    }
+                }else {
+                    if (item.getCustomer().getName() != null) {
+                        contents =item.getCustomer().getName() + ": " + contents;
+                    } else {
+                        contents = " #" + item.getCustomer().getNumberId() + ": " + contents;
+                    }
+                }
+                content.setText(contents);
+                break;
+            case Constant.COLLEAGUE:
+                break;
+        }
     }
 
     /**
@@ -255,29 +285,40 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
      */
     private void setTitle(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
         TextView title = helper.getView(R.id.dialog_item_title);
-        //设置对话title
-        String tv_title = null;
-        if (item.getAddress() == null || TextUtils.isEmpty(item.getAddress())) {
-            title.setText("未知地址");
-            tv_title = "未知地址";
-        } else {
-            tv_title = item.getAddress();
-        }
-        //当来源为web和link是显示地址如果不是则不显示地址
-        if (item.getCustomer().getName() != null) {
-            if (item.getSource().equals("web") || item.getSource().equals("link")) {
-                tv_title = tv_title + " " + item.getCustomer().getName();
+
+        switch (item.getItemType()) {
+
+            case Constant.HAVERECEIVED:
+            //设置对话title
+            String tv_title = null;
+            if (item.getAddress() == null || TextUtils.isEmpty(item.getAddress())) {
+                title.setText("未知地址");
+                tv_title = "未知地址";
             } else {
-                tv_title = item.getCustomer().getName();
+                tv_title = item.getAddress();
             }
-        } else {
-            if (item.getSource().equals("web") || item.getSource().equals("link")) {
-                tv_title = tv_title + " #" + item.getCustomer().getNumberId();
+            //当来源为web和link是显示地址如果不是则不显示地址
+            if (item.getCustomer().getName() != null) {
+                if (item.getSource().equals("web") || item.getSource().equals("link")) {
+                    tv_title = tv_title + " " + item.getCustomer().getName();
+                } else {
+                    tv_title = item.getCustomer().getName();
+                }
             } else {
-                tv_title = "#" + item.getCustomer().getNumberId();
+                if (item.getSource().equals("web") || item.getSource().equals("link")) {
+                    tv_title = tv_title + " #" + item.getCustomer().getNumberId();
+                } else {
+                    tv_title = "#" + item.getCustomer().getNumberId();
+                }
             }
+            title.setText(tv_title);
+            break;
+            case Constant.NOTRECEIVED:
+            title.setText("未接待："+item.getUnCount());
+                break;
+            case Constant.COLLEAGUE:
+                break;
         }
-        title.setText(tv_title);
     }
 
 }

@@ -10,5 +10,6 @@
     <string name="dialog_list">对话</string>
     <string name="dialog_loading">加载中...</string>
     <string name="dialog_close">结束</string>
-    <string name="dialog_team">同事的对话</string>
+    <string name="dialog_team">同事的对话:</string>
+    <string name="dialog_no_received">未接待</string>
 </resources>

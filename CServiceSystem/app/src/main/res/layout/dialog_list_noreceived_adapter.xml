@@ -2,6 +2,7 @@
 
 
  <LinearLayout
+    android:id="@+id/dialog_no_received_lin"
     android:clickable="true"
     android:background="@drawable/item_down_bg"
     android:orientation="vertical"
