@@ -52,6 +52,8 @@ public class Constant {
     public static final int NOTRECEIVED=1;//未接待类型
     public static final int HAVERECEIVED=2;//已接待
     public static final int COLLEAGUE=3;//同事的对话
+    public static final int NOTRECEIVED_ACT=4;//未接待的对话列表界面
+    public static final int COLLEAGUE_ACT=5;//同事的对话列表界面
     /**
      * 对话列表数据类型
      */

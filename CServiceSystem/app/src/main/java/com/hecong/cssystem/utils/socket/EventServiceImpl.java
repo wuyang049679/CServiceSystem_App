@@ -26,7 +26,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.hecong.cssystem.api.Address;
+import com.hecong.cssystem.base.BaseApplication;
+import com.hecong.cssystem.entity.MessageEntity;
 import com.hecong.cssystem.entity.SocketEntity;
+import com.hecong.cssystem.utils.JsonParseUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -297,8 +300,12 @@ public class EventServiceImpl implements EventService {
             //对话被接待
             case MESSAGE_RECEPTION:
                 break;
-            //客服账号登录唯一性验证
+            //客服账号登录唯一性验证//保存serviceId
             case MESSAGE_SERVICEONLY:
+                MessageEntity messageEntity = JsonParseUtils.parseToObject(message, MessageEntity.class);
+                if (messageEntity!=null){
+                    BaseApplication.getUserEntity().setServiceId(messageEntity.getServiceId());
+                }
                 break;
             //实时访客增加
             case MESSAGE_REALTIME_ADD:

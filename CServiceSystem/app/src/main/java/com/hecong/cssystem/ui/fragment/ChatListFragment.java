@@ -16,6 +16,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.adapter.DialogListAdapter;
 import com.hecong.cssystem.api.Address;
+import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.base.BaseFragment;
 import com.hecong.cssystem.contract.ChatListFragmentContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
@@ -109,6 +110,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         dialogListAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             switch (view.getId()){
                 case R.id.dialog_no_received_lin:
+                    //最后设置未读数量,避免未接待列表公用数据的不正确
+                    for (MessageDialogEntity.DataBean.ListBean listBean : listBeans) {
+                        if (listBean.getId().equals(notListBean.get(0).getId())){
+                            notListBean.get(0).setUnreadNum(listBean.getUnreadNum());
+                        }
+                    }
                     Bundle bundle=new Bundle();
                     bundle.putSerializable(Constant.NOTRECEIVED_LIST, (Serializable) notListBean);
                     startActivity(NotReceivedActivity.class,bundle);
@@ -211,36 +218,59 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     private void refreshUI(List<MessageDialogEntity.DataBean.ListBean> list) {
         listUIBeans.clear();
+        notListBean.clear();
+        colleagueListBean.clear();
+        haveListBeans.clear();
         //先置顶排序后按时间倒序排序
         listSort(list);
         //数据分类 为接待/已经待/同事的对话
         for (MessageDialogEntity.DataBean.ListBean listBean : list) {
             if (listBean.getState().equals("unassigned")){
                 notListBean.add(listBean);
+            }else if (!listBean.getServiceId().equals(BaseApplication.getUserEntity().getServiceId())){ //如果serviceId不相同则为同事对话
+                colleagueListBean.add(listBean);
             }else {
                 listBean.setItemtype(Constant.HAVERECEIVED);
                 haveListBeans.add(listBean);
             }
         }
+
         //添加到UI list集合
+
+        if (haveListBeans.size()!=0) { //添加已接待的集合
+            listUIBeans.addAll(haveListBeans);
+        }
+        if (colleagueListBean.size()==0){  //添加同事 的对话
+            listUIBeans.add(new MessageDialogEntity.DataBean.ListBean(Constant.COLLEAGUE));
+        }else {
+            //将同事 的最新一条数据添加到UI  list
+            MessageDialogEntity.DataBean.ListBean bean = colleagueListBean.get(0);
+            bean.setItemtype(Constant.COLLEAGUE);
+            int unReadNum=0;
+//            for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
+//                unReadNum+=listBean.getUnreadNum();
+//            }
+            bean.setUnCount(colleagueListBean.size());//设置同事对话数量
+            bean.setUnreadNum(unReadNum);//设置同事未读数量设置为0
+            listUIBeans.add(bean); //添加同事集合
+        }
+        //将添加了同事的item 再ui集合里面根据lastTime排序
+        listSort(listUIBeans);
+        //最后添加未接待item并插入第一条
         if (notListBean.size()!=0){  //如果有未接待的先添加未接待集合
             //将未接待 的最新一条数据添加到UI  list
             MessageDialogEntity.DataBean.ListBean bean = notListBean.get(0);
             bean.setItemtype(Constant.NOTRECEIVED);
             int unReadNum=0;
             for (MessageDialogEntity.DataBean.ListBean listBean : notListBean) {
-                unReadNum+=listBean.getUnreadNum();
+                    unReadNum += listBean.getUnreadNum();
             }
             bean.setUnCount(notListBean.size());//设置未接待数量
             bean.setUnreadNum(unReadNum);//设置未读数量
-            listUIBeans.add(bean); //添加未接待集合
+            listUIBeans.add(0,bean); //添加未接待item到UI list的第一条
+            listUIBeans.get(0).setUnreadNum(unReadNum);
         }
-        if (haveListBeans.size()!=0) { //添加已接待的集合
-            listUIBeans.addAll(haveListBeans);
-        }
-        if (colleagueListBean.size()==0){  //添加同事 的对话
-            listUIBeans.add(new MessageDialogEntity.DataBean.ListBean(Constant.COLLEAGUE));
-        }
+
         dialogListAdapter.notifyDataSetChanged();
     }
 

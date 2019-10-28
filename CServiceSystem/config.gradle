@@ -50,7 +50,9 @@ ext {
             easypermissions     : "pub.devrel:easypermissions:3.0.0",
             fastjson            : "com.alibaba:fastjson:1.2.59",
             socket              : "io.socket:socket.io-client:1.0.0",//socket.io推送常连接
-            swipelayout         : "com.daimajia.swipelayout:library:1.2.0@aar"//侧滑删除
+            swipelayout         : "com.daimajia.swipelayout:library:1.2.0@aar",//侧滑删除
+            flowlayout          : "com.hyman:flowlayout-lib:1.1.2",//流式布局
+            aspectjrt           : "org.aspectj:aspectjrt:1.9.4"//AOP使用
 
     ]
 }

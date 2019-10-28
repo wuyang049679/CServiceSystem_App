@@ -59,7 +59,7 @@ public class NotReceivedActivity extends BaseActivity {
         conmonTitleTextView.setText(getResources().getString(R.string.dialog_no_received));
         notListBean= (ArrayList<MessageDialogEntity.DataBean.ListBean>) getIntent().getSerializableExtra(Constant.NOTRECEIVED_LIST);
         for (MessageDialogEntity.DataBean.ListBean listBean : notListBean) {
-            listBean.setItemtype(Constant.HAVERECEIVED);
+            listBean.setItemtype(Constant.NOTRECEIVED_ACT);
         }
         if (notListBean!=null) {
             conmonTitleTextView.setText(getResources().getString(R.string.dialog_no_received)+"("+notListBean.size()+")");

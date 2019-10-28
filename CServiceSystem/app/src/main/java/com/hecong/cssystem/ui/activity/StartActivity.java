@@ -10,6 +10,7 @@ import com.hecong.cssystem.base.BaseActivity;
 import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.contract.StartActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
+import com.hecong.cssystem.entity.UserEntity;
 import com.hecong.cssystem.presenter.StartActivityPresenter;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
@@ -41,7 +42,9 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
         if (TextUtils.isEmpty(hash)) {
             showDataError("请登录");
         } else {
-            BaseApplication.setHash(hash);
+            UserEntity userEntity=new UserEntity();
+            userEntity.setHash(hash);
+            BaseApplication.setUserEntity(userEntity);
             startActivity(MainActivity.class);
             finish();
         }

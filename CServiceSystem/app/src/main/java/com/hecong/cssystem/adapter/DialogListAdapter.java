@@ -33,6 +33,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
         super(data);
         addItemType(Constant.NOTRECEIVED,R.layout.dialog_list_noreceived_adapter);
         addItemType(Constant.HAVERECEIVED,R.layout.dialog_list_adapter);
+        addItemType(Constant.NOTRECEIVED_ACT,R.layout.dialog_list_adapter);
         addItemType(Constant.COLLEAGUE,R.layout.dialog_list_colleague_adapter);
     }
 
@@ -48,8 +49,25 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             setTagList(item, helper);
             setImageView(item, helper);
         }
+        if (item.getItemType()==Constant.NOTRECEIVED_ACT) {//未接待对话列表
+            helper.addOnClickListener(R.id.close_btn);
+            helper.getView(R.id.btn_jd).setVisibility(View.VISIBLE);
+            setTitle(item, helper);
+            setMsgPoint(item, helper);
+            setUpdateTime(item, helper);
+            setContent(item, helper);
+            setTagList(item, helper);
+            setImageView(item, helper);
+        }
         if (item.getItemType()==Constant.NOTRECEIVED){//未接待
             helper.addOnClickListener(R.id.dialog_no_received_lin);
+            setTitle(item, helper);
+            setMsgPoint(item, helper);
+            setUpdateTime(item, helper);
+            setContent(item, helper);
+        }
+        if (item.getItemType()==Constant.COLLEAGUE){//同事的对话
+            helper.addOnClickListener(R.id.dialog_list_colleague_lin);
             setTitle(item, helper);
             setMsgPoint(item, helper);
             setUpdateTime(item, helper);
@@ -218,10 +236,12 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
         }
 
         switch (item.getItemType()){
+            case Constant.NOTRECEIVED_ACT://未接待列表数据显示和已接待一样
             case Constant.HAVERECEIVED:
                 content.setText(contents);
                 break;
-            case Constant.NOTRECEIVED:
+            case Constant.NOTRECEIVED://同事和未接待显示一样
+            case Constant.COLLEAGUE:
                 //当来源为web和link是显示地址如果不是则不显示地址
                 if (item.getSource().equals("web") || item.getSource().equals("link")) {
                     if (item.getCustomer().getName() != null) {
@@ -238,8 +258,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
                 }
                 content.setText(contents);
                 break;
-            case Constant.COLLEAGUE:
-                break;
+
         }
     }
 
@@ -288,7 +307,8 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
 
         switch (item.getItemType()) {
 
-            case Constant.HAVERECEIVED:
+            case Constant.HAVERECEIVED://未接待列表数据显示和已接待一样
+            case Constant.NOTRECEIVED_ACT:
             //设置对话title
             String tv_title = null;
             if (item.getAddress() == null || TextUtils.isEmpty(item.getAddress())) {
@@ -317,6 +337,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             title.setText("未接待："+item.getUnCount());
                 break;
             case Constant.COLLEAGUE:
+            title.setText("同事的对话："+item.getUnCount());
                 break;
         }
     }

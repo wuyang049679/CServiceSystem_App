@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/dialog_list_colleague_lin"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -80,7 +81,7 @@
             android:layout_marginLeft="10dp"
             android:textSize="13sp"
             android:textColor="@color/black_cc"
-            android:text="11:21"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <androidx.constraintlayout.widget.Barrier
@@ -96,10 +97,10 @@
             fresco:layout_constraintRight_toLeftOf="@id/barrier"
             fresco:layout_constraintLeft_toRightOf="@id/simple_drawViews"
             android:layout_marginLeft="10dp"
-            android:textColor="@color/black"
+            android:textColor="@color/black_999"
             android:singleLine="true"
             fresco:layout_constraintHorizontal_weight="0.5"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -110,8 +111,8 @@
             fresco:layout_constraintBottom_toBottomOf="parent"
             fresco:layout_constraintLeft_toRightOf="@id/simple_drawViews"
             android:layout_marginLeft="10dp"
-            android:textSize="14sp"
-            android:textColor="@color/black_999"
+            android:textSize="16sp"
+            android:textColor="@color/black"
             android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

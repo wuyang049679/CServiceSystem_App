@@ -17,6 +17,7 @@ import com.hecong.cssystem.base.BaseActivity;
 import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.contract.LoginActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
+import com.hecong.cssystem.entity.UserEntity;
 import com.hecong.cssystem.presenter.LoginActivityPresenter;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.ValidateUtils;
@@ -104,7 +105,9 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
         SharedPreferencesUtils.setParam(Constant.HASH, datas.getHash());
         SharedPreferencesUtils.setParam(Constant.USERNAME, usernames);
         SharedPreferencesUtils.setParam(Constant.PASSWORD, passwords);
-        BaseApplication.setHash(datas.getHash());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setHash(datas.getHash());
+        BaseApplication.setUserEntity(userEntity);
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

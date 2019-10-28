@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.multidex.MultiDexApplication;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.hecong.cssystem.entity.UserEntity;
 
 import java.util.Set;
 
@@ -17,9 +18,10 @@ import java.util.Set;
 public class BaseApplication extends MultiDexApplication {
     private static BaseApplication application = null;
     private static Context mContext;
-    //用户id，用户唯一标识
-    private static String hash =null;
     private Set<Activity> allActivities;
+    public static UserEntity userEntity;
+
+
 
     @Override
     public void onCreate() {
@@ -45,9 +47,12 @@ public class BaseApplication extends MultiDexApplication {
      * 初始化话app信息
      */
     private void init() {
+        //用户信息
+        userEntity=new UserEntity();
         //Fecbook初始化
         Fresco.initialize(this);
         //Gson初始化
+
     }
 
     /**
@@ -73,20 +78,16 @@ public class BaseApplication extends MultiDexApplication {
         System.exit(0);
     }
 
+
     /**
-     * 得到登录用户id
+     * 用户信息保存
      * @return
      */
-    public static String getHash() {
-        return hash;
-    }
-    /**
-     * 设置用户id
-     * @param hash
-     */
-    public static void setHash(String hash) {
-        BaseApplication.hash = hash;
+    public static UserEntity getUserEntity() {
+        return userEntity;
     }
 
-
+    public static void setUserEntity(UserEntity userEntity) {
+        BaseApplication.userEntity = userEntity;
+    }
 }

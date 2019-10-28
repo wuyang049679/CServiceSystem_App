@@ -828,7 +828,8 @@ public class DateUtils {
 			long currentTime = date.getTime();
 			// 计算两个时间点相差的秒数
 			long seconds = (endTime - currentTime);
-			if (seconds < 60 * 60 * 24 * 1000){
+
+			if (date.getYear()==now.getYear()&&date.getMonth()==now.getMonth()&&date.getDay()==now.getDay()){//判断是否是同一天
 				//当天时间显示时分
 				dateString = new SimpleDateFormat("HH:mm").format(date);
 			}else if (date.getYear() != now.getYear()){

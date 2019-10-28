@@ -18,7 +18,7 @@ public class ChatListFragmentModel implements ChatListFragmentContract.Model {
     public Observable<BaseEntity<MessageDialogEntity.DataBean>> showMessageDialog(int limit, int skip) {
 
         HashMap<String,String> hashMap=new HashMap<>();
-        hashMap.put(Constant.KEY_HASH, BaseApplication.getHash());
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
         hashMap.put("limit",limit+"");
         hashMap.put("skip",skip+"");
         hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
