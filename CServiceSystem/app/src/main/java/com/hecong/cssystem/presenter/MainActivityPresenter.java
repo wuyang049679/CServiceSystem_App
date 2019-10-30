@@ -27,7 +27,7 @@ public class MainActivityPresenter extends BasePresenterIm<MainActivityContract.
         mainActivityModel.checkLogin(hash).subscribe(new RxSubscribe<LoginEntity.DataBean>() {
             @Override
             protected void onSuccess(LoginEntity.DataBean loginEntity) {
-
+                mView.showDataSuccess(loginEntity);
             }
 
             @Override

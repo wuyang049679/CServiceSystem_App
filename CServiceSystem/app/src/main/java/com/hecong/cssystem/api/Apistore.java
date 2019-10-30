@@ -4,6 +4,7 @@ package com.hecong.cssystem.api;
 import com.hecong.cssystem.base.BaseEntity;
 import com.hecong.cssystem.entity.LoginEntity;
 import com.hecong.cssystem.entity.MessageDialogEntity;
+import com.hecong.cssystem.entity.TeamEntity;
 
 import java.util.HashMap;
 
@@ -34,4 +35,12 @@ public interface Apistore {
      */
     @GET("dialog/get")
     Observable<BaseEntity<MessageDialogEntity.DataBean>> showMessageDialog(@QueryMap HashMap<String, String> map);
+
+    /**
+     * 获取同事列表
+     * @param map
+     * @return
+     */
+    @GET("company/control")
+    Observable<BaseEntity<TeamEntity.DataBean>> getTeamList(@QueryMap HashMap<String, String> map);
 }

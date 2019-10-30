@@ -24,8 +24,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.NotReceivedActivity"></activity>
-        <!-- 解决由于 Android P 限制了明文流量的网络请求，非加密的流量请求都会被系统禁止掉 android:usesCleartextTraffic="true" -->
+        <activity android:name=".ui.activity.ColleagueActivity"></activity>
+        <activity android:name=".ui.activity.NotReceivedActivity" /> <!-- 解决由于 Android P 限制了明文流量的网络请求，非加密的流量请求都会被系统禁止掉 android:usesCleartextTraffic="true" -->
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.MainActivity" /> <!-- 自动适配-设计稿尺寸 -->
         <meta-data

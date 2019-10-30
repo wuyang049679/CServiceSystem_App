@@ -24,11 +24,9 @@ package com.hecong.cssystem.utils.socket;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.hecong.cssystem.api.Address;
 import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.entity.MessageEntity;
-import com.hecong.cssystem.entity.SocketEntity;
 import com.hecong.cssystem.utils.JsonParseUtils;
 
 import org.json.JSONException;
@@ -264,9 +262,9 @@ public class EventServiceImpl implements EventService {
      * @param
      */
     private void uploadDate(String message) {
-        Gson gson = new Gson();
-        SocketEntity data = gson.fromJson(message, SocketEntity.class);
-        switch (data.getAct()) {
+
+        MessageEntity entity = JsonParseUtils.parseToObject(message, MessageEntity.class);
+        switch (entity.getAct()) {
             //连接成功
             case MESSAGE_LOGINSUC:
                 if (mEventListener != null) mEventListener.onLogSuc(message);
@@ -282,6 +280,7 @@ public class EventServiceImpl implements EventService {
                 break;
             //收到新消息
             case MESSAGE_NEW:
+                if (mEventListener != null) mEventListener.onNewMessage(message);
                 break;
             //新对话加入
             case MESSAGE_NEWDIALOG:
@@ -302,10 +301,7 @@ public class EventServiceImpl implements EventService {
                 break;
             //客服账号登录唯一性验证//保存serviceId
             case MESSAGE_SERVICEONLY:
-                MessageEntity messageEntity = JsonParseUtils.parseToObject(message, MessageEntity.class);
-                if (messageEntity!=null){
-                    BaseApplication.getUserEntity().setServiceId(messageEntity.getServiceId());
-                }
+                
                 break;
             //实时访客增加
             case MESSAGE_REALTIME_ADD:

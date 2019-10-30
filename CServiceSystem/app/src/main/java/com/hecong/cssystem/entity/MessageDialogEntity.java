@@ -207,7 +207,7 @@ public class MessageDialogEntity implements Serializable{
             }
         }
 
-        public static class ListBean implements MultiItemEntity ,Serializable{
+        public static class ListBean implements MultiItemEntity ,Serializable,Cloneable{
             /**
              * id : 5da56df82a91b28c743199b2
              * customerId : 5da56df82a91b28c743199b1
@@ -247,6 +247,12 @@ public class MessageDialogEntity implements Serializable{
             private List<String> tag;
             private int itemtype;
             private int unCount;//未接待个数
+
+
+            @Override
+            public ListBean clone() throws CloneNotSupportedException {
+                return (ListBean)super.clone();
+            }
 
             public int getUnCount() {
                 return unCount;

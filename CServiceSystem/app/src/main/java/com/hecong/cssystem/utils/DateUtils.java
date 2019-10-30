@@ -752,7 +752,7 @@ public class DateUtils {
 
 	public static String getDateFormat(String create_time){
 
-		String format = "2019-10-21";
+		String format = "";
 		if (create_time != null && create_time != "NULL" && create_time != "") {
 			if (isDate(create_time)) {
 				format = create_time;

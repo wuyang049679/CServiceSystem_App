@@ -102,7 +102,7 @@
             android:layout_marginLeft="10dp"
             android:textSize="13sp"
             android:textColor="@color/black_cc"
-            android:text="11:21"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <androidx.constraintlayout.widget.Barrier

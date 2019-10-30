@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="popWindow_height">400dp</dimen>
+    <dimen name="popWindow_witch">375dp</dimen>
+</resources>

@@ -10,6 +10,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.hecong.cssystem.adapter.PopWindowListAdapter;
 import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 
@@ -93,13 +97,14 @@ public class CustomDialog extends Dialog {
 
         WindowManager.LayoutParams lp = win.getAttributes();
 
-        lp.gravity = Gravity.CENTER;
+        lp.gravity = Gravity.BOTTOM;
 
         lp.height = height;
 
         lp.width = width;
 
         win.setAttributes(lp);
+
 
     }
 
@@ -235,8 +240,14 @@ public class CustomDialog extends Dialog {
             return this;
 
         }
-
-
+        //list类型弹出是对话框
+        public Builder setRecyclerView(int viewRes, PopWindowListAdapter adapter){
+            RecyclerView recyclerView=(RecyclerView)view.findViewById(viewRes);
+            LinearLayoutManager layoutManager=new LinearLayoutManager(context);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adapter);
+            return this;
+        }
 
 
 

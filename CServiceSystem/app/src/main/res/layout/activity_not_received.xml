@@ -11,6 +11,8 @@
         android:id="@+id/not_received_include"
         layout="@layout/public_common_title"/>
     <androidx.recyclerview.widget.RecyclerView
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
         android:id="@+id/act_not_received_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

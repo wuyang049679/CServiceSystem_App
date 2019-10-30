@@ -20,8 +20,10 @@ import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.base.BaseFragment;
 import com.hecong.cssystem.contract.ChatListFragmentContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
+import com.hecong.cssystem.entity.MessageEntity;
 import com.hecong.cssystem.entity.OffLineEntity;
 import com.hecong.cssystem.presenter.ChatListFragmentPresenter;
+import com.hecong.cssystem.ui.activity.ColleagueActivity;
 import com.hecong.cssystem.ui.activity.NotReceivedActivity;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.DateUtils;
@@ -61,6 +63,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     private String POSITION="item_position";
     private final int ONOFFLINE=100;
     private final int ONLINE=101;
+    private final int NEW_MESSAGE=102;
 
     public ChatListFragment() {
     }
@@ -109,16 +112,15 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         chatRecycler.setAdapter(dialogListAdapter);
         dialogListAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             switch (view.getId()){
-                case R.id.dialog_no_received_lin:
-                    //最后设置未读数量,避免未接待列表公用数据的不正确
-                    for (MessageDialogEntity.DataBean.ListBean listBean : listBeans) {
-                        if (listBean.getId().equals(notListBean.get(0).getId())){
-                            notListBean.get(0).setUnreadNum(listBean.getUnreadNum());
-                        }
-                    }
+                case R.id.dialog_no_received_lin://点击未接待跳转
                     Bundle bundle=new Bundle();
                     bundle.putSerializable(Constant.NOTRECEIVED_LIST, (Serializable) notListBean);
                     startActivity(NotReceivedActivity.class,bundle);
+                    break;
+                case R.id.dialog_list_colleague_lin://点击同事对话跳转
+                    Bundle bundle2=new Bundle();
+                    bundle2.putSerializable(Constant.COLLEAGUE_LIST, (Serializable) colleagueListBean);
+                    startActivity(ColleagueActivity.class,bundle2);
                     break;
                 case R.id.close_btn:
                     listUIBeans.remove(position);
@@ -244,7 +246,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             listUIBeans.add(new MessageDialogEntity.DataBean.ListBean(Constant.COLLEAGUE));
         }else {
             //将同事 的最新一条数据添加到UI  list
-            MessageDialogEntity.DataBean.ListBean bean = colleagueListBean.get(0);
+            MessageDialogEntity.DataBean.ListBean bean = new MessageDialogEntity.DataBean.ListBean();
+            try {
+                bean = colleagueListBean.get(0).clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
             bean.setItemtype(Constant.COLLEAGUE);
             int unReadNum=0;
 //            for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
@@ -252,6 +259,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 //            }
             bean.setUnCount(colleagueListBean.size());//设置同事对话数量
             bean.setUnreadNum(unReadNum);//设置同事未读数量设置为0
+            bean.setTop(false);//不参与置顶排序
             listUIBeans.add(bean); //添加同事集合
         }
         //将添加了同事的item 再ui集合里面根据lastTime排序
@@ -259,31 +267,30 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         //最后添加未接待item并插入第一条
         if (notListBean.size()!=0){  //如果有未接待的先添加未接待集合
             //将未接待 的最新一条数据添加到UI  list
-            MessageDialogEntity.DataBean.ListBean bean = notListBean.get(0);
+            MessageDialogEntity.DataBean.ListBean bean = new MessageDialogEntity.DataBean.ListBean();
+            try {
+                //将未接待的第一条克隆给UI列表
+                bean= (MessageDialogEntity.DataBean.ListBean) (notListBean.get(0)).clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            //重新创建对象确保原始数据列表数据正常
             bean.setItemtype(Constant.NOTRECEIVED);
+            //最后设置未读数量,避免未接待列表公用数据的不正确
             int unReadNum=0;
             for (MessageDialogEntity.DataBean.ListBean listBean : notListBean) {
                     unReadNum += listBean.getUnreadNum();
             }
             bean.setUnCount(notListBean.size());//设置未接待数量
             bean.setUnreadNum(unReadNum);//设置未读数量
+
             listUIBeans.add(0,bean); //添加未接待item到UI list的第一条
-            listUIBeans.get(0).setUnreadNum(unReadNum);
         }
 
         dialogListAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * 按照top顶置操作排序
-     * @param beanList
-     * @return
-     */
-    private List<MessageDialogEntity.DataBean.ListBean> topSort(List<MessageDialogEntity.DataBean.ListBean> beanList) {
 
-//        beanList.
-        return null;
-    }
 
     /**
      * 先置顶排序后按lastMsgTime排序
@@ -348,7 +355,25 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     @Override
     public void onNewMessage(Object... args) {
+        MessageEntity messageBean = JsonParseUtils.parseToObject(args[0].toString(), MessageEntity.class);
+        if (messageBean!=null){
+            for (int i = 0; i < listUIBeans.size(); i++) {
+                if (listUIBeans.get(i).getId().equals(messageBean.getDialogId())){
+                    listUIBeans.get(i).setUnreadNum(listUIBeans.get(i).getUnreadNum()+1);
+                    MessageDialogEntity.DataBean.ListBean.LastMsgBean lastMsgBean=listUIBeans.get(i).getLastMsg();
+                    lastMsgBean.setContents(messageBean.getMessage().getContents());
+//                    lastMsgBean.setTime(messageBean.getMessage().getTime());
+                    listUIBeans.get(i).setLastMsg(lastMsgBean);
+                    Message message = mHandler.obtainMessage();
+                    message.what = NEW_MESSAGE;
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(POSITION, i);
+                    message.setData(bundle);
+                    message.sendToTarget();
+                }
+            }
 
+        }
     }
 
     @Override
@@ -383,9 +408,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         OffLineEntity offLineEntity = JsonParseUtils.parseToObject(args[0].toString(), OffLineEntity.class);
         if (offLineEntity!=null){
             String customId=offLineEntity.getCustomerId();
-            for (int i = 0; i < listBeans.size(); i++) {
-                if (listBeans.get(i).getCustomerId().equals(customId)) {
-                    listBeans.get(i).setCustomerOffTime(DateUtils.getCurrentTimeInString());
+            for (int i = 0; i < listUIBeans.size(); i++) {
+                if (listUIBeans.get(i).getCustomerId().equals(customId)) {
+                    listUIBeans.get(i).setCustomerOffTime(DateUtils.getCurrentTimeInString());
                     Message message = mHandler.obtainMessage();
                     message.what = ONOFFLINE;
                     Bundle bundle = new Bundle();
@@ -404,9 +429,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         OffLineEntity offLineEntity = JsonParseUtils.parseToObject(args[0].toString(), OffLineEntity.class);
         if (offLineEntity!=null){
             String customId=offLineEntity.getCustomerId();
-            for (int i = 0; i < listBeans.size(); i++) {
-                if (listBeans.get(i).getCustomerId().equals(customId)) {
-                    listBeans.get(i).setCustomerOffTime(null);
+            for (int i = 0; i < listUIBeans.size(); i++) {
+                if (listUIBeans.get(i).getCustomerId().equals(customId)) {
+                    listUIBeans.get(i).setCustomerOffTime(null);
                     Message message = mHandler.obtainMessage();
                     message.what = ONLINE;
                     Bundle bundle = new Bundle();
@@ -444,6 +469,10 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 case ONLINE://用户上线通知
                     int online_index = bundle.getInt(POSITION);
                     dialogListAdapter.notifyItemChanged(online_index);
+                    break;
+                case NEW_MESSAGE://新消息通知
+                    int message_index = bundle.getInt(POSITION);
+                    dialogListAdapter.notifyDataSetChanged();
                     break;
             }
         }

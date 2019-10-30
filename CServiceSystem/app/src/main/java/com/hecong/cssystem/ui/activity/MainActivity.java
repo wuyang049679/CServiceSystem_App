@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment;
 
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.base.BaseActivity;
+import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.contract.MainActivityContract;
 import com.hecong.cssystem.entity.LoginEntity;
+import com.hecong.cssystem.entity.UserEntity;
 import com.hecong.cssystem.presenter.MainActivityPresenter;
 import com.hecong.cssystem.ui.fragment.ChatListFragment;
 import com.hecong.cssystem.ui.fragment.MineFragment;
@@ -104,7 +106,10 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
 
     @Override
     public void showDataSuccess(LoginEntity.DataBean datas) {
-
+        UserEntity userEntity = new UserEntity();
+        userEntity.setHash(datas.getHash());
+        userEntity.setServiceId(datas.getInfo().getId());
+        BaseApplication.setUserEntity(userEntity);
     }
 
     @Override

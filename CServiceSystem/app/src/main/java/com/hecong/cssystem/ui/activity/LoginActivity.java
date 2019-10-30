@@ -107,6 +107,7 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
         SharedPreferencesUtils.setParam(Constant.PASSWORD, passwords);
         UserEntity userEntity = new UserEntity();
         userEntity.setHash(datas.getHash());
+        userEntity.setServiceId(datas.getInfo().getId());
         BaseApplication.setUserEntity(userEntity);
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);

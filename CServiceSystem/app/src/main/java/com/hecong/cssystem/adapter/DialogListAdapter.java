@@ -25,6 +25,7 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEntity.DataBean.ListBean, BaseViewHolder> {
@@ -35,6 +36,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
         addItemType(Constant.HAVERECEIVED,R.layout.dialog_list_adapter);
         addItemType(Constant.NOTRECEIVED_ACT,R.layout.dialog_list_adapter);
         addItemType(Constant.COLLEAGUE,R.layout.dialog_list_colleague_adapter);
+        addItemType(Constant.COLLEAGUE_ACT,R.layout.dialog_colleague_act_adapter);
     }
 
     @Override
@@ -72,6 +74,14 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             setMsgPoint(item, helper);
             setUpdateTime(item, helper);
             setContent(item, helper);
+        }
+        if (item.getItemType()==Constant.COLLEAGUE_ACT) {//同事的对话列表
+            setTitle(item, helper);
+            setMsgPoint(item, helper);
+            setUpdateTime(item, helper);
+            setContent(item, helper);
+            setTagList(item, helper);
+            setImageView(item, helper);
         }
     }
 
@@ -142,28 +152,34 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
      */
     private void setTagList(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
         TagFlowLayout flowLayout = helper.getView(R.id.flowLayout);
+        List<String> list=new ArrayList<>();
+        TagAdapter tagAdapter=new TagAdapter<String>(list) {
+            @Override
+            public View getView(FlowLayout parent, int position, String o) {
+                TextView tv = new TextView(mContext);
+                tv.setPadding(20, 10, 20, 10);
+                tv.setText(item.getTag().get(position));
+                tv.setTextColor(mContext.getResources().getColor(R.color.white));
+                tv.setMaxEms(20);
+                tv.setSingleLine();
+                GradientDrawable drawable = new GradientDrawable();
+                drawable.setShape(GradientDrawable.RECTANGLE);
+                drawable.setGradientType(GradientDrawable.RECTANGLE);
+                drawable.setCornerRadius(6);
+                drawable.setColor(mContext.getResources().getColor(R.color.colorAccent));
+                tv.setBackground(drawable);
+                return tv;
+            }
+        };
         if (item.getTag() != null && item.getTag().size() != 0) {
-            flowLayout.setAdapter(new TagAdapter<String>(item.getTag()) {
-                @Override
-                public View getView(FlowLayout parent, int position, String s) {
-
-
-                    TextView tv = new TextView(mContext);
-                    tv.setPadding(20, 10, 20, 10);
-                    tv.setText(item.getTag().get(position));
-                    tv.setTextColor(mContext.getResources().getColor(R.color.white));
-                    tv.setMaxEms(20);
-                    tv.setSingleLine();
-                    GradientDrawable drawable = new GradientDrawable();
-                    drawable.setShape(GradientDrawable.RECTANGLE);
-                    drawable.setGradientType(GradientDrawable.RECTANGLE);
-                    drawable.setCornerRadius(6);
-                    drawable.setColor(mContext.getResources().getColor(R.color.colorAccent));
-                    tv.setBackground(drawable);
-                    return tv;
-                }
-
-            });
+                list.addAll(item.getTag());
+                flowLayout.setAdapter(tagAdapter);
+        }else {
+        //第一请求20条刷新的tag重新刷新一次,确保数据显示正确
+        if (flowLayout.getAdapter()!=null){
+            list.clear();
+            flowLayout.setAdapter(tagAdapter);
+        }
         }
     }
 
@@ -193,6 +209,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
 //            if(!type || type == 'text')contents = contents.replace(/[\r\n]/g," ") //换行符替换成空格
 //            return contents;
 //        }
+        if (item.getLastMsg()==null)return;
         String sendType = item.getLastMsg().getType();
         String contents = "";
         switch (sendType) {
@@ -236,8 +253,9 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
         }
 
         switch (item.getItemType()){
-            case Constant.NOTRECEIVED_ACT://未接待列表数据显示和已接待一样
+            case Constant.NOTRECEIVED_ACT://未接待列表数据显示和已接待,同事列表一样
             case Constant.HAVERECEIVED:
+            case Constant.COLLEAGUE_ACT:
                 content.setText(contents);
                 break;
             case Constant.NOTRECEIVED://同事和未接待显示一样
@@ -269,7 +287,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
      */
     private void setUpdateTime(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
         TextView last_time = helper.getView(R.id.update_time);
-        if (item.getLastMsg().getTime() != null) {
+        if (item.getLastMsg()!=null&&item.getLastMsg().getTime() != null) {
             last_time.setText(DateUtils.getDateFormat(item.getLastMsg().getTime()));
         } else {
             last_time.setText(DateUtils.getDateFormat(item.getAddtime()));
@@ -307,8 +325,9 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
 
         switch (item.getItemType()) {
 
-            case Constant.HAVERECEIVED://未接待列表数据显示和已接待一样
+            case Constant.HAVERECEIVED://未接待列表数据显示和已接待,同事列表一样
             case Constant.NOTRECEIVED_ACT:
+            case Constant.COLLEAGUE_ACT:
             //设置对话title
             String tv_title = null;
             if (item.getAddress() == null || TextUtils.isEmpty(item.getAddress())) {
