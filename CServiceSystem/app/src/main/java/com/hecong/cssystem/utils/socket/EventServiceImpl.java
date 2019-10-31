@@ -25,7 +25,6 @@ package com.hecong.cssystem.utils.socket;
 import android.util.Log;
 
 import com.hecong.cssystem.api.Address;
-import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.entity.MessageEntity;
 import com.hecong.cssystem.utils.JsonParseUtils;
 
@@ -136,6 +135,21 @@ public class EventServiceImpl implements EventService {
             roomList.add(roomId);
         }
         Log.i(TAG, "roomId: "+roomId);
+    }
+    /**
+     * 新对话加入房间
+     * @param roomId
+     */
+    @Override
+    public void joinRoom(String roomId,Ack ack) {
+
+        if (roomList==null)roomList=new ArrayList<>();
+        if (!roomList.contains(roomId)) {//已经加入过了就不再重新加入
+            if (mSocket != null) mSocket.emit("join", roomId,ack);
+            roomList.add(roomId);
+        }
+        Log.i(TAG, "roomId: "+roomId);
+
     }
     /**
      * Disconnect from the server.
@@ -284,6 +298,7 @@ public class EventServiceImpl implements EventService {
                 break;
             //新对话加入
             case MESSAGE_NEWDIALOG:
+                if (mEventListener!=null)mEventListener.onNewDialog(message);
                 break;
             //接收顾客输入的文字
             case MESSAGE_INPUTING:

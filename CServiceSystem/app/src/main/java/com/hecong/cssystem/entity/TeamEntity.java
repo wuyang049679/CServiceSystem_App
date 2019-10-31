@@ -184,6 +184,15 @@ public class TeamEntity {
             private String id;
             private String email;
             private List<?> loginLogs;
+            private int dialogCount;
+
+            public int getDialogCount() {
+                return dialogCount;
+            }
+
+            public void setDialogCount(int dialogCount) {
+                this.dialogCount = dialogCount;
+            }
 
             public String get_id() {
                 return _id;

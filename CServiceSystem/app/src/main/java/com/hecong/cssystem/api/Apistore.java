@@ -43,4 +43,12 @@ public interface Apistore {
      */
     @GET("company/control")
     Observable<BaseEntity<TeamEntity.DataBean>> getTeamList(@QueryMap HashMap<String, String> map);
+
+    /**
+     * 获取新对话列表信息
+     * @param map
+     * @return
+     */
+    @GET("dialog/getone")
+    Observable<BaseEntity<MessageDialogEntity.DataBean>> getNewDialog(@QueryMap HashMap<String, String> map);
 }

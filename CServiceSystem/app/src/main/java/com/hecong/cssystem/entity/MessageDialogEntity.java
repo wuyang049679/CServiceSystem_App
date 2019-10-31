@@ -80,6 +80,15 @@ public class MessageDialogEntity implements Serializable{
         private boolean evaluate;
         private SessionBean session;
         private List<ListBean> list;
+        private ListBean dialog;//新对话消息
+
+        public ListBean getDialog() {
+            return dialog;
+        }
+
+        public void setDialog(ListBean dialog) {
+            this.dialog = dialog;
+        }
 
         public int get_suc() {
             return _suc;

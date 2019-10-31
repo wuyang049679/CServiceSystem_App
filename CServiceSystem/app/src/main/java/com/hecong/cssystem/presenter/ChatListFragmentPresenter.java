@@ -39,6 +39,24 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
     }
 
     @Override
+    public void pGetDialog(String dialogId) {
+        chatListFragmentModel.getDialog(dialogId).subscribe(new RxSubscribe<MessageDialogEntity.DataBean>() {
+            @Override
+            protected void onSuccess(MessageDialogEntity.DataBean dataBean) {
+                mView.showNewDialog(dataBean);
+            }
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
     public void onConnect(Object... args) {
 
     }
@@ -60,6 +78,11 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
 
     @Override
     public void onNewMessage(Object... args) {
+
+    }
+
+    @Override
+    public void onNewDialog(Object... args) {
 
     }
 

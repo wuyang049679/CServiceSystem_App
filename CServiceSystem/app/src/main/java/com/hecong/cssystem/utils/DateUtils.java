@@ -775,6 +775,16 @@ public class DateUtils {
 		return format;
 	}
 	/**
+	 * 将时间戳转成2018-08-05T16:00:00.000Z
+	 */
+
+	public static String getDateFormat(long time){
+
+		Date date=new Date(time);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+		return sdf1.format(date);
+	}
+	/**
 	 * 2018-08-05T16:00:00.000Z获取data
 	 */
 

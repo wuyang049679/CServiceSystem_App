@@ -23,6 +23,7 @@ public class PopWindowListAdapter extends BaseQuickAdapter<TeamEntity.DataBean.L
         }else {
             helper.setText(R.id.team_name,item.getName());
         }
+        helper.setText(R.id.team_content,"对话数:"+item.getDialogCount());
         helper.addOnClickListener(R.id.team_lin);
     }
 }

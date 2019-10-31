@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+import io.socket.client.Ack;
 
 public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, MessageDialogEntity.DataBean> implements ChatListFragmentContract.View, EventListener {
 
@@ -181,6 +183,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void showDialogList(MessageDialogEntity.DataBean messageEntity) {
 
@@ -190,7 +193,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             listBeans.addAll(list);
             skip=listBeans.size();
             for (MessageDialogEntity.DataBean.ListBean listBean : list) {
-                if (listBean.getState().equals("active")){
+                if (listBean.getState().equals("active")&&listBean.getServiceId().equals(BaseApplication.getUserEntity().getServiceId())){
                     mCounter++;
                 }
                 conmonTitleTextView.setText(getResources().getString(R.string.dialog_list) + "(" + mCounter + ")");
@@ -198,19 +201,31 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
             if (list.size()==limit){
                 if (limit==20){
-                    //第一次请求20条刷新
-                    refreshUI(listBeans);
+                 //第一次请求20条刷新
+                refreshUI(listBeans);
                 }
                 //第二次请求将限制条数扩大到150
                 limit=150;
                 mPresenter.pShowMessageDialog(limit,skip);
             }else {
                 //最后所有数据请求完成之后刷新
-               refreshUI(listBeans);
+                refreshUI(listBeans);
             }
 
         }
 
+    }
+
+    /**
+     * 新对话加入数据
+     * @param messageEntity
+     */
+    @Override
+    public void showNewDialog(MessageDialogEntity.DataBean messageEntity) {
+            if (messageEntity.getDialog()!=null){
+                listBeans.add(messageEntity.getDialog());
+                refreshUI(listBeans);
+            }
     }
 
     /**
@@ -248,7 +263,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             //将同事 的最新一条数据添加到UI  list
             MessageDialogEntity.DataBean.ListBean bean = new MessageDialogEntity.DataBean.ListBean();
             try {
-                bean = colleagueListBean.get(0).clone();
+                bean = colleagueListBean.get(0).clone();//克隆避免原始数据被赋值
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
             }
@@ -362,7 +377,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     listUIBeans.get(i).setUnreadNum(listUIBeans.get(i).getUnreadNum()+1);
                     MessageDialogEntity.DataBean.ListBean.LastMsgBean lastMsgBean=listUIBeans.get(i).getLastMsg();
                     lastMsgBean.setContents(messageBean.getMessage().getContents());
-//                    lastMsgBean.setTime(messageBean.getMessage().getTime());
+                    lastMsgBean.setType(messageBean.getMessage().getType());
+                    lastMsgBean.setTime(DateUtils.getDateFormat(messageBean.getMessage().getTime()));
                     listUIBeans.get(i).setLastMsg(lastMsgBean);
                     Message message = mHandler.obtainMessage();
                     message.what = NEW_MESSAGE;
@@ -373,6 +389,26 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 }
             }
 
+        }
+    }
+
+    /**
+     * 新对话加入
+     * @param args
+     */
+    @Override
+    public void onNewDialog(Object... args) {
+        MessageEntity messageBean = JsonParseUtils.parseToObject(args[0].toString(), MessageEntity.class);
+        if (messageBean!=null){
+            EventServiceImpl.getInstance().joinRoom(messageBean.getCustomerId(), new Ack() {
+                @Override
+                public void call(Object... args) {//先加入房间等服务器回执再请求对话数据
+                    mPresenter.pGetDialog(messageBean.getDialogId());
+                    for (int i = 0; i < args.length; i++) {
+                        Log.i(TAG, "ACK: onNewDialog" + args[i]);
+                    }
+                }
+            });
         }
     }
 

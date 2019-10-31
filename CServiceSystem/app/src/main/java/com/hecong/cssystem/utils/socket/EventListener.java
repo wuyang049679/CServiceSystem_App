@@ -38,6 +38,8 @@ public interface EventListener {
 
     void onNewMessage(Object... args);
 
+    void onNewDialog(Object... args);
+
     void onUserJoined(Object... args);
 
     void onUserLeft(Object... args);

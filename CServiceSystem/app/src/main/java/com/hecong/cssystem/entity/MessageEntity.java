@@ -13,7 +13,17 @@ public class MessageEntity {
     private String state;
     private String serviceId;
     private String dialogId;
+    private String customerId;
     private MessageBean message;
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
     public String getDialogId() {
         return dialogId;
     }

@@ -24,6 +24,8 @@ package com.hecong.cssystem.utils.socket;
 
 import java.net.URISyntaxException;
 
+import io.socket.client.Ack;
+
 /**
  * Service layer that connects/disconnects to the server and
  * sends and receives events too.
@@ -35,6 +37,8 @@ public interface EventService {
     void disconnect();
 
     void joinRoom(String roomId);
+
+    void joinRoom(String roomId,Ack Ack);
 
     void setEventListener(EventListener listener);
 

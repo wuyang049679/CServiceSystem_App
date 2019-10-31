@@ -26,4 +26,15 @@ public class ChatListFragmentModel implements ChatListFragmentContract.Model {
         return ApiManager.getApistore().showMessageDialog(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    @Override
+    public Observable<BaseEntity<MessageDialogEntity.DataBean>> getDialog(String dialogId) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put("dialogId",dialogId);
+
+        return ApiManager.getApistore().getNewDialog(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

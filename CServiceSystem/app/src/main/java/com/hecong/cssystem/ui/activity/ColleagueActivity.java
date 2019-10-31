@@ -8,12 +8,12 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.adapter.DialogListAdapter;
 import com.hecong.cssystem.adapter.PopWindowListAdapter;
 import com.hecong.cssystem.base.BaseActivity;
+import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.contract.ColleagueActivityContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
 import com.hecong.cssystem.entity.TeamEntity;
@@ -115,41 +115,55 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter,T
      * @param datas
      */
     private void createDiaLog(TeamEntity.DataBean datas) {
-        popWindowListAdapter=new PopWindowListAdapter(datas.getList());
+        List<TeamEntity.DataBean.ListBean> list = datas.getList();
+        for (TeamEntity.DataBean.ListBean bean : list) {
+            int count=0;//统计每个同伴的对话数量比较serviceId
+            String id = bean.get_id();
+            for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
+                if (id.equals(listBean.getServiceId())){
+                    count++;
+                    bean.setDialogCount(count);
+                }
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {//移除管理员
+            if (BaseApplication.getUserEntity().getServiceId().equals(datas.getList().get(i).get_id())){
+                datas.getList().remove(i);
+                break;
+            }
+        }
+
+        popWindowListAdapter=new PopWindowListAdapter(list);
         CustomDialog.Builder builder=new CustomDialog.Builder(this);
+        //点击全部的分类操作
         customDialog=builder.heightDimenRes(R.dimen.popWindow_height)
                 .widthDimenRes(R.dimen.popWindow_witch)
                 .view(R.layout.colleague_list_popwindow)
                 .style(R.style.Dialog)
                 .setRecyclerView(R.id.colleague_popwindow_recycler,popWindowListAdapter)
                 .cancelTouchout(true)
-                .addViewOnclick(R.id.all_team, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        colleagueListBeans.clear();
-                        colleagueListBeans.addAll(colleagueListBean);
-                        listAdapter.notifyDataSetChanged();
-                        customDialog.dismiss();
-                    }
+                .addViewOnclick(R.id.all_team, view -> {  //点击全部的时候全部显示
+                    colleagueListBeans.clear();
+                    colleagueListBeans.addAll(colleagueListBean);
+                    listAdapter.notifyDataSetChanged();
+                    customDialog.dismiss();
+                    btnChoose.setText(getResources().getString(R.string.dialog_all));
                 })
                 .build();
             customDialog.show();
 
-        popWindowListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                TeamEntity.DataBean.ListBean bean = (TeamEntity.DataBean.ListBean) adapter.getData().get(position);
-                btnChoose.setText(bean.getNickname());
-                customDialog.dismiss();
-                String serviceId = bean.get_id();
-                colleagueListBeans.clear();
-                for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
-                    if (listBean.getServiceId().equals(serviceId)){
-                        colleagueListBeans.add(listBean);
-                    }
+        popWindowListAdapter.setOnItemChildClickListener((adapter, view, position) -> {//点击同事的时候分类显示
+            TeamEntity.DataBean.ListBean bean = (TeamEntity.DataBean.ListBean) adapter.getData().get(position);
+            btnChoose.setText(bean.getNickname());
+            customDialog.dismiss();
+            String serviceId = bean.get_id();
+            colleagueListBeans.clear();
+            for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
+                if (listBean.getServiceId().equals(serviceId)){
+                    colleagueListBeans.add(listBean);
                 }
-                listAdapter.notifyDataSetChanged();
             }
+            listAdapter.notifyDataSetChanged();
         });
 
     }
