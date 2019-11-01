@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -419,10 +420,10 @@ public class StateView extends View {
     public View showLoading() {
         if (mLoadingView == null) {
             mLoadingView = inflate(mLoadingResource, LOADING);
-            //找到动图控件
-            SimpleDraweeView stateLoadingGif = mLoadingView.findViewById(R.id.state_loading);
-            //设置动图控制器
-            stateLoadingGif.setController(getDraweeController(mLoadingView.getContext()));
+            //加载中。。。
+            ProgressBar stateLoadingGif = mLoadingView.findViewById(R.id.state_loading);
+//            //设置动图控制器
+//            stateLoadingGif.setController(getDraweeController(mLoadingView.getContext()));
         }
         showView(mLoadingView);
         return mLoadingView;

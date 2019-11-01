@@ -151,6 +151,17 @@ public class EventServiceImpl implements EventService {
         Log.i(TAG, "roomId: "+roomId);
 
     }
+
+    /**
+     * 询问用户是否在线
+     * @param customerId
+     * @param serviceId
+     */
+    @Override
+    public void isOffLine(String customerId, String serviceId) {
+        if (mSocket!=null)mSocket.emit("isOffline",customerId,serviceId);
+    }
+
     /**
      * Disconnect from the server.
      */

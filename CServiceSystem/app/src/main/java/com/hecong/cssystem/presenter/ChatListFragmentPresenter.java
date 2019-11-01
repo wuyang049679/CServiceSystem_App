@@ -23,17 +23,19 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
         chatListFragmentModel.showMessageDialog(limit,skip).subscribe(new RxSubscribe<MessageDialogEntity.DataBean>() {
             @Override
             protected void onSuccess(MessageDialogEntity.DataBean messageEntity) {
+
                 mView.showDialogList(messageEntity);
             }
 
             @Override
             protected void onFailed(int code, String msg) {
+                mView.showNetErrorView();
                 ToastUtils.showShort(msg);
             }
 
             @Override
             public void onSubscribe(Disposable d) {
-             addSubscription(d);
+              addSubscription(d);
             }
         });
     }

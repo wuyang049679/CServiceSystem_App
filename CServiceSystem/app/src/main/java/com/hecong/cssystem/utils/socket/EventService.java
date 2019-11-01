@@ -40,6 +40,8 @@ public interface EventService {
 
     void joinRoom(String roomId,Ack Ack);
 
+    void isOffLine(String customerId,String serviceId);
+
     void setEventListener(EventListener listener);
 
 //    Flowable<ChatMessage> sendMessage(ChatMessage chatMessage);

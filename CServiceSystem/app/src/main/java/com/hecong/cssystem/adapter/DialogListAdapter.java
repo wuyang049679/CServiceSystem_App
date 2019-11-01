@@ -20,7 +20,6 @@ import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.DateUtils;
 import com.hecong.cssystem.utils.JsonParseUtils;
 import com.hecong.cssystem.utils.UriUtils;
-import com.hecong.cssystem.utils.socket.EventServiceImpl;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -41,7 +40,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MessageDialogEntity.DataBean.ListBean item) {
-        EventServiceImpl.getInstance().joinRoom(item.getCustomerId());
+
         if (item.getItemType()==Constant.HAVERECEIVED) {//已接待
             helper.addOnClickListener(R.id.close_btn);
             setTitle(item, helper);
@@ -210,7 +209,9 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
 //            return contents;
 //        }
         if (item.getLastMsg()==null)return;
+        if (item.getLastMsg().getType()==null)return;
         String sendType = item.getLastMsg().getType();
+
         String contents = "";
         switch (sendType) {
 
@@ -287,8 +288,12 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
      */
     private void setUpdateTime(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
         TextView last_time = helper.getView(R.id.update_time);
+
         if (item.getLastMsg()!=null&&item.getLastMsg().getTime() != null) {
-            last_time.setText(DateUtils.getDateFormat(item.getLastMsg().getTime()));
+            String dateFormat = DateUtils.getDateFormat(item.getLastMsg().getTime());
+            if (!dateFormat.contains("1970")) {//前面设置的时间戳位1970，为辅助数据不显示
+                last_time.setText(dateFormat);
+            }
         } else {
             last_time.setText(DateUtils.getDateFormat(item.getAddtime()));
         }

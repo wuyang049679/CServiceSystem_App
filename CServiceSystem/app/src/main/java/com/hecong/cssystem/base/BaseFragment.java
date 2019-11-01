@@ -327,6 +327,7 @@ public abstract class BaseFragment<T extends BasePresenterIm, V> extends Fragmen
     @Override
     public void hideLoading() {
 //        loadingDialog.dismiss();
+
     }
 
     @Override

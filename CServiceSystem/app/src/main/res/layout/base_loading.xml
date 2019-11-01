@@ -5,11 +5,14 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
     <!--如果加载中显示的动图,需要在stateView类中代码设置动图资源并使用SimpleDraweeView-->
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/state_loading"
-        android:layout_width="66px"
-        android:layout_height="81px"
-        android:layout_gravity="center"
-        fresco:actualImageScaleType="focusCrop" />
 
+
+    <ProgressBar
+        android:id="@+id/state_loading"
+        android:layout_gravity="center"
+        android:indeterminateDuration="700"
+        style="@style/progressBar_custom_drawable"
+        android:indeterminateDrawable="@drawable/progressbar_loading"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 </FrameLayout>

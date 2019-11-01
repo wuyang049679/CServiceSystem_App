@@ -84,7 +84,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     @Override
     protected int injectTarget() {
-        return 0;
+        return R.id.inject_lin;
     }
 
     @Override
@@ -140,7 +140,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         try {
             EventServiceImpl.getInstance().connect(hash);
             EventServiceImpl.getInstance().setEventListener(this);
+            showLoadingView();
         } catch (URISyntaxException e) {
+            showContentView();
             Toast.makeText(getActivity(), "Failed to connect to chat server.", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
@@ -186,10 +188,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     @SuppressLint("SetTextI18n")
     @Override
     public void showDialogList(MessageDialogEntity.DataBean messageEntity) {
-
-        if (messageEntity.getList()!=null&&messageEntity.getList().size()!=0){
+        if (messageEntity.getList()!=null){
             List<MessageDialogEntity.DataBean.ListBean> list = messageEntity.getList();
-
             listBeans.addAll(list);
             skip=listBeans.size();
             for (MessageDialogEntity.DataBean.ListBean listBean : list) {
@@ -198,11 +198,11 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 }
                 conmonTitleTextView.setText(getResources().getString(R.string.dialog_list) + "(" + mCounter + ")");
             }
-
             if (list.size()==limit){
                 if (limit==20){
                  //第一次请求20条刷新
                 refreshUI(listBeans);
+                showContentView();
                 }
                 //第二次请求将限制条数扩大到150
                 limit=150;
@@ -225,6 +225,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             if (messageEntity.getDialog()!=null){
                 listBeans.add(messageEntity.getDialog());
                 refreshUI(listBeans);
+                EventServiceImpl.getInstance().isOffLine(messageEntity.getDialog().getCustomerId(),messageEntity.getDialog().getServiceId());
             }
     }
 
@@ -234,6 +235,10 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
      */
 
     private void refreshUI(List<MessageDialogEntity.DataBean.ListBean> list) {
+        //加入房间操作
+        for (MessageDialogEntity.DataBean.ListBean listBean : list) {
+            EventServiceImpl.getInstance().joinRoom(listBean.getCustomerId());
+        }
         listUIBeans.clear();
         notListBean.clear();
         colleagueListBean.clear();
@@ -258,7 +263,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             listUIBeans.addAll(haveListBeans);
         }
         if (colleagueListBean.size()==0){  //添加同事 的对话
-            listUIBeans.add(new MessageDialogEntity.DataBean.ListBean(Constant.COLLEAGUE));
+            MessageDialogEntity.DataBean.ListBean bean = new MessageDialogEntity.DataBean.ListBean();
+            MessageDialogEntity.DataBean.ListBean.LastMsgBean lastMsgBean = new MessageDialogEntity.DataBean.ListBean.LastMsgBean();
+            lastMsgBean.setTime(DateUtils.getDateFormat(10000000));//如果没有同事的对话时，设置一个较小的时间戳，防止排序报错,将同事对话排在最后
+            bean.setLastMsg(lastMsgBean);
+            bean.setItemtype(Constant.COLLEAGUE);
+            listUIBeans.add(bean);
         }else {
             //将同事 的最新一条数据添加到UI  list
             MessageDialogEntity.DataBean.ListBean bean = new MessageDialogEntity.DataBean.ListBean();
@@ -372,14 +382,15 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     public void onNewMessage(Object... args) {
         MessageEntity messageBean = JsonParseUtils.parseToObject(args[0].toString(), MessageEntity.class);
         if (messageBean!=null){
-            for (int i = 0; i < listUIBeans.size(); i++) {
-                if (listUIBeans.get(i).getId().equals(messageBean.getDialogId())){
-                    listUIBeans.get(i).setUnreadNum(listUIBeans.get(i).getUnreadNum()+1);
-                    MessageDialogEntity.DataBean.ListBean.LastMsgBean lastMsgBean=listUIBeans.get(i).getLastMsg();
+            for (int i = 0; i < listBeans.size(); i++) {
+                String id = listBeans.get(i).getId();
+                if (id!=null&&id.equals(messageBean.getDialogId())){
+                    listBeans.get(i).setUnreadNum(listBeans.get(i).getUnreadNum()+1);
+                    MessageDialogEntity.DataBean.ListBean.LastMsgBean lastMsgBean=listBeans.get(i).getLastMsg();
                     lastMsgBean.setContents(messageBean.getMessage().getContents());
                     lastMsgBean.setType(messageBean.getMessage().getType());
                     lastMsgBean.setTime(DateUtils.getDateFormat(messageBean.getMessage().getTime()));
-                    listUIBeans.get(i).setLastMsg(lastMsgBean);
+                    listBeans.get(i).setLastMsg(lastMsgBean);
                     Message message = mHandler.obtainMessage();
                     message.what = NEW_MESSAGE;
                     Bundle bundle = new Bundle();
@@ -445,8 +456,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         if (offLineEntity!=null){
             String customId=offLineEntity.getCustomerId();
             for (int i = 0; i < listUIBeans.size(); i++) {
-                if (listUIBeans.get(i).getCustomerId().equals(customId)) {
-                    listUIBeans.get(i).setCustomerOffTime(DateUtils.getCurrentTimeInString());
+                String customerId = listUIBeans.get(i).getCustomerId();
+                if (customerId!=null&&customerId.equals(customId)) {
+                    listUIBeans.get(i).setCustomerOffTime(DateUtils.getDateFormat(DateUtils.getCurrentTimeInLong()));
                     Message message = mHandler.obtainMessage();
                     message.what = ONOFFLINE;
                     Bundle bundle = new Bundle();
@@ -466,7 +478,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         if (offLineEntity!=null){
             String customId=offLineEntity.getCustomerId();
             for (int i = 0; i < listUIBeans.size(); i++) {
-                if (listUIBeans.get(i).getCustomerId().equals(customId)) {
+                String customerId = listUIBeans.get(i).getCustomerId();
+                if (customerId!=null&&customerId.equals(customId)) {
                     listUIBeans.get(i).setCustomerOffTime(null);
                     Message message = mHandler.obtainMessage();
                     message.what = ONLINE;
@@ -476,7 +489,6 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     message.sendToTarget();
                 }
             }
-
         }
     }
 
@@ -486,11 +498,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
      */
     @Override
     public void onLogSuc(Object... args) {
+
         mPresenter.pShowMessageDialog(limit, skip);
     }
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    private  Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -507,8 +520,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     dialogListAdapter.notifyItemChanged(online_index);
                     break;
                 case NEW_MESSAGE://新消息通知
-                    int message_index = bundle.getInt(POSITION);
-                    dialogListAdapter.notifyDataSetChanged();
+//                    int message_index = bundle.getInt(POSITION);
+//                    dialogListAdapter.notifyDataSetChanged();
+                    refreshUI(listBeans);
                     break;
             }
         }
