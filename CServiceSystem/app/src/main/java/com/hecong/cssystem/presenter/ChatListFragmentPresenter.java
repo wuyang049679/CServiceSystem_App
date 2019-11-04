@@ -89,6 +89,21 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
     }
 
     @Override
+    public void onUpdateDialog(Object... args) {
+
+    }
+
+    @Override
+    public void onLeaveDialog(Object... args) {
+
+    }
+
+    @Override
+    public void onReception(Object... args) {
+
+    }
+
+    @Override
     public void onUserJoined(Object... args) {
 
     }

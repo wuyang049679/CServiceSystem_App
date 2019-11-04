@@ -40,6 +40,12 @@ public interface EventListener {
 
     void onNewDialog(Object... args);
 
+    void onUpdateDialog(Object... args);
+
+    void onLeaveDialog(Object... args);
+
+    void onReception(Object... args);
+
     void onUserJoined(Object... args);
 
     void onUserLeft(Object... args);

@@ -108,6 +108,8 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
         UserEntity userEntity = new UserEntity();
         userEntity.setHash(datas.getHash());
         userEntity.setServiceId(datas.getInfo().getId());
+        userEntity.setMaxChat(datas.getInfo().getMaxChat());
+        userEntity.setFounding(datas.getInfo().isFounding());
         BaseApplication.setUserEntity(userEntity);
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);

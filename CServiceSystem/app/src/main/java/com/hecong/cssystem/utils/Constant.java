@@ -60,4 +60,9 @@ public class Constant {
     public static final String NOTRECEIVED_LIST="not_received_list";//未接待类型
     public static final String HAVERECEIVED_LIST="have_received_list";//已接待
     public static final String COLLEAGUE_LIST="colleague_list";//同事的对话
+
+    /**
+     * 已接待对话数量
+     */
+    public static final String HAVERECEIVED_NUM="have_received_num";
 }

@@ -256,11 +256,21 @@ public class MessageDialogEntity implements Serializable{
             private List<String> tag;
             private int itemtype;
             private int unCount;//未接待个数
+            private int read;//读取消息数量，用于点击有未读消息有更新红点
+
 
 
             @Override
             public ListBean clone() throws CloneNotSupportedException {
                 return (ListBean)super.clone();
+            }
+
+            public int getRead() {
+                return read;
+            }
+
+            public void setRead(int read) {
+                this.read = read;
             }
 
             public int getUnCount() {

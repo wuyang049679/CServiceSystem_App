@@ -45,6 +45,8 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
     private List<Fragment> fragments = new ArrayList<>();
 
 
+
+
     @Override
     public MainActivityPresenter getPresenter() {
         return new MainActivityPresenter();
@@ -94,9 +96,7 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
                 .mode(EasyNavigationBar.MODE_NORMAL)
                 .hasPadding(true)//fragment列表底部重叠，部分看不到
                 .build();
-       easyNavigationBar.setMsgPointCount(0, 9);
-       easyNavigationBar.setMsgPointCount(1, 19);
-       easyNavigationBar.setMsgPointCount(2, 100);
+
     }
 
     @Override
@@ -109,6 +109,8 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
         UserEntity userEntity = new UserEntity();
         userEntity.setHash(datas.getHash());
         userEntity.setServiceId(datas.getInfo().getId());
+        userEntity.setMaxChat(datas.getInfo().getMaxChat());
+        userEntity.setFounding(datas.getInfo().isFounding());
         BaseApplication.setUserEntity(userEntity);
     }
 

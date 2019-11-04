@@ -7,7 +7,25 @@ public class UserEntity {
 
     private   String hash;
     private   String serviceId;
+    private   int maxChat;
+    private   boolean founding;
 
+
+    public boolean isFounding() {
+        return founding;
+    }
+
+    public void setFounding(boolean founding) {
+        this.founding = founding;
+    }
+
+    public int getMaxChat() {
+        return maxChat;
+    }
+
+    public void setMaxChat(int maxChat) {
+        this.maxChat = maxChat;
+    }
 
     public String getHash() {
         return hash;

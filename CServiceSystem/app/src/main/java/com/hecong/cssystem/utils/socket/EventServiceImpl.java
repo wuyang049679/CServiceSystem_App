@@ -153,6 +153,17 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
+     * 离开房间
+     * @param roomId
+     */
+    @Override
+    public void leaveRoom(String roomId) {
+
+        if (mSocket!=null)mSocket.emit("leave",roomId);
+        if (roomList!=null&&roomList.contains(roomId))roomList.remove(roomId);
+    }
+
+    /**
      * 询问用户是否在线
      * @param customerId
      * @param serviceId
@@ -299,6 +310,8 @@ public class EventServiceImpl implements EventService {
                 break;
             //结束对话后退出房间
             case MESSAGE_LEAVE:
+                leaveRoom(entity.getRoomID());//离开房间操作
+               if (mEventListener!=null)mEventListener.onLeaveDialog(message);
                 break;
             //只有客服能收到的退出房间消息
             case MESSAGE_SERVICELEAVE:
@@ -324,6 +337,7 @@ public class EventServiceImpl implements EventService {
                 break;
             //对话被接待
             case MESSAGE_RECEPTION:
+                if (mEventListener!=null)mEventListener.onReception(message);
                 break;
             //客服账号登录唯一性验证//保存serviceId
             case MESSAGE_SERVICEONLY:
@@ -343,6 +357,7 @@ public class EventServiceImpl implements EventService {
                 break;
             //更新对话（团队协作可能更新）
             case MESSAGE_UPATEDIALOG:
+                if (mEventListener != null) mEventListener.onUpdateDialog(message);
                 break;
             //收到客服汇报的在线状态
             case MESSAGE_REPORT_STATE:

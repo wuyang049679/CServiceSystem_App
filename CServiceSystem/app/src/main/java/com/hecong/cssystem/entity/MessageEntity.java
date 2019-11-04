@@ -15,6 +15,34 @@ public class MessageEntity {
     private String dialogId;
     private String customerId;
     private MessageBean message;
+    private String hash;
+    private String roomID;
+    private MessageDialogEntity.DataBean.ListBean item;
+
+
+    public MessageDialogEntity.DataBean.ListBean getItem() {
+        return item;
+    }
+
+    public void setItem(MessageDialogEntity.DataBean.ListBean item) {
+        this.item = item;
+    }
+
+    public String getRoomID() {
+        return roomID;
+    }
+
+    public void setRoomID(String roomID) {
+        this.roomID = roomID;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
 
     public String getCustomerId() {
         return customerId;

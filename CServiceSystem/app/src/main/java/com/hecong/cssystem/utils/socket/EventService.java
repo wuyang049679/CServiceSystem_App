@@ -40,6 +40,8 @@ public interface EventService {
 
     void joinRoom(String roomId,Ack Ack);
 
+    void leaveRoom(String roomId);
+
     void isOffLine(String customerId,String serviceId);
 
     void setEventListener(EventListener listener);

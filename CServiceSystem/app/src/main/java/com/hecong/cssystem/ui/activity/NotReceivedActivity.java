@@ -12,8 +12,13 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.hecong.cssystem.R;
 import com.hecong.cssystem.adapter.DialogListAdapter;
 import com.hecong.cssystem.base.BaseActivity;
+import com.hecong.cssystem.base.BaseApplication;
+import com.hecong.cssystem.contract.NotReceivedActivityContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
+import com.hecong.cssystem.entity.ReceptionEntity;
+import com.hecong.cssystem.presenter.NotReceivedActivityPresenter;
 import com.hecong.cssystem.utils.Constant;
+import com.hecong.cssystem.utils.android.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NotReceivedActivity extends BaseActivity {
+public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresenter, ReceptionEntity.DataBean>implements NotReceivedActivityContract.View {
 
     @BindView(R.id.backImg)
     ImageView backImg;
@@ -32,6 +37,13 @@ public class NotReceivedActivity extends BaseActivity {
     RecyclerView actNotReceivedRecycler;
     private List<MessageDialogEntity.DataBean.ListBean> notListBean;
     private DialogListAdapter listAdapter;
+    private int POSITION;
+    private int mCountAll;
+
+    @Override
+    public NotReceivedActivityPresenter getPresenter() {
+        return new NotReceivedActivityPresenter();
+    }
 
     @Override
     protected void reloadActivity() {
@@ -58,6 +70,7 @@ public class NotReceivedActivity extends BaseActivity {
         backImg.setImageResource(R.mipmap.back);
         conmonTitleTextView.setText(getResources().getString(R.string.dialog_no_received));
         notListBean= (ArrayList<MessageDialogEntity.DataBean.ListBean>) getIntent().getSerializableExtra(Constant.NOTRECEIVED_LIST);
+        mCountAll=getIntent().getIntExtra(Constant.HAVERECEIVED_NUM,0);
         for (MessageDialogEntity.DataBean.ListBean listBean : notListBean) {
             listBean.setItemtype(Constant.NOTRECEIVED_ACT);
         }
@@ -68,6 +81,20 @@ public class NotReceivedActivity extends BaseActivity {
             listAdapter = new DialogListAdapter(notListBean);
             actNotReceivedRecycler.setAdapter(listAdapter);
         }
+        listAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            POSITION=position;
+            switch (view.getId()){
+                case R.id.close_btn:
+                    break;
+                case R.id.btn_jd:
+                    if (mCountAll< BaseApplication.getUserEntity().getMaxChat()) {
+                        mPresenter.pReceptionDialog(notListBean.get(position).getId());
+                    }else {
+                        ToastUtils.showShort("同时对话已经数达到最大值，请先处理当前对话");
+                    }
+                    break;
+            }
+        });
     }
 
     @Override
@@ -76,9 +103,18 @@ public class NotReceivedActivity extends BaseActivity {
     }
 
     @Override
-    public void showDataSuccess(Object datas) {
-
+    public void showDataSuccess(ReceptionEntity.DataBean datas) {
+        int suc = datas.get_suc();
+        if (suc==0){
+            ToastUtils.showShort("对话已被接待");
+        }
+        if (suc==1){
+            notListBean.remove(POSITION);
+            listAdapter.notifyDataSetChanged();
+            conmonTitleTextView.setText(getResources().getString(R.string.dialog_no_received)+"("+notListBean.size()+")");
+        }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

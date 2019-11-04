@@ -25,6 +25,7 @@ import com.hecong.cssystem.entity.MessageEntity;
 import com.hecong.cssystem.entity.OffLineEntity;
 import com.hecong.cssystem.presenter.ChatListFragmentPresenter;
 import com.hecong.cssystem.ui.activity.ColleagueActivity;
+import com.hecong.cssystem.ui.activity.MainActivity;
 import com.hecong.cssystem.ui.activity.NotReceivedActivity;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.DateUtils;
@@ -45,6 +46,7 @@ import io.socket.client.Ack;
 
 public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, MessageDialogEntity.DataBean> implements ChatListFragmentContract.View, EventListener {
 
+
     private final String SERVER_URL = Address.SOCKET_URL + "?type=service&hash=";
     @BindView(R.id.backLayout)
     LinearLayout backLayout;
@@ -58,7 +60,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     private List<MessageDialogEntity.DataBean.ListBean> haveListBeans,notListBean,colleagueListBean;
     private List<MessageDialogEntity.DataBean.ListBean> listUIBeans;//展示的listUI集合
     private List<MessageDialogEntity.DataBean.ListBean> listBeans;//请求总集合
-    int mCounter = 0;//总的条数
+    int mCounter = 0;//已接待对话总条数
+    int unReadCount = 0;//总的未读条数
     int limit=20;//限制每次访问多少条第一设置20条
     int skip=0;//跳过已获取的条数
 
@@ -66,6 +69,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     private final int ONOFFLINE=100;
     private final int ONLINE=101;
     private final int NEW_MESSAGE=102;
+    private final int UPDATE_MESSAGE=103;
+    private final int LEAVE_DIALOG=104;
+    private final int RECEPTION_DIALOG=105;
 
     public ChatListFragment() {
     }
@@ -89,6 +95,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     @Override
     protected void doRetry() {
+
     }
 
     @Override
@@ -117,6 +124,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 case R.id.dialog_no_received_lin://点击未接待跳转
                     Bundle bundle=new Bundle();
                     bundle.putSerializable(Constant.NOTRECEIVED_LIST, (Serializable) notListBean);
+                    bundle.putInt(Constant.HAVERECEIVED_NUM,mCounter);
                     startActivity(NotReceivedActivity.class,bundle);
                     break;
                 case R.id.dialog_list_colleague_lin://点击同事对话跳转
@@ -192,12 +200,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             List<MessageDialogEntity.DataBean.ListBean> list = messageEntity.getList();
             listBeans.addAll(list);
             skip=listBeans.size();
-            for (MessageDialogEntity.DataBean.ListBean listBean : list) {
-                if (listBean.getState().equals("active")&&listBean.getServiceId().equals(BaseApplication.getUserEntity().getServiceId())){
-                    mCounter++;
-                }
-                conmonTitleTextView.setText(getResources().getString(R.string.dialog_list) + "(" + mCounter + ")");
-            }
+
             if (list.size()==limit){
                 if (limit==20){
                  //第一次请求20条刷新
@@ -313,8 +316,39 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         }
 
         dialogListAdapter.notifyDataSetChanged();
+        checkDialogNum();
     }
 
+    /**
+     * 检验对话数是否已满,和底部未读
+     */
+    @SuppressLint("SetTextI18n")
+    private void checkDialogNum() {
+        mCounter=0;
+        unReadCount=0;
+        for (MessageDialogEntity.DataBean.ListBean listBean : listBeans) {
+            if (listBean.getState().equals("active")&&listBean.getServiceId().equals(BaseApplication.getUserEntity().getServiceId())){
+                mCounter++;
+            }
+
+            //更新未读数
+            if (listBean.getServiceId().equals(BaseApplication.getUserEntity().getServiceId())||listBean.getState().equals("unassigned")){
+                if (!listBean.isAssignGrade()||listBean.getServiceId().equals(BaseApplication.getUserEntity().getServiceId())||BaseApplication.getUserEntity().isFounding()) {
+                    if (listBean.getUnreadNum() != 0) {
+                        unReadCount += listBean.getUnreadNum();
+                    }
+                }
+            }
+        }
+        if (mCounter>=BaseApplication.getUserEntity().getMaxChat()) {
+            conmonTitleTextView.setText(getResources().getString(R.string.dialog_list) + "(对话数已满)");
+        }
+        if (unReadCount!=0){
+            ((MainActivity) getActivity()).getNavigationBar().setMsgPointCount(0,unReadCount);
+        }else {
+            ((MainActivity) getActivity()).getNavigationBar().clearAllMsgPoint();
+        }
+        }
 
 
     /**
@@ -423,6 +457,83 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         }
     }
 
+    /**
+     * 更新对话
+     * @param args
+     */
+    @Override
+    public void onUpdateDialog(Object... args) {
+        MessageEntity messageBean = JsonParseUtils.parseToObject(args[0].toString(), MessageEntity.class);
+
+        if (messageBean!=null&& messageBean.getItem()!=null){
+            MessageDialogEntity.DataBean.ListBean item = messageBean.getItem();
+            for (MessageDialogEntity.DataBean.ListBean listUIBean : listBeans) {
+                if (listUIBean.getId().equals(item.getId())){  //比较对话id替换对话原来对话的数据
+                    MessageDialogEntity.DataBean.ListBean.CustomerBean _customer = listUIBean.getCustomer();
+                    MessageDialogEntity.DataBean.ListBean.CustomerBean customer= item.getCustomer();
+                    if (customer!=null){//更新顾客信息
+                    if (customer.getName()!=null)_customer.setName(customer.getName());
+                    if (customer.getHead()!=null)_customer.setHead(customer.getHead());
+                    if (customer.getNumberId()!=0)_customer.setNumberId(customer.getNumberId());
+                    if (customer.getCard()!=null)_customer.setCard(customer.getCard());
+                    if (customer.getAttCard()!=null)_customer.setAttCard(customer.getAttCard());
+                    if (customer.getAddress()!=null)_customer.setAddress(customer.getAddress());
+                    if (customer.getAddtime()!=null)_customer.setAddtime(customer.getAddtime());
+                    }
+                    //更新未读消息
+                    if (item.getRead()!=0)listUIBean.setUnreadNum(0);//清空未读消息
+                }
+            }
+            listSort(listBeans);
+            Message message = mHandler.obtainMessage();
+            message.what = UPDATE_MESSAGE;
+            message.sendToTarget();
+        }
+    }
+
+    /**
+     * 结束对话
+     * @param args
+     */
+    @Override
+    public void onLeaveDialog(Object... args) {
+        MessageEntity messageBean = JsonParseUtils.parseToObject(args[0].toString(), MessageEntity.class);
+        if (messageBean!=null){
+            for (MessageDialogEntity.DataBean.ListBean listBean : listBeans) {
+                if (listBean.getId().equals(messageBean.getDialogId())){
+                    listBeans.remove(listBean);
+                    return;
+                }
+
+            }
+            listSort(listBeans);
+            Message message = mHandler.obtainMessage();
+            message.what = LEAVE_DIALOG;
+            message.sendToTarget();
+        }
+    }
+
+    /**
+     * 对话被接待
+     * @param args
+     */
+    @Override
+    public void onReception(Object... args) {
+        MessageEntity messageBean = JsonParseUtils.parseToObject(args[0].toString(), MessageEntity.class);
+        if (messageBean!=null){
+            for (MessageDialogEntity.DataBean.ListBean listBean : listBeans) {
+                if (listBean.getId().equals(messageBean.getDialogId())){
+                    listBean.setServiceId(messageBean.getServiceId());
+                    listBean.setState("active");
+                }
+            }
+            listSort(listBeans);
+            Message message = mHandler.obtainMessage();
+            message.what = RECEPTION_DIALOG;
+            message.sendToTarget();
+        }
+    }
+
     @Override
     public void onUserJoined(Object... args) {
 
@@ -445,7 +556,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     @Override
     public void onUserState(Object... args) {
-
+//        if(item.serviceId == myInfo.id || item.state == 'unassigned'){
+//            if(!item.assignGrade || item.serviceId == myInfo.id || myInfo.founding)unread += item.unreadNum;
+//        }
     }
 
     @Override
@@ -522,6 +635,15 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 case NEW_MESSAGE://新消息通知
 //                    int message_index = bundle.getInt(POSITION);
 //                    dialogListAdapter.notifyDataSetChanged();
+                    refreshUI(listBeans);
+                    break;
+                case UPDATE_MESSAGE://更新对话信息
+                    refreshUI(listBeans);
+                    break;
+                case LEAVE_DIALOG://结束对话
+                    refreshUI(listBeans);
+                    break;
+                case RECEPTION_DIALOG://对话被接待
                     refreshUI(listBeans);
                     break;
             }

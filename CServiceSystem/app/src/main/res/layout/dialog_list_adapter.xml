@@ -105,12 +105,14 @@
             android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
         <androidx.constraintlayout.widget.Barrier
-            fresco:constraint_referenced_ids="update_time"
-            fresco:barrierDirection="left"
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            fresco:barrierDirection="left"
+            fresco:constraint_referenced_ids="update_time"
+            tools:layout_editor_absoluteX="402dp" />
         <TextView
             android:id="@+id/dialog_item_title"
             android:layout_marginTop="15dp"

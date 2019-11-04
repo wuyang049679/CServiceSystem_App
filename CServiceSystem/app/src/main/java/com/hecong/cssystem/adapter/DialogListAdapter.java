@@ -49,6 +49,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             setContent(item, helper);
             setTagList(item, helper);
             setImageView(item, helper);
+            helper.addOnClickListener(R.id.close_btn);
         }
         if (item.getItemType()==Constant.NOTRECEIVED_ACT) {//未接待对话列表
             helper.addOnClickListener(R.id.close_btn);
@@ -59,6 +60,8 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             setContent(item, helper);
             setTagList(item, helper);
             setImageView(item, helper);
+            helper.addOnClickListener(R.id.close_btn);
+            helper.addOnClickListener(R.id.btn_jd);
         }
         if (item.getItemType()==Constant.NOTRECEIVED){//未接待
             helper.addOnClickListener(R.id.dialog_no_received_lin);
