@@ -4,6 +4,7 @@ import com.hecong.cssystem.base.BasePresenterIm;
 import com.hecong.cssystem.base.RxSubscribe;
 import com.hecong.cssystem.contract.ChatListFragmentContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
+import com.hecong.cssystem.entity.ReceptionEntity;
 import com.hecong.cssystem.model.ChatListFragmentModel;
 import com.hecong.cssystem.utils.android.ToastUtils;
 
@@ -15,12 +16,12 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
     ChatListFragmentModel chatListFragmentModel;
 
     public ChatListFragmentPresenter() {
-        chatListFragmentModel=new ChatListFragmentModel();
+        chatListFragmentModel = new ChatListFragmentModel();
     }
 
     @Override
-    public void pShowMessageDialog(int limit,int skip) {
-        chatListFragmentModel.showMessageDialog(limit,skip).subscribe(new RxSubscribe<MessageDialogEntity.DataBean>() {
+    public void pShowMessageDialog(int limit, int skip) {
+        chatListFragmentModel.showMessageDialog(limit, skip).subscribe(new RxSubscribe<MessageDialogEntity.DataBean>() {
             @Override
             protected void onSuccess(MessageDialogEntity.DataBean messageEntity) {
 
@@ -35,7 +36,7 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
 
             @Override
             public void onSubscribe(Disposable d) {
-              addSubscription(d);
+                addSubscription(d);
             }
         });
     }
@@ -47,10 +48,32 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
             protected void onSuccess(MessageDialogEntity.DataBean dataBean) {
                 mView.showNewDialog(dataBean);
             }
+
             @Override
             protected void onFailed(int code, String msg) {
                 ToastUtils.showShort(msg);
             }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
+    public void pEndDialog(String idList, String offEnd, String autoEnd) {
+        chatListFragmentModel.endDialog(idList, offEnd, autoEnd).subscribe(new RxSubscribe<ReceptionEntity.DataBean>() {
+            @Override
+            protected void onSuccess(ReceptionEntity.DataBean dataBean) {
+                mView.showEndDialog(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
             @Override
             public void onSubscribe(Disposable d) {
                 addSubscription(d);

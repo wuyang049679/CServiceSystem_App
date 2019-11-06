@@ -27,6 +27,7 @@ import android.util.Log;
 import com.hecong.cssystem.api.Address;
 import com.hecong.cssystem.entity.MessageEntity;
 import com.hecong.cssystem.utils.JsonParseUtils;
+import com.hecong.cssystem.utils.ThreadUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -76,7 +78,7 @@ public class EventServiceImpl implements EventService {
     private static Socket mSocket;
 
     private List<String> roomList;
-
+    private static ExecutorService singlePool;
     // Prevent direct instantiation
     private EventServiceImpl() {
     }
@@ -90,7 +92,6 @@ public class EventServiceImpl implements EventService {
         if (INSTANCE == null) {
             INSTANCE = new EventServiceImpl();
         }
-
         return INSTANCE;
     }
 
@@ -103,6 +104,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void connect(String hash) throws URISyntaxException {
+        singlePool = ThreadUtils.getSinglePool();
         //判断是否已连接，如果连接重新连接
         if (mSocket!=null&&mSocket.connected()){
             mSocket.disconnect();
@@ -134,7 +136,7 @@ public class EventServiceImpl implements EventService {
             if (mSocket != null) mSocket.emit("join", roomId);
             roomList.add(roomId);
         }
-        Log.i(TAG, "roomId: "+roomId);
+//        Log.i(TAG, "roomId: "+roomId);
     }
     /**
      * 新对话加入房间
@@ -148,7 +150,7 @@ public class EventServiceImpl implements EventService {
             if (mSocket != null) mSocket.emit("join", roomId,ack);
             roomList.add(roomId);
         }
-        Log.i(TAG, "roomId: "+roomId);
+//        Log.i(TAG, "roomId: "+roomId);
 
     }
 
@@ -286,7 +288,14 @@ public class EventServiceImpl implements EventService {
                         e.printStackTrace();
                     }
                 } else {
-                    uploadDate(args[i].toString());
+                    int finalI = i;
+                    singlePool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                           uploadDate(args[finalI].toString());
+                        }
+                    });
                 }
             }
         }

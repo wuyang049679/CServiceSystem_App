@@ -8,9 +8,13 @@ import com.hecong.cssystem.entity.ReceptionEntity;
 import com.hecong.cssystem.entity.TeamEntity;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.Observable;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 
 /**
@@ -61,4 +65,13 @@ public interface Apistore {
      */
     @GET("dialog/reception")
     Observable<BaseEntity<ReceptionEntity.DataBean>> receptionDialog(@QueryMap HashMap<String, String> map);
+
+    /**
+     * 对话结束
+     * @param
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("dialog/autoend")
+    Observable<BaseEntity<ReceptionEntity.DataBean>> endDialog(@FieldMap Map<String, String> map);
 }

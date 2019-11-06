@@ -5,11 +5,30 @@ package com.hecong.cssystem.entity;
  */
 public class UserEntity {
 
+
     private   String hash;
     private   String serviceId;
-    private   int maxChat;
-    private   boolean founding;
+    private   int maxChat;//最大聊天
+    private   boolean founding;//是否是管理原
+    private   MessageDialogEntity.DataBean.AutoEndBean autoEnd; //自动结束
+    private   MessageDialogEntity.DataBean.OffEndBean offEnd; //离线自动结束
 
+
+    public MessageDialogEntity.DataBean.AutoEndBean getAutoEnd() {
+        return autoEnd;
+    }
+
+    public void setAutoEnd(MessageDialogEntity.DataBean.AutoEndBean autoEnd) {
+        this.autoEnd = autoEnd;
+    }
+
+    public MessageDialogEntity.DataBean.OffEndBean getOffEnd() {
+        return offEnd;
+    }
+
+    public void setOffEnd(MessageDialogEntity.DataBean.OffEndBean offEnd) {
+        this.offEnd = offEnd;
+    }
 
     public boolean isFounding() {
         return founding;

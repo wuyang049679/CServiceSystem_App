@@ -5,6 +5,7 @@ import com.hecong.cssystem.base.BaseApplication;
 import com.hecong.cssystem.base.BaseEntity;
 import com.hecong.cssystem.contract.ChatListFragmentContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
+import com.hecong.cssystem.entity.ReceptionEntity;
 import com.hecong.cssystem.utils.Constant;
 
 import java.util.HashMap;
@@ -35,6 +36,18 @@ public class ChatListFragmentModel implements ChatListFragmentContract.Model {
         hashMap.put("dialogId",dialogId);
 
         return ApiManager.getApistore().getNewDialog(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<BaseEntity<ReceptionEntity.DataBean>> endDialog(String idList, String offEnd, String autoEnd) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put("idList",idList);
+        if (offEnd!=null)hashMap.put("offEnd",offEnd);
+        if (autoEnd!=null)hashMap.put("autoEnd",autoEnd);
+        return ApiManager.getApistore().endDialog(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

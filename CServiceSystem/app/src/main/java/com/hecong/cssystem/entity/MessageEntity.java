@@ -124,8 +124,18 @@ public class MessageEntity {
             private String sendType;
             private String state;
             private String serviceId;
+            private String oneway;
 
-            public String getId() {
+
+        public String getOneway() {
+            return oneway;
+        }
+
+        public void setOneway(String oneway) {
+            this.oneway = oneway;
+        }
+
+        public String getId() {
                 return id;
             }
 

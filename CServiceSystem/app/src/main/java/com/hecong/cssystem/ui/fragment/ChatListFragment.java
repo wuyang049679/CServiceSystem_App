@@ -23,6 +23,8 @@ import com.hecong.cssystem.contract.ChatListFragmentContract;
 import com.hecong.cssystem.entity.MessageDialogEntity;
 import com.hecong.cssystem.entity.MessageEntity;
 import com.hecong.cssystem.entity.OffLineEntity;
+import com.hecong.cssystem.entity.ReceptionEntity;
+import com.hecong.cssystem.entity.UserEntity;
 import com.hecong.cssystem.presenter.ChatListFragmentPresenter;
 import com.hecong.cssystem.ui.activity.ColleagueActivity;
 import com.hecong.cssystem.ui.activity.MainActivity;
@@ -30,6 +32,7 @@ import com.hecong.cssystem.ui.activity.NotReceivedActivity;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.DateUtils;
 import com.hecong.cssystem.utils.JsonParseUtils;
+import com.hecong.cssystem.utils.ThreadUtils;
 import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
 import com.hecong.cssystem.utils.socket.EventListener;
 import com.hecong.cssystem.utils.socket.EventServiceImpl;
@@ -37,9 +40,12 @@ import com.hecong.cssystem.utils.socket.EventServiceImpl;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import butterknife.BindView;
 import io.socket.client.Ack;
@@ -64,7 +70,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     int unReadCount = 0;//总的未读条数
     int limit=20;//限制每次访问多少条第一设置20条
     int skip=0;//跳过已获取的条数
-
+    int INDEXS=0;
     private String POSITION="item_position";
     private final int ONOFFLINE=100;
     private final int ONLINE=101;
@@ -72,6 +78,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     private final int UPDATE_MESSAGE=103;
     private final int LEAVE_DIALOG=104;
     private final int RECEPTION_DIALOG=105;
+
+    ExecutorService singlePool;
 
     public ChatListFragment() {
     }
@@ -120,6 +128,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         chatRecycler.setLayoutManager(layoutParams);
         chatRecycler.setAdapter(dialogListAdapter);
         dialogListAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            MessageDialogEntity.DataBean.ListBean item = (MessageDialogEntity.DataBean.ListBean) adapter.getData().get(position);
             switch (view.getId()){
                 case R.id.dialog_no_received_lin://点击未接待跳转
                     Bundle bundle=new Bundle();
@@ -133,8 +142,9 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     startActivity(ColleagueActivity.class,bundle2);
                     break;
                 case R.id.close_btn:
-                    listUIBeans.remove(position);
-                    dialogListAdapter.notifyItemRemoved(position);
+                    INDEXS=position;
+                    String idList=item.getId();
+                    mPresenter.pEndDialog(idList,null,null);
                     break;
             }
 
@@ -155,6 +165,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             e.printStackTrace();
         }
 
+       singlePool = ThreadUtils.getSinglePool();
     }
 
     @Override
@@ -186,7 +197,13 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     @Override
     public void showDataSuccess(MessageDialogEntity.DataBean datas) {
-
+//        for (MessageDialogEntity.DataBean.ListBean listBean : listBeans) {
+//           if ( listBean.getId().equals(listUIBeans.get(INDEXS).getId())){
+//                listBeans.remove(listBean);
+//                break;
+//            }
+//        }
+//        refreshUI(listBeans);
     }
 
 
@@ -196,6 +213,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     @SuppressLint("SetTextI18n")
     @Override
     public void showDialogList(MessageDialogEntity.DataBean messageEntity) {
+        //设置自动结束状态和离线自动结束状态
+        UserEntity userEntity=BaseApplication.getUserEntity();
+        if (messageEntity!=null) {
+            if (messageEntity.getAutoEnd()!=null)userEntity.setAutoEnd(messageEntity.getAutoEnd());
+            if (messageEntity.getOffEnd()!=null)userEntity.setOffEnd(messageEntity.getOffEnd());
+        }
         if (messageEntity.getList()!=null){
             List<MessageDialogEntity.DataBean.ListBean> list = messageEntity.getList();
             listBeans.addAll(list);
@@ -213,9 +236,90 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             }else {
                 //最后所有数据请求完成之后刷新
                 refreshUI(listBeans);
+                //请求完成数据之后批量自动结束对话
+                endDialogList(messageEntity);
             }
 
         }
+
+    }
+
+    /**
+     * 自动结束对话
+     * @param messageEntity
+     */
+    private void endDialogList(MessageDialogEntity.DataBean messageEntity) {
+        List<String> autoList=new ArrayList<>();
+        List<String> offList=new ArrayList<>();
+        if (messageEntity!=null){
+        //超过设置时间自动过期结束
+        if (messageEntity!=null){
+            if (messageEntity.getAutoEnd()!=null){
+
+                long autoTime=(messageEntity.getAutoEnd().getTime())*60*1000;//分钟转毫秒
+                for(Iterator<MessageDialogEntity.DataBean.ListBean> it = listBeans.iterator(); it.hasNext();){
+                    MessageDialogEntity.DataBean.ListBean listBean = it.next();
+                    if (listBean.getState().equals("active")){
+                        String lastmsg=listBean.getLastMsg().getTime()!=null?listBean.getLastMsg().getTime():listBean.getAddtime();//是否存在lastmsg
+                        long time=autoTime-(DateUtils.getCurrentTimeInLong()-DateUtils.getDate(lastmsg).getTime());//比较时间差
+                        if (time<=0){
+                            autoList.add(listBean.getId());
+                            it.remove();
+                        }
+                    }
+                }
+
+                int counts= (int) Math.ceil((autoList.size())/200f);//计算需要上传次数(向上取整)
+                if (counts>0) {
+                    for (int i = 0; i < counts; i++) {
+                        String idList=null;
+                        int size=autoList.size()-i*200>200?(i+1)*200:autoList.size();//计算size(每次最多结束200)
+                        for (int x = i*200; x< size; x++) {
+                            if (idList==null){
+                                idList=autoList.get(x);
+                            }else {
+                                idList+=","+autoList.get(x);
+                            }
+                        }
+
+                        mPresenter.pEndDialog(idList,null,"true");
+                    }
+                }
+            }
+        //离线超过时间没有新消息
+            if (messageEntity.getOffEnd().isState()){
+                long offTime=(messageEntity.getOffEnd().getTime())*1000;
+                for(Iterator<MessageDialogEntity.DataBean.ListBean> it = listBeans.iterator(); it.hasNext();){
+                    MessageDialogEntity.DataBean.ListBean listBean = it.next();
+                    if (listBean.getState().equals("active")&&listBean.getCustomerOffTime()!=null){
+                        if (listBean.getSource().equals("web")||listBean.getSource().equals("link")){
+                            long time=offTime-(DateUtils.getCurrentTimeInLong()-DateUtils.getDate(listBean.getCustomerOffTime()).getTime());//比较时间差
+                            if (time<=0){
+                                offList.add(listBean.getId());
+                            }
+                        }
+                    }
+                }
+                int counts= (int) Math.floor(offList.size()/200f);//计算需要上传次数
+                if (counts>0) {
+                    for (int i = 0; i < counts; i++) {
+                        String idList=null;
+                        int size=offList.size()-i*200>200?(i+1)*200:offList.size();
+                        for (int x = i*200; i < size; x++) {
+                            if (idList==null){
+                                idList=offList.get(x);
+                            }else {
+                                idList+=","+offList.get(x);
+                            }
+                        }
+                        mPresenter.pEndDialog(idList,"true",null);
+                    }
+                }
+            }
+        }
+        }
+
+
 
     }
 
@@ -233,11 +337,20 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     }
 
     /**
+     * 对话结束成功
+     * @param messageEntity
+     */
+    @Override
+    public void showEndDialog(ReceptionEntity.DataBean messageEntity) {
+
+    }
+
+    /**
      * 数据分类排序和刷新UI
      * @param list
      */
 
-    private void refreshUI(List<MessageDialogEntity.DataBean.ListBean> list) {
+    private  void refreshUI(List<MessageDialogEntity.DataBean.ListBean> list) {
         //加入房间操作
         for (MessageDialogEntity.DataBean.ListBean listBean : list) {
             EventServiceImpl.getInstance().joinRoom(listBean.getCustomerId());
@@ -355,7 +468,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
      * 先置顶排序后按lastMsgTime排序
      * @param listBeans
      */
-    private void listSort(List<MessageDialogEntity.DataBean.ListBean> listBeans) {
+    private synchronized void listSort(List<MessageDialogEntity.DataBean.ListBean> listBeans) {
 
         Collections.sort(listBeans, (o1, o2) -> {
             try {
@@ -385,6 +498,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     }
                 }
             } catch (Exception e) {
+
                 e.printStackTrace();
             }
             return 0;
@@ -418,6 +532,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         if (messageBean!=null){
             for (int i = 0; i < listBeans.size(); i++) {
                 String id = listBeans.get(i).getId();
+                if (messageBean.getMessage().getOneway()!=null&&messageBean.getMessage().getOneway().equals("service"))return;//如果是服务器推送则不更新消息
                 if (id!=null&&id.equals(messageBean.getDialogId())){
                     listBeans.get(i).setUnreadNum(listBeans.get(i).getUnreadNum()+1);
                     MessageDialogEntity.DataBean.ListBean.LastMsgBean lastMsgBean=listBeans.get(i).getLastMsg();
@@ -482,9 +597,10 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     }
                     //更新未读消息
                     if (item.getRead()!=0)listUIBean.setUnreadNum(0);//清空未读消息
+                    //置顶
+                    if (item.isTop())listUIBean.setTop(true);
                 }
             }
-            listSort(listBeans);
             Message message = mHandler.obtainMessage();
             message.what = UPDATE_MESSAGE;
             message.sendToTarget();
@@ -502,11 +618,10 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             for (MessageDialogEntity.DataBean.ListBean listBean : listBeans) {
                 if (listBean.getId().equals(messageBean.getDialogId())){
                     listBeans.remove(listBean);
-                    return;
+                    break;
                 }
 
             }
-            listSort(listBeans);
             Message message = mHandler.obtainMessage();
             message.what = LEAVE_DIALOG;
             message.sendToTarget();
@@ -527,7 +642,6 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     listBean.setState("active");
                 }
             }
-            listSort(listBeans);
             Message message = mHandler.obtainMessage();
             message.what = RECEPTION_DIALOG;
             message.sendToTarget();
@@ -564,7 +678,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     @Override
     public void onOffLine(Object... args) {
 
+            singlePool.submit(new Runnable() {
+                @Override
+                public void run() {
 
+                }
+            });
         OffLineEntity offLineEntity = JsonParseUtils.parseToObject(args[0].toString(), OffLineEntity.class);
         if (offLineEntity!=null){
             String customId=offLineEntity.getCustomerId();
@@ -580,7 +699,6 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     message.sendToTarget();
                 }
             }
-
         }
     }
 
@@ -635,16 +753,27 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 case NEW_MESSAGE://新消息通知
 //                    int message_index = bundle.getInt(POSITION);
 //                    dialogListAdapter.notifyDataSetChanged();
+                    List<MessageDialogEntity.DataBean.ListBean>  lists1 = new ArrayList(Arrays.asList(new Object[listBeans.size()]));
+                    Collections.copy(lists1,listBeans);
+                    refreshUI(lists1);
                     refreshUI(listBeans);
                     break;
                 case UPDATE_MESSAGE://更新对话信息
+                    List<MessageDialogEntity.DataBean.ListBean>  lists2 = new ArrayList(Arrays.asList(new Object[listBeans.size()]));
+                    Collections.copy(lists2,listBeans);
+                    refreshUI(lists2);
                     refreshUI(listBeans);
                     break;
                 case LEAVE_DIALOG://结束对话
+                    List<MessageDialogEntity.DataBean.ListBean>  lists3 = new ArrayList(Arrays.asList(new Object[listBeans.size()]));
+                    Collections.copy(lists3,listBeans);
+                    refreshUI(lists3);
                     refreshUI(listBeans);
                     break;
-                case RECEPTION_DIALOG://对话被接待
-                    refreshUI(listBeans);
+                case RECEPTION_DIALOG://对话被接
+                    List<MessageDialogEntity.DataBean.ListBean>  lists = new ArrayList(Arrays.asList(new Object[listBeans.size()]));
+                    Collections.copy(lists,listBeans);
+                    refreshUI(lists);
                     break;
             }
         }
