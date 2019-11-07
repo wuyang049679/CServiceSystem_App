@@ -37,4 +37,23 @@ public class NotReceivedActivityPresenter extends BasePresenterIm<NotReceivedAct
             }
         });
     }
+    @Override
+    public void pEndDialog(String idList, String offEnd, String autoEnd) {
+        receivedActivityModel.endDialog(idList, offEnd, autoEnd).subscribe(new RxSubscribe<ReceptionEntity.DataBean>() {
+            @Override
+            protected void onSuccess(ReceptionEntity.DataBean dataBean) {
+                mView.showEndDialog(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
 }

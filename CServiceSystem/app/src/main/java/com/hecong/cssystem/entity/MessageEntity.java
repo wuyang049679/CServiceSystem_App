@@ -1,6 +1,8 @@
 package com.hecong.cssystem.entity;
 
-public class MessageEntity {
+import java.io.Serializable;
+
+public class MessageEntity implements Serializable {
 
     /**
      * act : loginSuc
@@ -18,7 +20,25 @@ public class MessageEntity {
     private String hash;
     private String roomID;
     private MessageDialogEntity.DataBean.ListBean item;
+    private long receptionTime;//被接待时间
+    private String autoMsgType;//判断是否是自动消息推送，end为自动结束
 
+
+    public String getAutoMsgType() {
+        return autoMsgType;
+    }
+
+    public void setAutoMsgType(String autoMsgType) {
+        this.autoMsgType = autoMsgType;
+    }
+
+    public long getReceptionTime() {
+        return receptionTime;
+    }
+
+    public void setReceptionTime(long receptionTime) {
+        this.receptionTime = receptionTime;
+    }
 
     public MessageDialogEntity.DataBean.ListBean getItem() {
         return item;
@@ -104,7 +124,7 @@ public class MessageEntity {
 
 
     //新消息类型数据
-    public  class MessageBean {
+    public  class MessageBean implements Serializable{
             /**
              * id : 5db7acc54bdcaa34003f809d
              * key : 5db7acc54bdcaa34003f809d

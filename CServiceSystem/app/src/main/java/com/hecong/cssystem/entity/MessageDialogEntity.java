@@ -257,12 +257,20 @@ public class MessageDialogEntity implements Serializable{
             private int itemtype;
             private int unCount;//未接待个数
             private int read;//读取消息数量，用于点击有未读消息有更新红点
-
+            private String receptionTime;
 
 
             @Override
             public ListBean clone() throws CloneNotSupportedException {
                 return (ListBean)super.clone();
+            }
+
+            public String getReceptionTime() {
+                return receptionTime;
+            }
+
+            public void setReceptionTime(String receptionTime) {
+                this.receptionTime = receptionTime;
             }
 
             public int getRead() {

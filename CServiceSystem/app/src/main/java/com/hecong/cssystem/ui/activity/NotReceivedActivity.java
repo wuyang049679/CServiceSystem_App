@@ -19,8 +19,8 @@ import com.hecong.cssystem.entity.ReceptionEntity;
 import com.hecong.cssystem.presenter.NotReceivedActivityPresenter;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.android.ToastUtils;
+import com.hecong.cssystem.wight.LocalDataSource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -69,7 +69,7 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
                 .init();
         backImg.setImageResource(R.mipmap.back);
         conmonTitleTextView.setText(getResources().getString(R.string.dialog_no_received));
-        notListBean= (ArrayList<MessageDialogEntity.DataBean.ListBean>) getIntent().getSerializableExtra(Constant.NOTRECEIVED_LIST);
+        notListBean= LocalDataSource.getNOTLIST();
         mCountAll=getIntent().getIntExtra(Constant.HAVERECEIVED_NUM,0);
         for (MessageDialogEntity.DataBean.ListBean listBean : notListBean) {
             listBean.setItemtype(Constant.NOTRECEIVED_ACT);
@@ -82,9 +82,12 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
             actNotReceivedRecycler.setAdapter(listAdapter);
         }
         listAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            MessageDialogEntity.DataBean.ListBean item = (MessageDialogEntity.DataBean.ListBean) adapter.getData().get(position);
             POSITION=position;
             switch (view.getId()){
                 case R.id.close_btn:
+                    String idList=item.getId();
+                    mPresenter.pEndDialog(idList,null,null);
                     break;
                 case R.id.btn_jd:
                     if (mCountAll< BaseApplication.getUserEntity().getMaxChat()) {
@@ -130,5 +133,11 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void showEndDialog(ReceptionEntity.DataBean messageEntity) {
+        notListBean.remove(POSITION);
+        listAdapter.notifyItemRemoved(POSITION);
     }
 }

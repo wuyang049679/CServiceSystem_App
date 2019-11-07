@@ -24,4 +24,16 @@ public class NotReceivedActivityModel implements NotReceivedActivityContract.Mod
         return ApiManager.getApistore().receptionDialog(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    @Override
+    public Observable<BaseEntity<ReceptionEntity.DataBean>> endDialog(String idList, String offEnd, String autoEnd) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put("idList",idList);
+        if (offEnd!=null)hashMap.put("offEnd",offEnd);
+        if (autoEnd!=null)hashMap.put("autoEnd",autoEnd);
+        return ApiManager.getApistore().endDialog(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

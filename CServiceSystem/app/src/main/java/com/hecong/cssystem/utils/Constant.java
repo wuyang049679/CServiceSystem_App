@@ -65,4 +65,8 @@ public class Constant {
      * 已接待对话数量
      */
     public static final String HAVERECEIVED_NUM="have_received_num";
+    /**
+     * 常用或ID
+     */
+    public static final String DIALOGID="_dialogId";
 }
