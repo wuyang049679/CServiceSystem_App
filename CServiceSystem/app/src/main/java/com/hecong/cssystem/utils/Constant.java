@@ -69,4 +69,25 @@ public class Constant {
      * 常用或ID
      */
     public static final String DIALOGID="_dialogId";
+
+    /**
+     * 消息类型
+     */
+    public static final String MESSAGE_LOGINSUC = "loginSuc";
+    public static final String MESSAGE_JOIN = "join";
+    public static final String MESSAGE_LEAVE = "leave";
+    public static final String MESSAGE_SERVICELEAVE = "serviceLeave";
+    public static final String MESSAGE_NEW = "message";
+    public static final String MESSAGE_NEWDIALOG = "newdialog";
+    public static final String MESSAGE_INPUTING = "inputing";
+    public static final String MESSAGE_ONLINE = "online";
+    public static final String MESSAGE_OFFLINE = "offline";
+    public static final String MESSAGE_RECEPTION = "reception";
+    public static final String MESSAGE_SERVICEONLY = "serviceOnly";
+    public static final String MESSAGE_REALTIME_ADD = "realtime_add";
+    public static final String MESSAGE_REALTIME_MODIFY = "realtime_modify";
+    public static final String MESSAGE_REALTIME_DEL = "realtime_del";
+    public static final String MESSAGE_STATEUPATE = "stateUpate";
+    public static final String MESSAGE_UPATEDIALOG = "upateDialog";
+    public static final String MESSAGE_REPORT_STATE = "report_state";
 }

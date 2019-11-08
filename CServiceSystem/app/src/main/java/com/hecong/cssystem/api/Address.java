@@ -17,7 +17,7 @@ public class Address {
     /**
      * 图片服务器地址
      */
-    public static  String IMG_URL = "https://socket.aihecong.com/";
+    public static  String IMG_URL = "https://chatimg.aihecong.com/";
     /**
      * baseUrl
      */
@@ -79,7 +79,5 @@ public class Address {
             this.displayName = displayName;
         }
     }
-
-
 
 }

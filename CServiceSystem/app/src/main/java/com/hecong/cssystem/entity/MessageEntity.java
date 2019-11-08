@@ -16,6 +16,7 @@ public class MessageEntity implements Serializable {
     private String serviceId;
     private String dialogId;
     private String customerId;
+    private String currentUrl;
     private MessageBean message;
     private String hash;
     private String roomID;
@@ -26,6 +27,15 @@ public class MessageEntity implements Serializable {
 
     public String getAutoMsgType() {
         return autoMsgType;
+    }
+
+
+    public String getCurrentUrl() {
+        return currentUrl;
+    }
+
+    public void setCurrentUrl(String currentUrl) {
+        this.currentUrl = currentUrl;
     }
 
     public void setAutoMsgType(String autoMsgType) {

@@ -20,6 +20,7 @@ import com.hecong.cssystem.entity.TeamEntity;
 import com.hecong.cssystem.presenter.ColleagueActivityPresenter;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.wight.CustomDialog;
+import com.hecong.cssystem.wight.LocalDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter,T
                 .init();
         backImg.setImageResource(R.mipmap.back);
 
-        colleagueListBean = (ArrayList<MessageDialogEntity.DataBean.ListBean>) getIntent().getSerializableExtra(Constant.COLLEAGUE_LIST);
+        colleagueListBean = LocalDataSource.getTEAMLIST();
         for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
             listBean.setItemtype(Constant.COLLEAGUE_ACT);
         }

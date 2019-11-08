@@ -14,6 +14,7 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hecong.cssystem.R;
+import com.hecong.cssystem.api.Address;
 import com.hecong.cssystem.entity.FileEntity;
 import com.hecong.cssystem.entity.MessageDialogEntity;
 import com.hecong.cssystem.utils.Constant;
@@ -113,7 +114,18 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
         }
         if (item.getCustomer().getHead()!=null){
             img_lin.setVisibility(View.GONE);
-            draweeView.setImageURI(UriUtils.getUri(Constant.ONLINEPIC, item.getCustomer().getHead()));
+            if (item.getSource().equals("web")||item.getSource().equals("link")){
+                draweeView.setImageURI(UriUtils.getUri(Constant.ONLINEPIC, item.getCustomer().getHead()));
+            }else {
+//                userHead(hash) {
+//                    if(hash && hash!='undefined'){
+//                        return serverAddress.imgPath + hash + '?imageView2/1/w/100/h/100';
+//                    }else{
+//                        return serverAddress.systemPath + 'image/defaultAvatar.jpeg';
+//                    }
+//                }
+                draweeView.setImageURI(UriUtils.getUri(Constant.ONLINEPIC, Address.IMG_URL+item.getCustomer().getHead()+"?imageView2/1/w/100/h/100"));
+            }
         }else {
             img_lin.setVisibility(View.VISIBLE);
             img.setImageResource(resId);

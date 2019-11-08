@@ -41,7 +41,7 @@
         <View
             android:background="@color/black_d5"
             android:layout_width="match_parent"
-            android:layout_height="0.7dp"/>
+            android:layout_height="0.5dp"/>
         <com.hecong.cssystem.wight.AddAndSubEditText
             android:inputType="textEmailAddress"
             android:singleLine="true"
@@ -56,7 +56,7 @@
         <View
             android:background="@color/black_d5"
             android:layout_width="match_parent"
-            android:layout_height="0.7dp"/>
+            android:layout_height="0.5dp"/>
 
         <FrameLayout
             android:layout_marginTop="25dp"

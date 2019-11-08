@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.hecong.cssystem.utils.socket.MessageEvent;
 import com.hecong.cssystem.wight.stateview.StateView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -111,7 +112,7 @@ public abstract class BaseFragment<T extends BasePresenterIm, V> extends Fragmen
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateUserInfo(Message msg) {
+    public void onSocketEvent(MessageEvent msg) {
 
     }
 

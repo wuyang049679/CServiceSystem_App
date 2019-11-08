@@ -32,11 +32,11 @@ import com.hecong.cssystem.ui.activity.NotReceivedActivity;
 import com.hecong.cssystem.utils.Constant;
 import com.hecong.cssystem.utils.DateUtils;
 import com.hecong.cssystem.utils.JsonParseUtils;
-import com.hecong.cssystem.utils.JsonUtils;
 import com.hecong.cssystem.utils.ThreadUtils;
 import com.hecong.cssystem.utils.android.SharedPreferencesUtils;
 import com.hecong.cssystem.utils.socket.EventListener;
 import com.hecong.cssystem.utils.socket.EventServiceImpl;
+import com.hecong.cssystem.utils.socket.MessageEvent;
 import com.hecong.cssystem.wight.LocalDataSource;
 
 import java.net.URISyntaxException;
@@ -51,6 +51,25 @@ import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import io.socket.client.Ack;
+
+import static com.hecong.cssystem.utils.Constant.MESSAGE_INPUTING;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_JOIN;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_LEAVE;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_LOGINSUC;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_NEW;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_NEWDIALOG;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_OFFLINE;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_ONLINE;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_REALTIME_ADD;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_REALTIME_DEL;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_REALTIME_MODIFY;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_RECEPTION;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_REPORT_STATE;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_SERVICELEAVE;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_SERVICEONLY;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_STATEUPATE;
+import static com.hecong.cssystem.utils.Constant.MESSAGE_UPATEDIALOG;
+import static com.hecong.cssystem.utils.socket.MessageEventType.EventMessage;
 
 public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, MessageDialogEntity.DataBean> implements ChatListFragmentContract.View, EventListener {
 
@@ -142,10 +161,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     startActivity(NotReceivedActivity.class,bundle);
                     break;
                 case R.id.dialog_list_colleague_lin://点击同事对话跳转
-                    String json= JsonUtils.list2json(notListBean);
-                    Bundle bundle2=new Bundle();
-                    bundle2.putString(Constant.COLLEAGUE_LIST, json);
-                    startActivity(ColleagueActivity.class,bundle2);
+                    LocalDataSource.setTEAMLIST(colleagueListBean);
+                    startActivity(ColleagueActivity.class);
                     break;
                 case R.id.close_btn://点击结束
                     INDEXS=position;
@@ -240,6 +257,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 limit=150;
                 mPresenter.pShowMessageDialog(limit,skip);
             }else {
+                showContentView();
                 //请求完成数据之后批量自动结束对话
                 endDialogList(messageEntity);
                 //最后所有数据请求完成之后刷新
@@ -453,7 +471,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             listUIBeans.add(0,bean); //添加未接待item到UI list的第一条
         }
         listBeans.stream().distinct().collect(Collectors.toList());
-        for (int i = 0; i < listBeans.size(); i++) {
+        for (int i = 0; i < listBeans.size(); i++) {//去重元素
             for (int j = 0; j < listBeans.size(); j++) {
                 if(i!=j&&listBeans.get(i).getId().equals(listBeans.get(j).getId())) {
                     listBeans.remove(listBeans.get(j));
@@ -494,7 +512,6 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             ((MainActivity) getActivity()).getNavigationBar().clearAllMsgPoint();
         }
         }
-
 
     /**
      * 先置顶排序后按lastMsgTime排序
@@ -570,7 +587,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             Message message = mHandler.obtainMessage();
             message.what = NEW_MESSAGE;
             Bundle bundle = new Bundle();
-            bundle.putString(Constant.DIALOGID, messageBean.getDialogId());
+            bundle.putSerializable(Constant.DIALOGID,messageBean);
             message.setData(bundle);
             message.sendToTarget();
         }
@@ -699,12 +716,6 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     @Override
     public void onOffLine(Object... args) {
 
-            singlePool.submit(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            });
         OffLineEntity offLineEntity = JsonParseUtils.parseToObject(args[0].toString(), OffLineEntity.class);
         if (offLineEntity!=null){
             String customId=offLineEntity.getCustomerId();
@@ -772,17 +783,16 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     dialogListAdapter.notifyItemChanged(online_index);
                     break;
                 case NEW_MESSAGE://新消息通知
-                    String dialogIds = bundle.getString(Constant.DIALOGID);
+                    MessageEntity serializable = (MessageEntity) bundle.getSerializable(Constant.DIALOGID);
                     for (int i = 0; i < listBeans.size(); i++) {
                         String id = listBeans.get(i).getId();
-                        if (id!=null&&id.equals(dialogIds)){
+                        if (id!=null&&id.equals(serializable.getDialogId())){
                             listBeans.get(i).setUnreadNum(listBeans.get(i).getUnreadNum()+1);
                             MessageDialogEntity.DataBean.ListBean.LastMsgBean lastMsgBean=listBeans.get(i).getLastMsg();
-                            lastMsgBean.setContents("新消息000000000000000000000000000000");
-                            lastMsgBean.setType("text");
+                            lastMsgBean.setContents(serializable.getMessage().getContents());
+                            lastMsgBean.setType(serializable.getMessage().getType());
                             lastMsgBean.setTime(DateUtils.getDateFormat(DateUtils.getCurrentTimeInLong()));
                             listBeans.get(i).setLastMsg(lastMsgBean);
-
                         }
                     }
                     refreshUI(listBeans);
@@ -811,4 +821,206 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             }
         }
     };
+
+    @Override
+    public void onSocketEvent(MessageEvent msg) {
+        super.onSocketEvent(msg);
+        MessageEntity message = (MessageEntity) msg.getMsg();
+        if (msg.getType()==EventMessage);
+            switch (message.getAct()) {
+                //连接成功
+                case MESSAGE_LOGINSUC:
+                    //登录连接成功获取对话列表，并加入房间
+                    mPresenter.pShowMessageDialog(limit, skip);
+                    break;
+                //加入房间
+                case MESSAGE_JOIN:
+                    break;
+                //结束对话后退出房间
+                case MESSAGE_LEAVE:
+                    EventServiceImpl.getInstance().leaveRoom(message.getRoomID());//离开房间操作
+//                    if (mEventListener!=null)mEventListener.onLeaveDialog(message);
+                    updateData(message);
+                    break;
+                //只有客服能收到的退出房间消息
+                case MESSAGE_SERVICELEAVE:
+                    break;
+                //收到新消息
+                case MESSAGE_NEW:
+//                    if (mEventListener != null) mEventListener.onNewMessage(message);
+                    break;
+                //新对话加入
+                case MESSAGE_NEWDIALOG:
+//                    if (mEventListener!=null)mEventListener.onNewDialog(message);
+                    break;
+                //接收顾客输入的文字
+                case MESSAGE_INPUTING:
+                    break;
+                //顾客上线
+                case MESSAGE_ONLINE:
+//                    if (mEventListener != null) mEventListener.onLine(message);
+                    break;
+                //顾客离线
+                case MESSAGE_OFFLINE:
+//                    if (mEventListener != null) mEventListener.onOffLine(message);
+                    break;
+                //对话被接待
+                case MESSAGE_RECEPTION:
+//                    if (mEventListener!=null)mEventListener.onReception(message);
+                    break;
+                //客服账号登录唯一性验证//保存serviceId
+                case MESSAGE_SERVICEONLY:
+
+                    break;
+                //实时访客增加
+                case MESSAGE_REALTIME_ADD:
+                    break;
+                //实时访客修改
+                case MESSAGE_REALTIME_MODIFY:
+                    break;
+                //实时访客删除
+                case MESSAGE_REALTIME_DEL:
+                    break;
+                //客服在线状态变化
+                case MESSAGE_STATEUPATE:
+                    break;
+                //更新对话（团队协作可能更新）
+                case MESSAGE_UPATEDIALOG:
+//                    if (mEventListener != null) mEventListener.onUpdateDialog(message);
+                    break;
+                //收到客服汇报的在线状态
+                case MESSAGE_REPORT_STATE:
+                    break;
+            }
+    }
+
+    /**
+     * 更新数据上同步锁
+     * @param message
+     */
+    private synchronized void updateData(MessageEntity message) {
+
+        switch (message.getAct()) {
+            //连接成功
+            case MESSAGE_LOGINSUC:
+                break;
+            //加入房间
+            case MESSAGE_JOIN:
+                break;
+            //结束对话后退出房间
+            case MESSAGE_LEAVE:
+                //移除数据
+                for(Iterator<MessageDialogEntity.DataBean.ListBean> it = listBeans.iterator(); it.hasNext();) {
+                    if (it.next().getId().equals(message.getDialogId())){
+                        it.remove();
+                        break;
+                    }
+                }
+                break;
+            //只有客服能收到的退出房间消息
+            case MESSAGE_SERVICELEAVE:
+                break;
+            //收到新消息
+            case MESSAGE_NEW:
+                if (message.getAutoMsgType()!=null&&message.getAutoMsgType().equals("end"))return;
+                if (message.getMessage().getOneway()!=null&&message.getMessage().getOneway().equals("service"))return;//如果是服务器推送则不更新消息
+                for (int i = 0; i < listBeans.size(); i++) {
+                    String id = listBeans.get(i).getId();
+                    if (id!=null&&id.equals(message.getDialogId())){
+                        listBeans.get(i).setUnreadNum(listBeans.get(i).getUnreadNum()+1);
+                        MessageDialogEntity.DataBean.ListBean.LastMsgBean lastMsgBean=listBeans.get(i).getLastMsg();
+                        lastMsgBean.setContents(message.getMessage().getContents());
+                        lastMsgBean.setType(message.getMessage().getType());
+                        lastMsgBean.setTime(DateUtils.getDateFormat(message.getMessage().getTime()));
+                        listBeans.get(i).setLastMsg(lastMsgBean);
+                    }
+                }
+                break;
+            //新对话加入
+            case MESSAGE_NEWDIALOG:
+                    EventServiceImpl.getInstance().joinRoom(message.getCustomerId(), new Ack() {
+                        @Override
+                        public void call(Object... args) {//先加入房间等服务器回执再请求对话数据
+                            mPresenter.pGetDialog(message.getDialogId());
+                            for (int i = 0; i < args.length; i++) {
+                                Log.i(TAG, "ACK: onNewDialog" + args[i]);
+                            }
+                        }
+                    });
+
+                break;
+            //接收顾客输入的文字
+            case MESSAGE_INPUTING:
+                break;
+            //顾客上线
+            case MESSAGE_ONLINE:
+                    String customId=message.getCustomerId();
+                    for (int i = 0; i < listUIBeans.size(); i++) {
+                        String customerId = listUIBeans.get(i).getCustomerId();
+                        if (customerId!=null&&customerId.equals(customId)) {
+                            listUIBeans.get(i).setCustomerOffTime(null);
+                        }
+                    }
+                break;
+            //顾客离线
+            case MESSAGE_OFFLINE:
+                    String customIds=message.getCustomerId();
+                    for (int i = 0; i < listUIBeans.size(); i++) {
+                        String customerId = listUIBeans.get(i).getCustomerId();
+                        if (customerId!=null&&customerId.equals(customIds)) {
+                            listUIBeans.get(i).setCustomerOffTime(DateUtils.getDateFormat(DateUtils.getCurrentTimeInLong()));
+                        }
+                    }
+
+                break;
+            //对话被接待
+            case MESSAGE_RECEPTION:
+//                    if (mEventListener!=null)mEventListener.onReception(message);
+                break;
+            //客服账号登录唯一性验证//保存serviceId
+            case MESSAGE_SERVICEONLY:
+
+                break;
+            //实时访客增加
+            case MESSAGE_REALTIME_ADD:
+                break;
+            //实时访客修改
+            case MESSAGE_REALTIME_MODIFY:
+                break;
+            //实时访客删除
+            case MESSAGE_REALTIME_DEL:
+                break;
+            //客服在线状态变化
+            case MESSAGE_STATEUPATE:
+                break;
+            //更新对话（团队协作可能更新）
+            case MESSAGE_UPATEDIALOG:
+
+                    MessageDialogEntity.DataBean.ListBean item = message.getItem();
+                    for (MessageDialogEntity.DataBean.ListBean listUIBean : listBeans) {
+                        if (listUIBean.getId().equals(item.getId())){  //比较对话id替换对话原来对话的数据
+                            MessageDialogEntity.DataBean.ListBean.CustomerBean _customer = listUIBean.getCustomer();
+                            MessageDialogEntity.DataBean.ListBean.CustomerBean customer= item.getCustomer();
+                            if (customer!=null){//更新顾客信息
+                                if (customer.getName()!=null)_customer.setName(customer.getName());
+                                if (customer.getHead()!=null)_customer.setHead(customer.getHead());
+                                if (customer.getNumberId()!=0)_customer.setNumberId(customer.getNumberId());
+                                if (customer.getCard()!=null)_customer.setCard(customer.getCard());
+                                if (customer.getAttCard()!=null)_customer.setAttCard(customer.getAttCard());
+                                if (customer.getAddress()!=null)_customer.setAddress(customer.getAddress());
+                                if (customer.getAddtime()!=null)_customer.setAddtime(customer.getAddtime());
+                            }
+                            //更新未读消息
+                            if (item.getRead()!=0)listUIBean.setUnreadNum(0);//清空未读消息
+                            //置顶
+                            if (item.isTop())listUIBean.setTop(true);
+                        }
+                }
+                break;
+            //收到客服汇报的在线状态
+            case MESSAGE_REPORT_STATE:
+                break;
+        }
+
+    }
 }
