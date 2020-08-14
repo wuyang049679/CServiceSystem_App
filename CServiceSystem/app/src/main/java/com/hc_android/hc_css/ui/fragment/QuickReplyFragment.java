@@ -508,7 +508,7 @@ public class QuickReplyFragment extends BaseFragment<MDiaglogFragmentPresenter, 
             }
             multiItemEntities.add(expandEntity);
             if (groupingBeans != null && groupingBeans.size() > 0) {
-                //添加已分组列表()
+                //添加已分组列表(223233)
                 for (int i = 0; i < groupingBeans.size(); i++) {
                     ExpandEntity expandEntity1 = new ExpandEntity(groupingBeans.get(i).getName(), "0");
                     for (int i1 = 0; i1 < listBeans.size(); i1++) {
