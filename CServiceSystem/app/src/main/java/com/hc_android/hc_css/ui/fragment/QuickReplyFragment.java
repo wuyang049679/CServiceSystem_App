@@ -503,7 +503,9 @@ public class QuickReplyFragment extends BaseFragment<MDiaglogFragmentPresenter, 
                     }
                 }
             }
-            expandEntity.setCount(expandEntity.getSubItems().size() + "");
+            if (expandEntity.getSubItems()!=null) {
+                expandEntity.setCount(expandEntity.getSubItems().size() + "");
+            }
             multiItemEntities.add(expandEntity);
             if (groupingBeans != null && groupingBeans.size() > 0) {
                 //添加已分组列表
@@ -515,8 +517,10 @@ public class QuickReplyFragment extends BaseFragment<MDiaglogFragmentPresenter, 
                             expandEntity1.addSubItem(listBeans.get(i1));
                         }
                     }
-                    expandEntity1.setCount(expandEntity1.getSubItems() != null ? expandEntity1.getSubItems().size() + "" : "0");
-                    multiItemEntities.add(expandEntity1);
+                    if (expandEntity1.getSubItems() != null) {
+                        expandEntity1.setCount(expandEntity1.getSubItems() != null ? expandEntity1.getSubItems().size() + "" : "0");
+                    }
+                        multiItemEntities.add(expandEntity1);
 
                 }
             }
