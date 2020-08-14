@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<com.daimajia.swipe.SwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="wrap_content">
 
+    <LinearLayout
+        android:id="@+id/close_btn"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/end_btn"
+        android:gravity="center"
+        >
 
+        <TextView
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/dialog_close"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/lin_constrain"
         android:clickable="true"
         android:background="@drawable/item_down_bg"
         android:orientation="vertical"
@@ -20,9 +36,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             tools:ignore="MissingConstraints"
             android:layout_width="match_parent"
-            android:layout_height="62dp">
+            android:layout_height="61dp">
 
             <com.facebook.drawee.view.SimpleDraweeView
+                fresco:roundWithOverlayColor="@color/white"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/simple_drawViews"
                 fresco:layout_constraintLeft_toLeftOf="parent"
@@ -49,8 +66,8 @@
                 <ImageView
                     android:id="@+id/img_icon"
                     android:src="@mipmap/chrome"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
             </LinearLayout>
 
             <Space
@@ -68,13 +85,14 @@
                 android:id="@+id/msg_count_tv"
                 fresco:layout_constraintLeft_toRightOf="@id/id_space"
                 fresco:layout_constraintBottom_toTopOf="@id/id_space"
-                android:layout_width="18dp"
+                android:layout_width="wrap_content"
                 android:layout_height="18dp"
+                android:minWidth="18dp"
                 android:background="@drawable/oval_red"
                 android:gravity="center"
                 android:text="1"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 />
 
 
@@ -90,15 +108,17 @@
                 android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
             <androidx.constraintlayout.widget.Barrier
-                fresco:constraint_referenced_ids="update_time"
-                fresco:barrierDirection="left"
                 android:id="@+id/barrier"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                fresco:barrierDirection="left"
+                fresco:constraint_referenced_ids="update_time"
+                tools:layout_editor_absoluteX="402dp" />
             <TextView
                 android:id="@+id/dialog_item_title"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="18dp"
                 fresco:layout_constraintTop_toTopOf="parent"
                 fresco:layout_constraintRight_toLeftOf="@id/barrier"
                 fresco:layout_constraintLeft_toRightOf="@id/simple_drawViews"
@@ -112,34 +132,37 @@
                 android:layout_gravity="center"
                 android:text="" />
             <TextView
+                android:layout_marginBottom="3dp"
                 android:singleLine="true"
                 android:id="@+id/tv_content"
                 fresco:layout_constraintBottom_toBottomOf="parent"
+                fresco:layout_constraintRight_toLeftOf="@+id/btn_jd"
                 fresco:layout_constraintLeft_toRightOf="@id/simple_drawViews"
                 android:layout_marginLeft="10dp"
-                android:textSize="14sp"
+                android:paddingRight="10dp"
+                android:textSize="13sp"
                 android:textColor="@color/black_999"
                 android:text=""
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content" />
-            <Button
+            <TextView
                 android:visibility="gone"
                 android:id="@+id/btn_jd"
                 android:layout_marginRight="10dp"
                 fresco:layout_constraintRight_toRightOf="parent"
                 fresco:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:text="接待"
                 android:textColor="@color/white"
-                android:background="@drawable/green_btn"
-                android:layout_width="50dp"
-                android:layout_height="25dp" />
+                android:background="@drawable/green_bg"
+                android:layout_width="60dp"
+                android:layout_height="28dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <com.zhy.view.flowlayout.TagFlowLayout
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             fresco:max_select="0"
             android:id="@+id/flowLayout"
             android:paddingHorizontal="5dp"
@@ -151,7 +174,7 @@
             android:layout_marginLeft="10dp"
             android:background="@color/black_line"
             android:layout_width="match_parent"
-            android:layout_height="0.8dp"/>
+            android:layout_height="0.5dp"/>
     </LinearLayout>
 
-</LinearLayout>
+</com.daimajia.swipe.SwipeLayout>

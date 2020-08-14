@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingRight="@dimen/window_margin"
+    android:layout_gravity="center_vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ProgressBar
+        android:id="@+id/send_loading"
+        android:layout_gravity="center"
+        android:indeterminateDuration="600"
+        style="@style/progressBar_custom_drawable"
+        android:indeterminateDrawable="@drawable/progressbar_loading"
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
+</LinearLayout>

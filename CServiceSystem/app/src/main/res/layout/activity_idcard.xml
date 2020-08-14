@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.activity.realauth.IDCardActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/act_real_authen"
+        android:background="@color/theme_app"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:padding="9dp"
+            android:id="@+id/backImg"
+            android:src="@mipmap/back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="42dp"
+            android:layout_height="50dp" />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/msg_count_tv"
+            app:layout_constraintCircle="@+id/backImg"
+            app:layout_constraintCircleAngle="45"
+            app:layout_constraintCircleRadius="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:minWidth="18dp"
+            android:background="@drawable/oval_red"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            />
+        <TextView
+            android:id="@+id/title_real_authen"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="实名认证"
+            android:textColor="@color/white"
+            android:layout_marginLeft="6dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/backImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <RelativeLayout
+
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <TextView
+            android:id="@+id/name_id"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:text="姓名"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"/>
+        <com.hc_android.hc_css.wight.AddAndSubEditText
+            android:focusable="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="@dimen/window_margin"
+            android:layout_toRightOf="@+id/name_id"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:id="@+id/id_card_name"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:hint="@string/id_card_user"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_d5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <TextView
+
+            android:id="@+id/card_id"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:text="身份证"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"/>
+        <com.hc_android.hc_css.wight.AddAndSubEditText
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="@dimen/window_margin"
+            android:layout_toRightOf="@+id/card_id"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:id="@+id/id_card_num"
+            android:textSize="17sp"
+            android:hint="@string/id_card_num"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_d5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:id="@+id/next_b"
+        android:gravity="center"
+        android:paddingBottom="@dimen/window_margin"
+        android:paddingTop="@dimen/window_margin"
+        android:paddingRight="@dimen/window_margin_h"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:background="@drawable/login_btn"
+        android:textColor="@color/white"
+        android:text="下一步"
+        android:textSize="17sp"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"/>
+
+
+
+</LinearLayout>

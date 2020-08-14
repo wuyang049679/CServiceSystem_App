@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:background="@drawable/left_bg"
+    android:clickable="true"
+    android:paddingLeft="20dp"
+    android:paddingRight="15dp"
+    android:id="@+id/chat_audio_lin"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:rotation="180"
+            android:background="@drawable/audio_animation_left_list"
+            android:id="@+id/img_audio"
+            android:layout_gravity="center_vertical"
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
+        <TextView
+            android:layout_marginLeft="6dp"
+            android:id="@+id/tv_num"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black_333"
+            android:textSize="15sp"
+            android:text="4''"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>

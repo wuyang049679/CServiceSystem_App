@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".ui.activity.realauth.BusinessActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/act_real_authen"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/theme_app"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/backImg"
+            android:layout_width="42dp"
+            android:layout_height="50dp"
+            android:padding="9dp"
+            android:src="@mipmap/back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/msg_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:background="@drawable/oval_red"
+            android:gravity="center"
+            android:minWidth="18dp"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:visibility="gone"
+            app:layout_constraintCircle="@+id/backImg"
+            app:layout_constraintCircleAngle="45"
+            app:layout_constraintCircleRadius="16dp" />
+
+        <TextView
+            android:id="@+id/title_real_authen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:ellipsize="end"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:text="企业营业执照验证"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/backImg"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        <View
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <View
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_centerVertical="true"
+        android:text="上传营业执照"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+        <FrameLayout
+            android:layout_marginRight="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/upload_btn"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="@dimen/window_margin"
+            android:paddingLeft="@dimen/window_margin"
+
+            android:background="@drawable/login_btn"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="点击上传"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"/>
+            <ProgressBar
+                android:layout_gravity="center"
+                android:indeterminateDuration="500"
+                style="@style/progressBar_custom_drawable"
+                android:visibility="gone"
+                android:id="@+id/progress_login"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+        </FrameLayout>
+        <ImageView
+            android:visibility="gone"
+            android:layout_marginRight="30dp"
+            android:id="@+id/upload_img"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/photo_up"
+            android:layout_width="70dp"
+            android:layout_height="70dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <TextView
+            android:id="@+id/name_company"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="公司全称"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"/>
+        <com.hc_android.hc_css.wight.AddAndSubEditText
+            android:focusable="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/window_margin"
+            android:layout_toRightOf="@+id/name_company"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:id="@+id/name_company_et"
+            android:textSize="16sp"
+            android:hint="请输入公司全称"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_d5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <TextView
+
+            android:id="@+id/legal_name"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="法人姓名"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"/>
+        <com.hc_android.hc_css.wight.AddAndSubEditText
+            android:layout_centerVertical="true"
+
+            android:layout_marginRight="@dimen/window_margin"
+            android:layout_toRightOf="@+id/legal_name"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:id="@+id/legal_name_ed"
+            android:textSize="16sp"
+            android:hint="请填写法人名字"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_d5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <TextView
+
+            android:id="@+id/xy_num"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="社会信用代码"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"/>
+        <com.hc_android.hc_css.wight.AddAndSubEditText
+            android:layout_centerVertical="true"
+
+            android:layout_marginRight="@dimen/window_margin"
+            android:layout_toRightOf="@+id/xy_num"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:id="@+id/xy_num_et"
+
+            android:textSize="16sp"
+            android:hint="请填写统一社会信用代码"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_d5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+    </RelativeLayout>
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:id="@+id/next_b"
+        android:gravity="center"
+        android:paddingBottom="@dimen/window_margin"
+        android:paddingTop="@dimen/window_margin"
+        android:paddingRight="@dimen/window_margin_h"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:background="@drawable/login_btn"
+        android:textColor="@color/white"
+        android:text="下一步"
+        android:textSize="17sp"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

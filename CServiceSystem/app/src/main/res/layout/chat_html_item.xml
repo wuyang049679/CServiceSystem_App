@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@drawable/white_file_down"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="3dp"
+    android:id="@+id/html_lin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.hc_android.hc_css.wight.LollipopFixedWebView
+
+        android:id="@+id/html_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="WebViewLayout" />
+</LinearLayout>

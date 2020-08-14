@@ -6,22 +6,7 @@
     android:background="@android:color/white"
     app:theme="@style/Theme.AppCompat.Light">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/mycourse_lonely"
-        android:id="@+id/state_retry" />
 
-    <TextView
-        android:id="@+id/empty_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_below="@id/state_retry"
-        android:layout_marginTop="25px"
-        android:textColor="#9daabf"
-        android:layout_centerHorizontal="true"
-        android:text="还没有相应课程,请稍后再来吧!"/>
+    <include layout="@layout/dialog_empty"/>
 
 </RelativeLayout>

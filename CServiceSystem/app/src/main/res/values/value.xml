@@ -2,5 +2,11 @@
 <resources>
 
     <dimen name="popWindow_height">400dp</dimen>
+    <dimen name="popWindow_height_h">485dp</dimen>
+    <dimen name="popWindow_height_f">370dp</dimen>
+    <dimen name="popWindow_height_state">146dp</dimen>
+    <dimen name="chat_height">540dp</dimen>
     <dimen name="popWindow_witch">375dp</dimen>
+    <dimen name="window_margin">10dp</dimen>
+    <dimen name="window_margin_h">15dp</dimen>
 </resources>

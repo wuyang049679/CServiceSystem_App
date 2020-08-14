@@ -12,42 +12,75 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/colleague_include"
         android:background="@color/theme_app"
-        android:elevation="4dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
         <ImageView
+            android:padding="9dp"
             android:id="@+id/backImg"
-            android:layout_marginLeft="10dp"
             android:src="@mipmap/back"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            android:layout_width="42dp"
+            android:layout_height="50dp" />
         <TextView
-            android:text="@string/dialog_team"
+            android:id="@+id/title_colleague"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="@string/dialog_all"
             android:textColor="@color/white"
             android:layout_marginLeft="6dp"
             android:textSize="18sp"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/backImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
-            android:id="@+id/btn_choose"
-            android:layout_marginRight="10dp"
-            android:text="@string/dialog_all"
+            android:id="@+id/msg_count_tv"
+            app:layout_constraintCircle="@+id/backImg"
+            app:layout_constraintCircleAngle="45"
+            app:layout_constraintCircleRadius="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:minWidth="18dp"
+            android:background="@drawable/oval_red"
+            android:gravity="center"
+            android:text="1"
             android:textColor="@color/white"
-            android:layout_marginLeft="6dp"
-            android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="11sp"
+            />
+        <LinearLayout
+            android:padding="5dp"
+            android:id="@+id/btn_choose"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+
+            android:src="@mipmap/more"
+            android:textColor="@color/white"
+            />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/inject_target"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:overScrollMode="never"
         android:scrollbars="vertical"
@@ -56,4 +89,5 @@
         android:layout_height="match_parent">
 
     </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 </LinearLayout>

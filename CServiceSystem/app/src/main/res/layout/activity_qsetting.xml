@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activity.QSettingActivity">
+
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line" />
+     <TextView
+         android:id="@+id/qs_cancel"
+         android:layout_marginLeft="@dimen/window_margin_h"
+         android:layout_centerVertical="true"
+         android:paddingBottom="4dp"
+         android:paddingTop="4dp"
+         android:paddingLeft="8dp"
+         android:paddingRight="8dp"
+         android:textColor="@color/black"
+         android:textSize="15sp"
+         android:text="取消"
+         android:background="@drawable/black_qr"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/qs_save"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+           android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:text="保存"
+            android:background="@drawable/green_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:paddingRight="@dimen/window_margin_h">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:text="关闭则点击直接发送（文本类型）"
+            android:textColor="@color/black_999"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="追加到输入框"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+
+            android:id="@+id/input_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:thumb="@drawable/thumb"
+            app:switchMinWidth="40dp"
+            app:switchPadding="2dp"
+            app:theme="@style/switchStyle"
+            app:track="@drawable/track" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:paddingRight="@dimen/window_margin_h">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:text="开启后采用折叠菜单的形式排列快捷回复"
+            android:textColor="@color/black_999"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="折叠式分组"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+
+            android:id="@+id/expand_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:thumb="@drawable/thumb"
+            app:switchMinWidth="40dp"
+            app:switchPadding="2dp"
+            app:theme="@style/switchStyle"
+            app:track="@drawable/track" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="100dp"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:paddingRight="@dimen/window_margin_h">
+
+
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="按使用次数排序"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+
+                    android:id="@+id/count_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:thumb="@drawable/thumb"
+                    app:switchMinWidth="40dp"
+                    app:switchPadding="2dp"
+                    app:theme="@style/switchStyle"
+                    app:track="@drawable/track" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="开启后排序会随使用而变化，关闭则按添加时间排序"
+                android:textColor="@color/black_999"
+                android:textSize="16sp" />
+        </LinearLayout>
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+
+            android:background="@color/black_line" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/picker_type"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="100dp"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:paddingRight="@dimen/window_margin_h">
+
+
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="类型选择器"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+
+                    android:id="@+id/type_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:thumb="@drawable/thumb"
+                    app:switchMinWidth="40dp"
+                    app:switchPadding="2dp"
+                    app:theme="@style/switchStyle"
+                    app:track="@drawable/track" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="可以根据“ 文本、图片、富文本、菜单...”等消息类型筛选"
+                android:textColor="@color/black_999"
+                android:textSize="16sp" />
+        </LinearLayout>
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+
+            android:background="@color/black_line" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:paddingRight="@dimen/window_margin_h">
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="显示使用次数"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+
+            android:id="@+id/visible_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:thumb="@drawable/thumb"
+            app:switchMinWidth="40dp"
+            app:switchPadding="2dp"
+            app:theme="@style/switchStyle"
+            app:track="@drawable/track" />
+
+    </RelativeLayout>
+</LinearLayout>

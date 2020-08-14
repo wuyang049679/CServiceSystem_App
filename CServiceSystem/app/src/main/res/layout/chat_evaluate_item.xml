@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.hc_android.hc_css.wight.span.selectText.SelectableTextView
+        android:gravity="center_vertical"
+        android:id="@+id/chat_item_system"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="@dimen/window_margin"
+        android:paddingRight="@dimen/window_margin"
+        android:background="@drawable/white_et"
+        android:textIsSelectable="true"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:text=""
+        android:minHeight="42dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

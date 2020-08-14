@@ -9,6 +9,29 @@
         layout="@layout/public_common_title"/>
 
     <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/wifi_error"
+            android:gravity="center"
+            android:background="@color/bg_yel"
+            android:layout_width="match_parent"
+            android:layout_height="42dp">
+            <ImageView
+                android:layout_marginRight="4dp"
+                android:src="@drawable/error_hint"
+                android:layout_width="22dp"
+                android:layout_height="22dp"/>
+            <TextView
+                android:textColor="@color/black_333"
+                android:textSize="16sp"
+                android:text="当前网络不可用，请检查你的网络设置"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    <LinearLayout
         android:id="@+id/inject_lin"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -20,5 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

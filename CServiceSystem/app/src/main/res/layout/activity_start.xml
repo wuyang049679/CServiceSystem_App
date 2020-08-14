@@ -9,23 +9,23 @@
     android:id="@+id/act_start_lin"
     tools:context=".ui.activity.StartActivity">
 
-    <LinearLayout
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical"
-        app:layout_constraintHeight_percent="0.6"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        tools:ignore="MissingConstraints">
+<!--    <LinearLayout-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintHeight_percent="0.6"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        tools:ignore="MissingConstraints">-->
 
-        <ImageView
-            android:layout_gravity="center"
-            android:src="@drawable/logo"
-            android:layout_width="60dp"
-            android:layout_height="60dp" />
+<!--        <ImageView-->
+<!--            android:layout_gravity="center"-->
+<!--            android:src="@mipmap/logo"-->
+<!--            android:layout_width="60dp"-->
+<!--            android:layout_height="60dp" />-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

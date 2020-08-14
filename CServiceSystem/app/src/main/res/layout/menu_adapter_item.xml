@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.hc_android.hc_css.wight.span.selectText.SelectableTextView
+        android:clickable="true"
+        android:textIsSelectable="true"
+        android:textColor="@color/break_tv"
+        android:id="@+id/menu_text"
+        android:layout_marginTop="5dp"
+        android:text="@string/app_name"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

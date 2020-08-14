@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/visitor_loading"
+        android:layout_gravity="center"
+        android:indeterminateDuration="400"
+        style="@style/progressBar_custom_drawable"
+        android:indeterminateDrawable="@drawable/progressbar_loading"
+        android:layout_width="22dp"
+        android:layout_height="22dp" />
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/empty_view"
+        android:layout_gravity="center"
+        android:textSize="14sp"
+        android:textColor="@color/black_aa"
+        android:text="没有访问轨迹"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

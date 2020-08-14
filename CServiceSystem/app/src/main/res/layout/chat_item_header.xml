@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp">
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/chat_item_loading"
+        android:layout_gravity="center"
+        android:indeterminateDuration="600"
+        style="@style/progressBar_custom_drawable"
+        android:indeterminateDrawable="@drawable/progressbar_loading"
+        android:layout_width="18dp"
+        android:layout_height="18dp" />
+    </LinearLayout>
+</LinearLayout>

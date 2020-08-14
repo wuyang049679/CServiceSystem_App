@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/white_file_down"
+    android:padding="@dimen/window_margin"
+    android:id="@+id/menu_lin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <com.hc_android.hc_css.wight.span.selectText.SelectableTextView
+
+        android:visibility="gone"
+        android:id="@+id/menu_title"
+        android:textColor="@color/black"
+        android:text="菜单标题"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <androidx.recyclerview.widget.RecyclerView
+
+        android:id="@+id/menu_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+    <com.hc_android.hc_css.wight.span.selectText.SelectableTextView
+        android:visibility="gone"
+        android:id="@+id/menu_end"
+        android:textColor="@color/black"
+        android:text=""
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

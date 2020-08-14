@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.MsgNotifiActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/act_msg"
+        android:background="@color/theme_app"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:padding="9dp"
+            android:id="@+id/backImg"
+            android:src="@mipmap/back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="42dp"
+            android:layout_height="50dp" />
+        <TextView
+            android:id="@+id/msg_count_tv"
+            app:layout_constraintCircle="@+id/backImg"
+            app:layout_constraintCircleAngle="45"
+            app:layout_constraintCircleRadius="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:minWidth="18dp"
+            android:background="@drawable/oval_red"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            />
+        <TextView
+            android:id="@+id/title_act_chat_set"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="@string/title_msg"
+            android:textColor="@color/white"
+            android:layout_marginLeft="6dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/backImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.core.widget.NestedScrollView
+        android:overScrollMode="never"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:paddingBottom="8dp"
+        android:paddingLeft="15dp"
+        android:textColor="@color/black_999"
+        android:textSize="14sp"
+        android:gravity="bottom"
+        android:text="应用没有打开时"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="消息通知"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/hint_on"
+            android:layout_marginRight="@dimen/window_margin"
+            android:layout_toLeftOf="@+id/wechat_switch"
+            android:layout_centerVertical="true"
+            android:text="建议开启"
+            android:textColor="@color/red"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.SwitchCompat
+
+            android:id="@+id/wechat_switch"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:switchMinWidth="40dp"
+            app:switchPadding="2dp"
+            app:theme="@style/switchStyle"
+            android:thumb="@drawable/thumb"
+            app:track="@drawable/track"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:visibility="gone"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <View
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="邮件通知"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginRight="@dimen/window_margin"
+            android:layout_toLeftOf="@+id/email_switch"
+            android:layout_centerVertical="true"
+            android:text="未绑定邮箱"
+            android:textColor="@color/black_aa"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Switch
+            android:id="@+id/email_switch"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="40dp"
+            android:textOn="   "
+            android:textOff="   "
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/wechat_lin"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:paddingBottom="8dp"
+        android:paddingLeft="15dp"
+        android:textColor="@color/black_999"
+        android:textSize="14sp"
+        android:gravity="bottom"
+        android:text="微信通知开启流程"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+        <View
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <TextView
+            android:background="@color/white"
+            android:paddingLeft="@dimen/window_margin_h"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/black_aa"
+            android:text="第一步：电脑上登录在个人信息里绑定微信"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+        <View
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <TextView
+            android:background="@color/white"
+            android:paddingLeft="@dimen/window_margin_h"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/black_aa"
+            android:text="第二步：微信里搜索「合从」并关注公众号"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+        <View
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+
+    </LinearLayout>
+    <RelativeLayout
+
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <View
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="电脑在线时不通知"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Switch
+            android:id="@+id/switch_web"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="40dp"
+            android:textOn="   "
+            android:textOff="   "
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track" />
+
+    </RelativeLayout>
+    <TextView
+        android:paddingBottom="8dp"
+        android:paddingLeft="15dp"
+        android:textColor="@color/black_999"
+        android:textSize="14sp"
+        android:gravity="bottom"
+        android:text="应用打开时"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <View
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="声音"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Switch
+            android:id="@+id/switch_voice"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="40dp"
+            android:textOn="   "
+            android:textOff="   "
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track" />
+
+    </RelativeLayout>
+        <RelativeLayout
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:background="@color/black_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+            <TextView
+                android:layout_marginLeft="@dimen/window_margin_h"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="震动"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Switch
+                android:id="@+id/switch_shock"
+                android:background="@null"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/window_margin_h"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="40dp"
+                android:textOn="   "
+                android:textOff="   "
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/track" />
+
+        </RelativeLayout>
+    <TextView
+        android:paddingBottom="8dp"
+        android:paddingLeft="15dp"
+        android:textColor="@color/black_999"
+        android:textSize="14sp"
+        android:gravity="bottom"
+        android:text="消息通知范围"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="新对话"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Switch
+            android:id="@+id/switch_dialog"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="40dp"
+            android:textOn="   "
+            android:textOff="   "
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="新消息"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Switch
+            android:id="@+id/switch_msg"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="40dp"
+            android:textOn="   "
+            android:textOff="   "
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="对话转入"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Switch
+            android:id="@+id/switch_dialog_input"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="40dp"
+            android:textOn="   "
+            android:textOff="   "
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginBottom="@dimen/window_margin_h"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <View
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <View
+            android:layout_alignParentBottom="true"
+            android:background="@color/black_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="对话转出"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Switch
+            android:id="@+id/switch_dialog_output"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="40dp"
+            android:textOn="   "
+            android:textOff="   "
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track" />
+
+    </RelativeLayout>
+
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

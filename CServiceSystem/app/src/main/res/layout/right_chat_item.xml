@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="@dimen/window_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/chat_header"
+        fresco:layout_constraintRight_toRightOf="parent"
+        fresco:layout_constraintTop_toTopOf="parent"
+        fresco:roundWithOverlayColor="@color/background"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        fresco:roundBottomLeft="true"
+        fresco:roundBottomRight="true"
+        fresco:roundTopLeft="true"
+        fresco:roundTopRight="true"
+        fresco:roundedCornerRadius="3dp" />
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/img_lin"
+        android:background="@drawable/login_btn"
+        android:gravity="center"
+        fresco:layout_constraintTop_toTopOf="parent"
+        fresco:layout_constraintRight_toRightOf="parent"
+        android:layout_width="42dp"
+        android:layout_height="42dp">
+        <ImageView
+
+            android:id="@+id/img_icon"
+            android:src="@mipmap/chrome"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="horizontal"
+        android:gravity="right|center_vertical"
+        android:id="@+id/content_view"
+        android:layout_marginRight="@dimen/window_margin"
+        fresco:layout_constraintTop_toTopOf="parent"
+        fresco:layout_constraintBottom_toBottomOf="parent"
+        fresco:layout_constraintRight_toLeftOf="@+id/chat_header"
+        android:layout_marginLeft="70dp"
+        fresco:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

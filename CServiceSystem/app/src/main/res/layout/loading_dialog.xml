@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:layout_gravity="center"
+        android:indeterminateDuration="500"
+        style="@style/progressBar_custom_drawable"
+        android:id="@+id/progress_wxlogin"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+</LinearLayout>

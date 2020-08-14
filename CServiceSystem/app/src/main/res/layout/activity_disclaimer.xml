@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.activity.realauth.DisclaimerActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/act_real_authen"
+        android:background="@color/theme_app"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:padding="9dp"
+            android:id="@+id/backImg"
+            android:src="@mipmap/back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="42dp"
+            android:layout_height="50dp" />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/msg_count_tv"
+            app:layout_constraintCircle="@+id/backImg"
+            app:layout_constraintCircleAngle="45"
+            app:layout_constraintCircleRadius="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:minWidth="18dp"
+            android:background="@drawable/oval_red"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            />
+        <TextView
+            android:id="@+id/title_real_authen"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="合从用户服务协议及隐私政策"
+            android:textColor="@color/white"
+            android:layout_marginLeft="6dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/backImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <TextView
+        android:lineSpacingExtra="4dp"
+        android:layout_below="@+id/act_real_authen"
+        android:textColor="@color/black_333"
+        android:textSize="18sp"
+        android:layout_margin="30dp"
+        android:text="@string/agreement1"
+        android:id="@+id/agreement_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/agree_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:paddingBottom="@dimen/window_margin"
+        android:paddingTop="@dimen/window_margin"
+        android:paddingRight="@dimen/window_margin_h"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:background="@drawable/login_btn"
+        android:textColor="@color/white"
+        android:text="我已阅读并同意"
+        android:textSize="17sp"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

@@ -6,10 +6,11 @@
         <!-- padding：Button里面的文字与Button边界的间隔 -->
 
         <padding
-            android:left="3dp"
-            android:right="3dp"
+            android:left="5dp"
+            android:right="5dp"
+
              />
 
-        <solid android:color="@android:color/holo_red_light" />
+        <solid android:color="#ff3860" />
         <corners android:radius="8dip" />
     </shape>

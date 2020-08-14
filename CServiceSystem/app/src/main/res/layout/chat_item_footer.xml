@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/foot_lin"
+
+    android:padding="@dimen/window_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        fresco:roundWithOverlayColor="@color/white"
+        android:id="@+id/simple_drawViews"
+        fresco:layout_constraintLeft_toLeftOf="parent"
+        fresco:layout_constraintTop_toTopOf="parent"
+        fresco:backgroundImage="@mipmap/chrome"
+        fresco:progressBarImage="@mipmap/chrome"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        fresco:roundBottomLeft="true"
+        fresco:roundBottomRight="true"
+        fresco:roundTopLeft="true"
+        fresco:roundTopRight="true"
+        fresco:roundedCornerRadius="3dp" />
+
+    <LinearLayout
+
+        android:id="@+id/img_lin"
+        android:background="@drawable/login_btn"
+        android:gravity="center"
+        fresco:layout_constraintTop_toTopOf="parent"
+        fresco:layout_constraintLeft_toLeftOf="parent"
+
+        android:layout_width="42dp"
+        android:layout_height="42dp">
+        <ImageView
+            android:id="@+id/img_icon"
+            android:src="@mipmap/chrome"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:descendantFocusability="blocksDescendants"
+        android:id="@+id/content_view"
+
+        android:layout_marginLeft="@dimen/window_margin"
+        fresco:layout_constraintTop_toTopOf="parent"
+        fresco:layout_constraintBottom_toBottomOf="parent"
+        fresco:layout_constraintLeft_toRightOf="@+id/simple_drawViews"
+        fresco:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="70dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:focusable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:paddingLeft="12dp"
+                android:paddingRight="10dp"
+                android:focusable="false"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="8dp"
+                android:background="@drawable/left"
+                android:minHeight="42dp"
+                android:id="@+id/foot_content"
+                android:text=""
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

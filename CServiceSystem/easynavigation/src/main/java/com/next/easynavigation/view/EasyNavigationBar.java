@@ -393,6 +393,7 @@ public class EasyNavigationBar extends LinearLayout {
             //消息红点
             TextView msgPoint = itemView.findViewById(R.id.msg_point_tv);
             msgPoint.setTextSize(NavigationUtil.px2sp(getContext(), msgPointTextSize));
+            msgPoint.setGravity(Gravity.CENTER);
             RelativeLayout.LayoutParams msgPointParams = (RelativeLayout.LayoutParams) msgPoint.getLayoutParams();
             msgPointParams.bottomMargin = (int) msgPointTop;
             msgPointParams.width = (int) msgPointSize;
@@ -1092,12 +1093,14 @@ public class EasyNavigationBar extends LinearLayout {
             ViewGroup.LayoutParams layoutParams = msgPointList.get(position).getLayoutParams();
             layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             if (count>99) {
+
                 msgPointList.get(position).setText("99+");
             }else {
                 msgPointList.get(position).setText(count+"");
             }
             msgPointList.get(position).setBackgroundResource(R.drawable.radius_red);
             msgPointList.get(position).setVisibility(VISIBLE);
+            msgPointList.get(position).setGravity(Gravity.CENTER);
         } else if (count < 1) {
             msgPointList.get(position).setVisibility(GONE);
         } else {
@@ -1107,6 +1110,7 @@ public class EasyNavigationBar extends LinearLayout {
             msgPointList.get(position).setText(count + "");
             msgPointList.get(position).setBackgroundResource(R.drawable.oval_red);
             msgPointList.get(position).setVisibility(VISIBLE);
+            msgPointList.get(position).setGravity(Gravity.CENTER);
         }
     }
 
@@ -1146,7 +1150,7 @@ public class EasyNavigationBar extends LinearLayout {
      */
     public void clearAllMsgPoint() {
         for (int i = 0; i < msgPointList.size(); i++) {
-            msgPointList.get(i).setVisibility(GONE);
+            if (i != 1)msgPointList.get(i).setVisibility(GONE);
         }
     }
 

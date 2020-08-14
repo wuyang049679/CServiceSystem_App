@@ -7,19 +7,31 @@
     app:theme="@style/Theme.AppCompat.Light">
 
     <ImageView
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/state_net_bad"
         android:id="@+id/state_retry" />
-
     <TextView
+        android:layout_centerInParent="true"
+        android:id="@+id/state_retry_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:layout_below="@id/state_retry"
         android:layout_marginTop="25px"
-        android:textColor="#9daabf"
+        android:textColor="@color/black_999"
+        android:layout_centerHorizontal="true"
+        android:text="请检查网络连接"/>
+    <TextView
+        android:padding="5dp"
+        android:background="@color/green_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_below="@id/state_retry_tv"
+        android:layout_marginTop="25px"
+        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
         android:text="请检查网络"/>
 

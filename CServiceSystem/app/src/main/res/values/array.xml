@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="emoji_list">
+        <item>1f44c</item>
+        <item>1f44d</item>
+        <item>1f44e</item>
+        <item>1f44f</item>
+        <item>1f60a</item>
+        <item>1f60c</item>
+        <item>1f60d</item>
+        <item>1f60e</item>
+        <item>1f61c</item>
+        <item>1f61e</item>
+        <item>1f62b</item>
+        <item>1f62c</item>
+        <item>1f62d</item>
+        <item>1f64f</item>
+        <item>1f91d</item>
+        <item>1f601</item>
+        <item>1f602</item>
+        <item>1f604</item>
+        <item>1f605</item>
+        <item>1f609</item>
+        <item>1f612</item>
+        <item>1f622</item>
+        <item>1f623</item>
+        <item>1f625</item>
+        <item>1f628</item>
+        <item>1f629</item>
+        <item>1f630</item>
+        <item>1f635</item>
+        <item>1f641</item>
+        <item>1f642</item>
+    </string-array>
+    <!--表情相关-->
+    <string-array name="emoji_text">
+        <item name="_1f44c">[OK]</item>
+        <item name="_1f44d">[强]</item>
+        <item name="_1f44e">[弱]</item>
+        <item name="_1f44f">[鼓掌]</item>
+        <item name="_1f60a">[愉快]</item>
+        <item name="_1f60c">[害羞]</item>
+        <item name="_1f60d">[色]</item>
+        <item name="_1f60e">[得意]</item>
+        <item name="_1f61c">[调皮]</item>
+        <item name="_1f61e">[快哭了]</item>
+        <item name="_1f62b">[哈欠]</item>
+        <item name="_1f62c">[紧张]</item>
+        <item name="_1f62d">[流泪]</item>
+        <item name="_1f64f">[拜托]</item>
+        <item name="_1f91d">[握手]</item>
+        <item name="_1f601">[呲牙]</item>
+        <item name="_1f602">[笑哭]</item>
+        <item name="_1f604">[憨笑]</item>
+        <item name="_1f605">[尴尬]</item>
+        <item name="_1f609">[眨眼]</item>
+        <item name="_1f612">[傲慢]</item>
+        <item name="_1f622">[可怜]</item>
+        <item name="_1f623">[激动]</item>
+        <item name="_1f625">[擦汗]</item>
+        <item name="_1f628">[惊讶]</item>
+        <item name="_1f629">[囧]</item>
+        <item name="_1f630">[冷汗]</item>
+        <item name="_1f635">[晕]</item>
+        <item name="_1f641">[难过]</item>
+        <item name="_1f642">[微笑]</item>
+    </string-array>
+    <!--快捷回复-->
+    <string-array name="quick_text_list">
+        <item>text</item>
+        <item>image</item>
+        <item>html</item>
+        <item>menu</item>
+        <item>card</item>
+        <item>file</item>
+        <item>form</item>
+        <item>video</item>
+        <item>voice</item>
+    </string-array>
+    <!--在线状态-->
+    <string-array name="online_status">
+        <item>在线</item>
+        <item>隐身</item>
+        <item>离线</item>
+    </string-array>
+    <!--评价状态-->
+    <string-array name="ping_status">
+        <item>好评</item>
+        <item>中评</item>
+        <item>差评</item>
+        <item>无评价</item>
+    </string-array>
+    <!--接入方式-->
+    <string-array name="install_status">
+        <item>网页接入</item>
+        <item>对话链接</item>
+        <item>微信公众号</item>
+        <item>微信小程序</item>
+    </string-array>
+    <!--查看方式-->
+    <string-array name="look_status">
+        <item>显示</item>
+        <item>隐藏</item>
+        <item>只看无效</item>
+    </string-array>
+    <string-array name="miss_status">
+        <item>显示</item>
+        <item>隐藏</item>
+        <item>只看遗漏</item>
+    </string-array>
+</resources>

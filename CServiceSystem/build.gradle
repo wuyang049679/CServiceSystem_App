@@ -5,12 +5,19 @@ buildscript {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url 'http://developer.huawei.com/repo/' }
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.android.tools.build:gradle:3.4.1'
         classpath 'org.aspectj:aspectjtools:1.9.4'//aop面向切面
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        // Add the following line
+        classpath 'com.huawei.agconnect:agcp:1.2.0.300'  // HUAWEI agcp plugin
+        //greendao数据库
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
     }
 }
 
@@ -19,6 +26,8 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven {url 'http://developer.huawei.com/repo/'}
+
     }
 }
 

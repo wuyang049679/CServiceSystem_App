@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/quick_list_lin"
+    android:background="@drawable/item_down_bg"
+    android:layout_width="match_parent"
+    android:layout_height="52dp">
+
+    <View
+        android:layout_alignParentBottom="true"
+        android:background="@color/background"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <TextView
+        android:singleLine="true"
+        android:maxEms="16"
+        android:layout_centerVertical="true"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:text="快捷回复"
+        android:layout_marginLeft="12dp"
+        android:id="@+id/quick_list_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/quick_list_count"
+        android:layout_marginRight="@dimen/window_margin_h"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:text="12"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="@dimen/window_margin"
+        android:paddingRight="@dimen/window_margin"
+        android:background="@drawable/black_qr"
+        android:textColor="@color/black_4a"
+        android:textSize="11sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/quick_list_type"
+        android:layout_marginRight="12dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/quick_list_count"
+        android:text="富文本"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="@dimen/window_margin"
+        android:paddingRight="@dimen/window_margin"
+        android:background="@drawable/black_qr"
+        android:textColor="@color/black_4a"
+        android:textSize="11sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+</RelativeLayout>

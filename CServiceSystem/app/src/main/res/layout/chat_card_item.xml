@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:id="@+id/card_lin"
+    android:background="@drawable/white_file_down"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            fresco:placeholderImage="@mipmap/photos"
+            fresco:failureImage="@mipmap/photos"
+            android:id="@+id/card_img"
+            fresco:roundBottomLeft="false"
+            fresco:roundBottomRight="false"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="true"
+            fresco:roundedCornerRadius="3dp"
+            fresco:roundingBorderWidth="0.5dp"
+            fresco:actualImageScaleType="fitXY"
+            fresco:progressBarImage="@drawable/progressbar_loading"
+            fresco:roundingBorderColor="@color/black_line"
+            fresco:roundWithOverlayColor="@color/background"
+            android:layout_width="220dp"
+            android:layout_height="180dp" />
+
+    <com.hc_android.hc_css.wight.span.selectText.SelectableTextView
+
+        android:id="@+id/title_card"
+        android:textColor="@color/black"
+        android:layout_marginLeft="@dimen/window_margin"
+        android:layout_marginTop="@dimen/window_margin"
+        android:layout_marginBottom="@dimen/window_margin"
+        android:text="无标题"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <com.hc_android.hc_css.wight.span.selectText.SelectableTextView
+        android:visibility="gone"
+        android:id="@+id/dec_card"
+        android:textColor="@color/black_bb"
+        android:layout_marginLeft="@dimen/window_margin"
+        android:layout_marginBottom="@dimen/window_margin"
+        android:text="@string/app_name"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <com.hc_android.hc_css.wight.span.selectText.SelectableTextView
+        android:visibility="gone"
+        android:id="@+id/price_card"
+        android:layout_marginBottom="@dimen/window_margin"
+        android:textColor="@color/red"
+        android:layout_marginLeft="@dimen/window_margin"
+        android:text="@string/app_name"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

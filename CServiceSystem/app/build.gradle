@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.huawei.agconnect'  // HUAWEI agconnect Gradle plugin
+//数据库使用
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     defaultConfig {
@@ -9,22 +12,106 @@ android {
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+        ndk {
+            // 设置支持的SO库架构 Bugly Android ndk集成 (阿里实名认证)
+            abiFilters('armeabi-v7a', 'arm64-v8a')
+        }
+
+        //每个应用拥有不同的authorities，防止相同在同一个手机上无法同时安装
+        resValue "string", "authorities", applicationId
     }
+
+//    signingConfigs {
+//        debug {
+//            keyAlias 'hecong'
+//            keyPassword 'wu123456'
+//            storeFile file('android_keystore.jks')
+//            storePassword 'wu123456'
+//            v1SigningEnabled true
+//            v2SigningEnabled true
+//        }
+//
+//        release {
+//            keyAlias 'hecong'
+//            keyPassword 'wu123456'
+//            storeFile file('android_keystore.jks')
+//            storePassword 'wu123456'
+//            v1SigningEnabled true
+//            v2SigningEnabled true
+//        }
+//    }
+//    buildTypes {
+//        release {
+//            debuggable false
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            zipAlignEnabled false
+//            multiDexEnabled true
+//            signingConfig signingConfigs.release
+//        }
+//
+//        debug {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            zipAlignEnabled false
+//            multiDexEnabled true
+//            signingConfig signingConfigs.debug
+//        }
+//
+//        /**
+//         * 补充知识
+//         * debuggable	这个构建类型是否应该生成可调试的apk
+//         * debug  "debug"类型的构建类型
+//         * signingConfig signingConfigs.release 设置默认调用上方我们刚配置的signingConfigs.release
+//         */
+//
+//    }
+
+    signingConfigs {
+        config {
+            storeFile file('D:\\android_keystore.jks')
+            storePassword 'wu123456'
+            keyAlias = 'hecong'
+            keyPassword 'wu123456'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable = true
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
+        /**
+         * 补充知识
+         * debuggable	这个构建类型是否应该生成可调试的apk
+         * debug  "debug"类型的构建类型
+         * signingConfig signingConfigs.release 设置默认调用上方我们刚配置的signingConfigs.release
+         */
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildToolsVersion = android.buildToolsVersion
+
+}
+repositories {
+    flatDir {
+        dirs '../libs'
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.aar', '*.jar'], dir: 'libs')
     implementation project(path: ':easynavigation')
+    implementation project(path: ':bigImage')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.annotation:annotation:1.1.0'
@@ -42,7 +129,6 @@ dependencies {
     implementation rootProject.ext.support.gridlayout
     implementation rootProject.ext.support.annotations
     implementation rootProject.ext.support.vectorDrawable
-
     //第三方库
     implementation rootProject.ext.dependencies.multidex
     implementation rootProject.ext.dependencies.autosize
@@ -62,14 +148,51 @@ dependencies {
     implementation rootProject.ext.dependencies.smartrefresh
     implementation rootProject.ext.dependencies.zxing
     implementation rootProject.ext.dependencies.facebook
+    implementation rootProject.ext.dependencies.facebook_web
+    implementation rootProject.ext.dependencies.facebook_gif
     implementation rootProject.ext.dependencies.popwindow
     implementation rootProject.ext.dependencies.easypermissions
     implementation rootProject.ext.dependencies.fastjson
     implementation rootProject.ext.dependencies.swipelayout
     implementation rootProject.ext.dependencies.flowlayout
     implementation rootProject.ext.dependencies.aspectjrt
+    implementation rootProject.ext.dependencies.shortcutBadger
+    implementation rootProject.ext.dependencies.glide
+    implementation rootProject.ext.dependencies.gSYVideoPlayer
+    implementation rootProject.ext.dependencies.agentweb
+    implementation rootProject.ext.dependencies.pictureSelector
+    implementation rootProject.ext.dependencies.magicIndicator
+    implementation rootProject.ext.dependencies.okhttp
+    implementation rootProject.ext.dependencies.niceDialog
+    implementation rootProject.ext.dependencies.xpopup
+    implementation rootProject.ext.dependencies.huawei
+    implementation rootProject.ext.dependencies.multidex
+    implementation rootProject.ext.dependencies.bugly
+    //    implementation rootProject.ext.dependencies.bugly_nat
+    implementation rootProject.ext.dependencies.greendao
+    implementation rootProject.ext.dependencies.wechat_sdk
+    implementation rootProject.ext.dependencies.appupdateX
     implementation(rootProject.ext.dependencies.socket) {
         exclude group: 'org.json', module: 'json'
     }
+    implementation files('libs/tbs_sdk_thirdapp_v4.3.0.1148_43697_sharewithdownloadwithfile_withoutGame_obfs_20190805_175505.jar')
+    //TencentTbs腾讯浏览服务 x5内核使用
+    implementation files('libs/qiniu-android-sdk-7.4.3.jar')
+    //七牛sdk
+    implementation files('libs/MiPush_SDK_Client_3_7_5.jar')
+    //小米推送
+    implementation files('libs/mcssdk-2.0.2.jar')
+    //OPPO推送
+    implementation 'com.github.yellowcath:VideoProcessor:2.4.0'
+    greendao {
+        //指定数据库schema版本号，迁移等操作会用到;
+        schemaVersion 4
+        //dao的包名，包名默认是entity所在的包；
+        daoPackage 'com.hc_android.hc_css.greendao.gen'
+        //生成数据库文件的目录;
+        targetGenDir 'src/main/java'
+    }
+    implementation files('libs/windvane-min-8.0.3.2.3.jar')
+
 
 }

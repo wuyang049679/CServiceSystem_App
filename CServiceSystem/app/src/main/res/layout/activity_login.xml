@@ -17,17 +17,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
-        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintHeight_percent="0.5"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
 
         <ImageView
             android:layout_gravity="center"
-            android:src="@drawable/logo"
+            android:src="@mipmap/logo"
             android:layout_width="60dp"
             android:layout_height="60dp" />
-        <com.hecong.cssystem.wight.AddAndSubEditText
+
+        <com.hc_android.hc_css.wight.AddAndSubEditText
+
             android:inputType="textEmailAddress"
             android:singleLine="true"
             android:imeOptions="actionNext"
@@ -42,8 +44,8 @@
             android:background="@color/black_d5"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"/>
-        <com.hecong.cssystem.wight.AddAndSubEditText
-            android:inputType="textEmailAddress"
+        <com.hc_android.hc_css.wight.AddAndSubEditText
+            android:inputType="textPassword"
             android:singleLine="true"
             android:imeOptions="actionGo"
             android:id="@+id/password"
@@ -62,7 +64,7 @@
             android:layout_marginTop="25dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <Button
+            <TextView
                 android:layout_gravity="center"
                 android:background="@drawable/login_btn"
                 android:gravity="center"
@@ -74,24 +76,35 @@
                 android:layout_height="45dp" />
             <ProgressBar
                 android:layout_gravity="center"
-                android:indeterminateDuration="700"
+                android:indeterminateDuration="500"
                 style="@style/progressBar_custom_drawable"
                 android:visibility="gone"
                 android:id="@+id/progress_login"
-                android:layout_width="15dp"
-                android:layout_height="15dp" />
+                android:layout_width="18dp"
+                android:layout_height="18dp" />
         </FrameLayout>
-
-        <Button
+        <FrameLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+            android:gravity="center"
             android:id="@+id/btn_chat_login"
             android:textSize="16sp"
             android:textColor="@color/white"
             android:text="@string/login_chat_btn"
-            android:layout_marginTop="25dp"
             android:background="@drawable/login_chat_btn"
             android:layout_width="match_parent"
             android:layout_height="45dp" />
-
+            <ProgressBar
+                android:layout_gravity="center"
+                android:indeterminateDuration="500"
+                style="@style/progressBar_custom_drawable"
+                android:visibility="gone"
+                android:id="@+id/progress_wxlogin"
+                android:layout_width="18dp"
+                android:layout_height="18dp" />
+        </FrameLayout>
         <TextView
             android:visibility="gone"
             android:textSize="16sp"

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:elevation="4dp"
     android:background="@color/theme_app">
 
     <LinearLayout
@@ -10,13 +9,15 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:gravity="center">
+        android:gravity="center_vertical">
 
         <ImageView
+            android:layout_marginLeft="5dp"
+            android:padding="3dp"
             android:id="@+id/backImg"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginRight="20dp"
+
             />
     </LinearLayout>
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/white"
+    app:cardCornerRadius="3dp"
+    app:cardElevation="6dp"
+    app:layout_goneMarginLeft="@dimen/window_margin"
+    app:layout_goneMarginRight="@dimen/window_margin"
+    app:layout_goneMarginTop="@dimen/window_margin"
+    android:layout_marginBottom="@dimen/window_margin"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content">
+    <androidx.recyclerview.widget.RecyclerView
+        android:paddingRight="@dimen/window_margin"
+        android:paddingBottom="@dimen/window_margin"
+        android:paddingLeft="@dimen/window_margin"
+        android:paddingTop="@dimen/window_margin"
+        android:id="@+id/form_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</androidx.cardview.widget.CardView>
