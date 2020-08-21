@@ -20,6 +20,7 @@ import com.hc_android.hc_css.contract.PersonalActivityContract;
 import com.hc_android.hc_css.entity.IneValuateEntity;
 import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
+import com.hc_android.hc_css.entity.ParamEntity;
 import com.hc_android.hc_css.entity.TokenEntity;
 import com.hc_android.hc_css.entity.UpdateUserEntity;
 import com.hc_android.hc_css.presenter.PersonalActivityPresenter;
@@ -32,6 +33,7 @@ import com.hc_android.hc_css.utils.android.image.GlideEngine;
 import com.hc_android.hc_css.utils.android.image.ImageLoaderManager;
 import com.hc_android.hc_css.utils.android.image.UploadFileUtils;
 import com.hc_android.hc_css.utils.socket.MessageEvent;
+import com.hc_android.hc_css.wight.CustomDialog;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -41,6 +43,8 @@ import com.qiniu.android.storage.UpCompletionHandler;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -122,6 +126,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
     private LoginEntity.DataBean.InfoBean userBean;
     private String cutPath;
     private TextView clickText;
+    private CustomDialog customDialog;
 
     @Override
     protected void reloadActivity() {
@@ -143,11 +148,11 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
         userBean = BaseApplication.getUserBean();
         if (userBean != null) {
 //            FrescoUtils.setRoundGif(userHeader, UriUtils.getUri(Constant.ONLINEPIC, Address.IMG_URL + userBean.getHead()));
-            String head=null;
-            if (!NullUtils.isNull(userBean.getHead())){
-                head=Address.IMG_URL + userBean.getHead();
-            }else {
-                head=Address.SYSTEM_URL+"image/defaultAvatar.jpeg";
+            String head = null;
+            if (!NullUtils.isNull(userBean.getHead())) {
+                head = Address.IMG_URL + userBean.getHead();
+            } else {
+                head = Address.SYSTEM_URL + "image/defaultAvatar.jpeg";
             }
             ImageLoaderManager.loadCircleImage(this, head, userHeader);
             if (!NullUtils.isNull(userBean.getNickname())) {
@@ -202,6 +207,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
 
     @OnClick({R.id.backImg, R.id.header_click, R.id.personal_nickname, R.id.lin_gxqm, R.id.lin_xm, R.id.lin_mobile, R.id.lin_wechat, R.id.lin_email, R.id.lin_xgmm})
     public void onViewClicked(View view) {
+        userBean = BaseApplication.getUserBean();
         Bundle bundle = new Bundle();
         switch (view.getId()) {
             case R.id.backImg:
@@ -248,10 +254,34 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                 startActivityForResult(UpdateActivity.class, bundle, PERSONAL_ACT);
                 break;
             case R.id.lin_mobile:
+                clickText = mobileTv;
+                String title1 = "手机号";
+                bundle.putString(Constant._TITLE, title1);
+                if (NullUtils.isNull(userBean.getTel())) {
+                    startActivityForResult(BindActivity.class, bundle, PERSONAL_ACT);
+                } else {
+                    showDiaLog(title1, bundle);
+                }
                 break;
             case R.id.lin_wechat:
+                clickText = wechatTv;
+                String title2 = "微信";
+                bundle.putString(Constant._TITLE, title2);
+                if (NullUtils.isNull(userBean.getWechat())) {
+                    startActivityForResult(BindActivity.class, bundle, PERSONAL_ACT);
+                } else {
+                    showDiaLog(title2,bundle);
+                }
                 break;
             case R.id.lin_email:
+                clickText = emailTv;
+                String title3 = "邮箱";
+                bundle.putString(Constant._TITLE, title3);
+                if (NullUtils.isNull(userBean.getEmail())) {
+                    startActivityForResult(BindActivity.class, bundle, PERSONAL_ACT);
+                } else {
+                    showDiaLog(title3,bundle);
+                }
                 break;
             case R.id.lin_xgmm:
                 bundle.putString(Constant.INTENT_TYPE, Constant.PERSONAL_);
@@ -280,12 +310,12 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                         LocalMedia localMedia = selectList.get(0);
 
                         cutPath = localMedia.getCutPath();
-                        if (cutPath==null){
-                            if (cutPath==null) {
+                        if (cutPath == null) {
+                            if (cutPath == null) {
                                 cutPath = localMedia.getOriginalPath();
                             }
-                            if (cutPath==null){
-                                cutPath=localMedia.getAndroidQToPath();
+                            if (cutPath == null) {
+                                cutPath = localMedia.getAndroidQToPath();
                             }
                         }
                         mPresenter.pGetToken("img", localMedia.getMimeType());
@@ -345,27 +375,57 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
         setResult(RESULT_OK, intent);
         finish();
     }
+
     @Override
     public void onSocketEvent(MessageEvent message) {
         super.onSocketEvent(message);
-        MessageEntity messageEntity= (MessageEntity) message.getMsg();
-        switch (messageEntity.getAct()){
+        MessageEntity messageEntity = (MessageEntity) message.getMsg();
+        switch (messageEntity.getAct()) {
 
             case UI_FRESH:
                 setMsgCount();
                 break;
         }
     }
+
     /**
      * 设置未读数
      */
     private void setMsgCount() {
         int unReadCount = AppConfig.unReadCount;
-        if (unReadCount==0){
+        if (unReadCount == 0) {
             msgCountTv.setVisibility(View.GONE);
-        }else {
+        } else {
             msgCountTv.setVisibility(View.VISIBLE);
-            msgCountTv.setText(unReadCount+"");
+            msgCountTv.setText(unReadCount + "");
         }
+    }
+
+    /**
+     * 点击弹出窗口
+     */
+    private void showDiaLog(String string, Bundle bundle) {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        //点击全部的分类操作
+        customDialog = builder.heightDimenRes(R.dimen.popWindow_height_bind)
+                .widthDimenRes(R.dimen.popWindow_witch)
+                .view(R.layout.bind_state_dialog)
+                .style(R.style.Dialog)
+                .cancelTouchout(true)
+                .addViewOnclick(R.id.state_bind, view -> {
+                    customDialog.dismiss();
+                })
+                .addViewOnclick(R.id.state_change, view -> {
+
+                    startActivity(BindActivity.class, bundle);
+                    customDialog.dismiss();
+                })
+                .build();
+        TextView textView = (TextView) customDialog.getView(R.id.state_bind);
+        TextView change = (TextView) customDialog.getView(R.id.state_change);
+        textView.setText("解除绑定" + string);
+        change.setText("更换绑定" + string);
+        customDialog.show();
     }
 }

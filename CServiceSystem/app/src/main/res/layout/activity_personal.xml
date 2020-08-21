@@ -287,8 +287,9 @@
             android:clickable="true"
             android:textIsSelectable="true"
             android:id="@+id/mobile_tv"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_toLeftOf="@+id/img_jt5"
+            android:layout_toRightOf="@id/mobile"
+            android:layout_marginRight="@dimen/window_margin"
             android:text="未设置"
             android:textSize="14sp"
             android:textColor="@color/black_aa"
@@ -296,6 +297,14 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginRight="@dimen/window_margin"
+            android:id="@+id/img_jt5"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/qj"
+            android:layout_width="17dp"
+            android:layout_height="17dp"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/lin_wechat"
@@ -323,8 +332,9 @@
             android:clickable="true"
             android:textIsSelectable="true"
             android:id="@+id/wechat_tv"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_toLeftOf="@+id/img_jt6"
+            android:layout_toRightOf="@id/wechat"
+            android:layout_marginRight="@dimen/window_margin"
             android:text="未绑定"
             android:textSize="14sp"
             android:textColor="@color/black_aa"
@@ -332,6 +342,14 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginRight="@dimen/window_margin"
+            android:id="@+id/img_jt6"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/qj"
+            android:layout_width="17dp"
+            android:layout_height="17dp"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/lin_email"
@@ -359,8 +377,9 @@
             android:clickable="true"
             android:textIsSelectable="true"
             android:id="@+id/email_tv"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/window_margin_h"
+            android:layout_toLeftOf="@+id/img_jt7"
+            android:layout_toRightOf="@id/email"
+            android:layout_marginRight="@dimen/window_margin"
             android:text="未绑定"
             android:textSize="14sp"
             android:textColor="@color/black_aa"
@@ -368,6 +387,15 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_marginRight="@dimen/window_margin"
+            android:id="@+id/img_jt7"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/qj"
+            android:layout_width="17dp"
+            android:layout_height="17dp"/>
     </RelativeLayout>
     <View
         android:background="@color/black_line"

@@ -149,7 +149,7 @@ public class EventServiceImpl implements EventService {
      * @throws URISyntaxException
      */
     @Override
-    public void connect(String hash) throws URISyntaxException {
+    public synchronized void connect(String hash) throws URISyntaxException {
 
 
         //判断是否已连接，如果连接重新连接
@@ -269,7 +269,7 @@ public class EventServiceImpl implements EventService {
      * Disconnect from the server.
      */
     @Override
-    public void disconnect() {
+    public synchronized void disconnect() {
 
         if (mSocket != null) {
             handler.removeMessages(MESSAGE_KEEPLINK);

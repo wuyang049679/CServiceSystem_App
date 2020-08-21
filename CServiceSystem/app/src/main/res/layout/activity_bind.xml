@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context=".ui.activity.BindActivity">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/act_update"
+        android:background="@color/theme_app"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_marginLeft="@dimen/window_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/cancel"
+            android:textSize="16sp"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/title_act_update"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="绑定手机"
+            android:textColor="@color/white"
+            android:layout_marginLeft="6dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:enabled="true"
+            android:clickable="true"
+            android:id="@+id/update_save"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="@dimen/window_margin"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="@dimen/window_margin"
+            android:paddingRight="@dimen/window_margin"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="@string/ok"
+            android:background="@drawable/green_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_bin"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:paddingLeft="@dimen/window_margin"
+            android:textColorHint="@color/black_999"
+            android:hint="输入手机号"
+            android:id="@+id/update_et"
+            android:layout_marginTop="15dp"
+            android:textSize="16sp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/act_update"
+            android:layout_width="match_parent"
+            android:minHeight="48dp"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        <EditText
+            android:textColorHint="@color/black_999"
+            android:hint="输入验证码"
+            android:id="@+id/update_code"
+            android:paddingLeft="@dimen/window_margin"
+            android:layout_marginTop="15dp"
+            android:textSize="16sp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/act_update"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:minHeight="48dp"
+            android:layout_height="wrap_content"/>
+
+            <View
+                android:layout_marginTop="15dp"
+                android:background="@color/black_line"
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"/>
+            <com.hc_android.hc_css.wight.botton.CountdownButton
+                android:stateListAnimator="@null"
+                style="@null"
+                android:layout_marginTop="15dp"
+                android:id="@+id/cdb_register_timer"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:textAllCaps="false"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="获取验证码"
+                android:textColor="@color/theme_app"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    </LinearLayout>

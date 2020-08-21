@@ -11,7 +11,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -59,7 +61,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.activity.realauth.RemStateActivity"></activity>
+        <activity android:name=".ui.activity.BindActivity"></activity>
+        <activity android:name=".ui.activity.realauth.RemStateActivity" />
         <activity android:name=".ui.activity.realauth.RemittanceActivity" />
         <activity android:name=".ui.activity.realauth.BusinessActivity" />
         <activity android:name=".ui.activity.realauth.CompanyRealActivity" />

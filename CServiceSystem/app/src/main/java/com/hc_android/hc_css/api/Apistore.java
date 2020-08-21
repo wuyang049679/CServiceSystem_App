@@ -347,4 +347,20 @@ public interface Apistore {
      */
     @GET("/account/realconfirm")
     Observable<BaseEntity<VerityResultEntity.DataBean>> realConfirm(@QueryMap HashMap<String, String> map);
+
+    /**
+     * 绑定手机邮箱，微信
+     * @param
+     * @return
+     */
+    @GET("/account/verification")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> verification(@QueryMap HashMap<String, String> map);
+
+    /**
+     * 绑定手机邮箱，微信
+     * @param
+     * @return
+     */
+    @GET("/account/vercode")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> vercode(@QueryMap HashMap<String, String> map);
 }

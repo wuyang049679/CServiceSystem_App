@@ -119,7 +119,7 @@ public class IDCardActivity extends BaseActivity <RealAuthenActivityPresenter, V
                     @Override
                     public void onFinish(RPResult auditResult, String s, String s1) {
                         if (auditResult == RPResult.AUDIT_PASS) {
-                            // 认证通过。建议接入方调用实名认证服务端接口DescribeVerifyResult来获取最终的认证状态，并以此为准进行业务上的判断和处理。
+//                             认证通过。建议接入方调用实名认证服务端接口DescribeVerifyResult来获取最终的认证状态，并以此为准进行业务上的判断和处理。
                             // do something
                             mPresenter.pVerityResult(realtype,"RPBioOnly",bizId);
                         } else if (auditResult == RPResult.AUDIT_FAIL) {
@@ -159,7 +159,7 @@ public class IDCardActivity extends BaseActivity <RealAuthenActivityPresenter, V
                 if (NullUtils.isNull(idcard)){ToastUtils.showShort("请输入身份证号码");return;}
                 if (!ValidateUtils.isRealName(name)||name.length()>10){ToastUtils.showShort("请输入正确的姓名");return;}
                 if (!ValidateUtils.isIDCard(idcard)){ToastUtils.showShort("请输入正确的身份证号码");return;}
-                if (DateUtils.isChildUnderTargetAge(idcard,18,true)){ToastUtils.showShort("未满18周岁无法完成实名认证");return;}
+                if (DateUtils.isChildUnderTargetAge(idcard,17,true)){ToastUtils.showShort("未满18周岁无法完成实名认证");return;}
                 mPresenter.pVerityToken("RPBioOnly",name,idcard);
 
                 break;
