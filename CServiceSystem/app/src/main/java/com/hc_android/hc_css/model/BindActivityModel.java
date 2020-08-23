@@ -39,4 +39,26 @@ public class BindActivityModel implements BindActivityContract.Model {
         return ApiManager.getApistore().vercode(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> relievebind(String type) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put("type",type);
+        return ApiManager.getApistore().relievebind(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> bind(String mobile, String email, String code) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        if (mobile != null)hashMap.put("tel",mobile);
+        if (email != null)hashMap.put("email",email);
+        if (code != null)hashMap.put("code",code);
+        return ApiManager.getApistore().bind(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

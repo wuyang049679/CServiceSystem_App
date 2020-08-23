@@ -82,7 +82,9 @@
         <activity android:name=".ui.activity.HistoryActivity" />
         <activity android:name=".ui.activity.MsgNotifiActivity" />
         <activity android:name=".ui.activity.UpdatePwdActivity" />
-        <activity android:name=".ui.activity.PersonalActivity" />
+        <activity
+            android:launchMode="singleTask"
+            android:name=".ui.activity.PersonalActivity" />
         <activity
             android:name=".ui.activity.UpdateActivity"
             android:windowSoftInputMode="stateVisible" />

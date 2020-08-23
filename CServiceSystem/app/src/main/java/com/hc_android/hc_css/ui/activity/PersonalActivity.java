@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -23,6 +24,7 @@ import com.hc_android.hc_css.entity.MessageEntity;
 import com.hc_android.hc_css.entity.ParamEntity;
 import com.hc_android.hc_css.entity.TokenEntity;
 import com.hc_android.hc_css.entity.UpdateUserEntity;
+import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.presenter.PersonalActivityPresenter;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.JsonParseUtils;
@@ -33,6 +35,7 @@ import com.hc_android.hc_css.utils.android.image.GlideEngine;
 import com.hc_android.hc_css.utils.android.image.ImageLoaderManager;
 import com.hc_android.hc_css.utils.android.image.UploadFileUtils;
 import com.hc_android.hc_css.utils.socket.MessageEvent;
+import com.hc_android.hc_css.wight.ChoiceDialog;
 import com.hc_android.hc_css.wight.CustomDialog;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -40,6 +43,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
 
 import org.json.JSONObject;
 
@@ -50,6 +54,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cc.shinichi.library.tool.ui.ToastUtil;
 
 import static com.hc_android.hc_css.utils.Constant.UI_FRESH;
 
@@ -128,6 +133,11 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
     private TextView clickText;
     private CustomDialog customDialog;
 
+    private final String TYPE_WECHAT = "wechat";
+    private final String TYPE_TEL = "tel";
+    private final String TYPE_EMAIL= "email";
+
+    private String _type;
     @Override
     protected void reloadActivity() {
 
@@ -260,7 +270,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                 if (NullUtils.isNull(userBean.getTel())) {
                     startActivityForResult(BindActivity.class, bundle, PERSONAL_ACT);
                 } else {
-                    showDiaLog(title1, bundle);
+                    showDiaLog(title1, bundle, TYPE_TEL);
                 }
                 break;
             case R.id.lin_wechat:
@@ -268,9 +278,9 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                 String title2 = "微信";
                 bundle.putString(Constant._TITLE, title2);
                 if (NullUtils.isNull(userBean.getWechat())) {
-                    startActivityForResult(BindActivity.class, bundle, PERSONAL_ACT);
+                    wxLogin();
                 } else {
-                    showDiaLog(title2,bundle);
+                    showDiaLog(title2,bundle,TYPE_WECHAT);
                 }
                 break;
             case R.id.lin_email:
@@ -280,7 +290,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                 if (NullUtils.isNull(userBean.getEmail())) {
                     startActivityForResult(BindActivity.class, bundle, PERSONAL_ACT);
                 } else {
-                    showDiaLog(title3,bundle);
+                    showDiaLog(title3,bundle,TYPE_EMAIL);
                 }
                 break;
             case R.id.lin_xgmm:
@@ -370,6 +380,29 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
     }
 
     @Override
+    public void showRelievebindSuccess(IneValuateEntity.DataBean dataBean) {
+        if (dataBean.get_suc() == 0){
+            new ChoiceDialog(this, dataBean.getText(), 1);
+        }
+        if (dataBean.get_suc() == 1){
+            LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
+            if (_type.equals(TYPE_EMAIL))userBean.setEmail(null);
+            if (_type.equals(TYPE_TEL))userBean.setTel(null);
+            if (_type.equals(TYPE_WECHAT))userBean.setWechat(null);
+            UserEntity userEntity=BaseApplication.getUserEntity();
+            userEntity.setUserbean(userBean);
+            BaseApplication.setUserEntity(userEntity);
+            clickText.setText("未绑定");
+            ToastUtils.showShort("解除绑定成功");
+        }
+    }
+
+    @Override
+    public void showWeChatLogin(LoginEntity.DataBean dataBean) {
+        ToastUtils.showShort(dataBean.getHash());
+    }
+
+    @Override
     public void onBackPressed() {
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
@@ -404,7 +437,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
     /**
      * 点击弹出窗口
      */
-    private void showDiaLog(String string, Bundle bundle) {
+    private void showDiaLog(String string, Bundle bundle, String type) {
 
         CustomDialog.Builder builder = new CustomDialog.Builder(this);
         //点击全部的分类操作
@@ -414,11 +447,16 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                 .style(R.style.Dialog)
                 .cancelTouchout(true)
                 .addViewOnclick(R.id.state_bind, view -> {
+                    mPresenter.pRelievebind(type);
+                    _type = type;
                     customDialog.dismiss();
                 })
                 .addViewOnclick(R.id.state_change, view -> {
-
-                    startActivity(BindActivity.class, bundle);
+                    if (type.equals(TYPE_WECHAT)){
+                        wxLogin();
+                    }else {
+                        startActivity(BindActivity.class, bundle);
+                    }
                     customDialog.dismiss();
                 })
                 .build();
@@ -427,5 +465,35 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
         textView.setText("解除绑定" + string);
         change.setText("更换绑定" + string);
         customDialog.show();
+    }
+
+
+    //微信登录页
+    private void wxLogin() {
+        if (!BaseApplication.mWXapi.isWXAppInstalled()) {
+            showShortToast("您还未安装微信客户端");
+            return;
+        }
+
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "ufile_wx_login";//这个字段可以任意更改
+        BaseApplication.mWXapi.sendReq(req);
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String wxCode = intent.getStringExtra(Constant.CODE);
+        Log.d(TAG, "wxCode: " + wxCode);
+        if (wxCode != null) {
+            mPresenter.pCheckLogin(wxCode);
+        } else {
+            if (intent.hasExtra(Constant.CODE)) {
+                Toast.makeText(this, "微信登录授权失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 }

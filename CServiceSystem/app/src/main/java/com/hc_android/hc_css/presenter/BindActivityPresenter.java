@@ -27,7 +27,7 @@ public class BindActivityPresenter extends BasePresenterIm<BindActivityContract.
 
             @Override
             protected void onFailed(int code, String msg) {
-                ToastUtils.showShort(msg);
+                mView.showEroor(msg);
             }
 
             @Override
@@ -43,6 +43,46 @@ public class BindActivityPresenter extends BasePresenterIm<BindActivityContract.
         bindActivityModel.vercode(mobile, email).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
             @Override
             protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                mView.showVercode(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                mView.showEroor(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
+    public void pRelievebind(String type) {
+        bindActivityModel.relievebind(type).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
+    public void pBind(String mobile, String email, String code) {
+        bindActivityModel.bind(mobile, email, code).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                mView.showBindSuccess(dataBean);
             }
 
             @Override

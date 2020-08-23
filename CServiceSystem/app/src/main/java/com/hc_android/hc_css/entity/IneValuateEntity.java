@@ -67,7 +67,15 @@ public class IneValuateEntity {
         private SessionBean session;
         private String invitationTime;
         private boolean existence;
+        private String text;
 
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
 
         public boolean isExistence() {
             return existence;

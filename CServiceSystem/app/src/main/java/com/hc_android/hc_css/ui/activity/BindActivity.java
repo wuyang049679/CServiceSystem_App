@@ -17,6 +17,7 @@ import com.hc_android.hc_css.entity.VerityResultEntity;
 import com.hc_android.hc_css.presenter.BindActivityPresenter;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.android.ToastUtils;
+import com.hc_android.hc_css.wight.ChoiceDialog;
 import com.hc_android.hc_css.wight.botton.CountdownButton;
 
 import butterknife.BindView;
@@ -44,6 +45,9 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
     LinearLayout linBin;
     private String title;
 
+    private final String WECHAt_TYPE = "wechat";
+    private final String WECHAt_tel = "tel";
+    private final String WECHAt_email = "email";
     @Override
     public BindActivityPresenter getPresenter() {
         return new BindActivityPresenter();
@@ -97,7 +101,7 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
     public void showDataSuccess(IneValuateEntity.DataBean datas) {
         if (datas.isExistence()){
         cdbRegisterTimer.stop();
-        ToastUtils.showShort("您填写的" + title +"已注册");
+            new ChoiceDialog(this, "您填写的" + title +"已注册" , 1);
         }else {
             String et = updateEt.getText().toString();
             if (title.equals("手机号")) {
@@ -128,4 +132,27 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
+    @Override
+    public void showRelievebindSuccess(IneValuateEntity.DataBean dataBean) {
+
+    }
+
+    @Override
+    public void showEroor(String msg) {
+        cdbRegisterTimer.stop();
+        ToastUtils.showShort(msg);
+    }
+
+    @Override
+    public void showBindSuccess(IneValuateEntity.DataBean dataBean) {
+
+    }
+
+    @Override
+    public void showVercode(IneValuateEntity.DataBean dataBean) {
+
+    }
+
+
 }

@@ -4,6 +4,7 @@ import com.hc_android.hc_css.base.BasePresenterIm;
 import com.hc_android.hc_css.base.RxSubscribe;
 import com.hc_android.hc_css.contract.PersonalActivityContract;
 import com.hc_android.hc_css.entity.IneValuateEntity;
+import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.TokenEntity;
 import com.hc_android.hc_css.model.PersonalActivityModel;
 import com.hc_android.hc_css.utils.android.ToastUtils;
@@ -50,6 +51,51 @@ public class PersonalActivityPresenter extends BasePresenterIm<PersonalActivityC
             @Override
             protected void onFailed(int code, String msg) {
                 ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
+    public void pRelievebind(String type) {
+
+        personalActivityModel.relievebind(type).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                if (mView!=null)mView.showRelievebindSuccess(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
+    public void pCheckLogin(String code) {
+        personalActivityModel.wXlogin(code).subscribe(new RxSubscribe<LoginEntity.DataBean>() {
+            @Override
+            protected void onSuccess(LoginEntity.DataBean loginEntity) {
+                if (loginEntity.get_suc()!=0) {
+                    mView.showWeChatLogin(loginEntity);
+                }else {
+                    onFailed(0,loginEntity.getText());
+                }
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                mView.showDataError(msg);
             }
 
             @Override

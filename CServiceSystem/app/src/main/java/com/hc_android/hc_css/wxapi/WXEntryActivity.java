@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import com.hc_android.hc_css.base.BaseApplication;
 import com.hc_android.hc_css.ui.activity.LoginActivity;
 import com.hc_android.hc_css.ui.activity.MainActivity;
+import com.hc_android.hc_css.ui.activity.PersonalActivity;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.android.app.AppParam;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -62,7 +63,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	// 微信发送请求到第三方应用时，会回调到该方法
 	@Override
 	public void onReq(BaseReq baseReq) {
-
+		Log.i(TAG, "BaseReq: " + baseReq.toString());
 	}
 
 	// 第三方应用发送到微信的请求处理后的响应结果，会回调到该方法
@@ -88,7 +89,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				final String code = ((SendAuth.Resp) baseResp).code;
 				wxCode =code;
 				Log.d(TAG, "code: " + code);
-				Intent intent = new Intent(this, LoginActivity.class);
+				Intent intent = new Intent(this, PersonalActivity.class);
 				intent.putExtra(Constant.CODE,wxCode);
 				startActivity(intent);
 				finish();

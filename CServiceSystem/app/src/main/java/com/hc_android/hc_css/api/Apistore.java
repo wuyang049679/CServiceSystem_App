@@ -349,7 +349,7 @@ public interface Apistore {
     Observable<BaseEntity<VerityResultEntity.DataBean>> realConfirm(@QueryMap HashMap<String, String> map);
 
     /**
-     * 绑定手机邮箱，微信
+     * 验证绑定手机邮箱，微信
      * @param
      * @return
      */
@@ -357,10 +357,24 @@ public interface Apistore {
     Observable<BaseEntity<IneValuateEntity.DataBean>> verification(@QueryMap HashMap<String, String> map);
 
     /**
-     * 绑定手机邮箱，微信
+     * 绑定手机邮箱，微信（发送验证码）
      * @param
      * @return
      */
     @GET("/account/vercode")
     Observable<BaseEntity<IneValuateEntity.DataBean>> vercode(@QueryMap HashMap<String, String> map);
+
+    /**
+     * 解除绑定绑定手机邮箱，微信
+     * @param
+     * @return
+     */
+    @GET("/account/relievebind")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> relievebind(@QueryMap HashMap<String, String> map);
+
+    /**
+     * 绑定手机邮箱，微信
+     */
+    @GET("/account/bind")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> bind(@QueryMap HashMap<String, String> map);
 }
