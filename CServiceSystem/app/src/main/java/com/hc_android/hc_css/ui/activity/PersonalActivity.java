@@ -55,6 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cc.shinichi.library.tool.ui.ToastUtil;
+import kotlin.reflect.KVariance;
 
 import static com.hc_android.hc_css.utils.Constant.UI_FRESH;
 
@@ -341,6 +342,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                     if (!NullUtils.isNull(content)) {
                         clickText.setText(content);
                     }
+
                     break;
             }
         }
@@ -421,6 +423,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
         }
     }
 
+
     /**
      * 设置未读数
      */
@@ -447,8 +450,21 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                 .style(R.style.Dialog)
                 .cancelTouchout(true)
                 .addViewOnclick(R.id.state_bind, view -> {
-                    mPresenter.pRelievebind(type);
-                    _type = type;
+                    ChoiceDialog choiceDialog = new ChoiceDialog(this, "确定解除绑定" + string, 0);
+                    choiceDialog.setCancelCallBack(new ChoiceDialog.ChoiceCancelCallBack() {
+                        @Override
+                        public void cancelBack() {
+                        }
+
+                        @Override
+                        public void okBack(String s) {
+                            if (s.equals("ok")) {
+                                _type = type;
+                                mPresenter.pRelievebind(type);
+                            }
+                        }
+                    });
+
                     customDialog.dismiss();
                 })
                 .addViewOnclick(R.id.state_change, view -> {
@@ -477,7 +493,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
 
         final SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
-        req.state = "ufile_wx_login";//这个字段可以任意更改
+        req.state = "ufile_wx_login_ver";//这个字段可以任意更改
         BaseApplication.mWXapi.sendReq(req);
 
     }

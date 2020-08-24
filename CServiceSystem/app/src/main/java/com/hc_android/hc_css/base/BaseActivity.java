@@ -358,8 +358,8 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
 
     @Override
     public void hideLoading() {
-//        loadingDialog.dismiss();
-        dialog.dismiss();
+        if (loadingDialog!=null)loadingDialog.dismiss();
+        if (dialog!=null)dialog.dismiss();
 
     }
 

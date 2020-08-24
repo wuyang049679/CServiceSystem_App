@@ -21,7 +21,7 @@ public class BindActivityModel implements BindActivityContract.Model {
     public Observable<BaseEntity<IneValuateEntity.DataBean>> verification(String mobile, String email) {
         HashMap<String,String> hashMap=new HashMap<>();
         hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
-        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+//        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
         if (mobile != null)hashMap.put("tel",mobile);
         if (email != null)hashMap.put("email",email);
         return ApiManager.getApistore().verification(hashMap).subscribeOn(Schedulers.io())
@@ -29,13 +29,15 @@ public class BindActivityModel implements BindActivityContract.Model {
     }
 
     @Override
-    public Observable<BaseEntity<IneValuateEntity.DataBean>> vercode(String mobile, String email) {
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> vercode(String mobile, String email, String type, String antiBrush) {
         HashMap<String,String> hashMap=new HashMap<>();
         hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
-        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        if (BaseApplication.getUserEntity().getHash()!=null)hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
         if (mobile != null)hashMap.put("tel",mobile);
         if (email != null)hashMap.put("email",email);
-        hashMap.put("type","bind");
+        if (antiBrush !=null)hashMap.put("antiBrush",antiBrush);
+        hashMap.put("type",type);
+        hashMap.put("mode","app");
         return ApiManager.getApistore().vercode(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -59,6 +61,15 @@ public class BindActivityModel implements BindActivityContract.Model {
         if (email != null)hashMap.put("email",email);
         if (code != null)hashMap.put("code",code);
         return ApiManager.getApistore().bind(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> regisiter(String fields) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        if (fields != null)hashMap.put("fields",fields);
+        return ApiManager.getApistore().regisiter(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

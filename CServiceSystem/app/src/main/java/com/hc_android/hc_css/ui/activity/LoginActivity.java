@@ -189,7 +189,7 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
      *
      * @param view
      */
-    @OnClick({R.id.btn_login, R.id.btn_chat_login})
+    @OnClick({R.id.btn_login, R.id.btn_chat_login, R.id.tv_register })
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -212,6 +212,9 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
                 break;
             case R.id.btn_chat_login:
                 wxLogin();
+                break;
+            case R.id.tv_register:
+                startActivity(RegisterActivity.class);
                 break;
         }
     }

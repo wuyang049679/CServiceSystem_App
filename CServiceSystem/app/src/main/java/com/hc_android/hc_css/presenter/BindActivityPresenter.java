@@ -38,9 +38,9 @@ public class BindActivityPresenter extends BasePresenterIm<BindActivityContract.
     }
 
     @Override
-    public void pVercode(String mobile, String email) {
+    public void pVercode(String mobile, String email, String type, String antiBrush) {
 
-        bindActivityModel.vercode(mobile, email).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+        bindActivityModel.vercode(mobile, email, type,antiBrush).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
             @Override
             protected void onSuccess(IneValuateEntity.DataBean dataBean) {
                 mView.showVercode(dataBean);
@@ -88,6 +88,26 @@ public class BindActivityPresenter extends BasePresenterIm<BindActivityContract.
             @Override
             protected void onFailed(int code, String msg) {
                 ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
+    public void pRegisiter(String fields) {
+        bindActivityModel.regisiter(fields).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                mView.showRegisiterSuccess(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                mView.showRegisiterEroor(msg);
             }
 
             @Override

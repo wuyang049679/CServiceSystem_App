@@ -377,4 +377,10 @@ public interface Apistore {
      */
     @GET("/account/bind")
     Observable<BaseEntity<IneValuateEntity.DataBean>> bind(@QueryMap HashMap<String, String> map);
+
+    /**
+     * 账号注册
+     */
+    @GET("/account/register")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> regisiter(@QueryMap HashMap<String, String> map);
 }

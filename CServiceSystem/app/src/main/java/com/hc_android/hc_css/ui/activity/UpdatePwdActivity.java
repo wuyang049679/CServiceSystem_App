@@ -244,7 +244,7 @@ public class UpdatePwdActivity extends BaseActivity<UpdatePwdActivityPresenter, 
     }
 
     @Override
-    public void okBack() {
+    public void okBack(String s) {
         finish();
     }
 

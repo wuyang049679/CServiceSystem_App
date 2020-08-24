@@ -124,7 +124,7 @@ public class RemStateActivity extends BaseActivity<RemStateActivityPresenter, Ve
                 }
 
                 @Override
-                public void okBack() {
+                public void okBack(String s) {
                     Intent intent = new Intent(RemStateActivity.this, MainActivity.class);
                     intent.putExtra("_ACTION","FRESH");
                     startActivity(intent);
@@ -154,7 +154,7 @@ public class RemStateActivity extends BaseActivity<RemStateActivityPresenter, Ve
                 }
 
                 @Override
-                public void okBack() {
+                public void okBack(String s) {
                     Intent intent = new Intent(RemStateActivity.this, MainActivity.class);
                     intent.putExtra("_ACTION","FRESH");
                     startActivity(intent);

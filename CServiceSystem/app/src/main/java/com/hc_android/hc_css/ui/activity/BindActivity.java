@@ -1,5 +1,6 @@
 package com.hc_android.hc_css.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,8 +12,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.base.BaseActivity;
+import com.hc_android.hc_css.base.BaseApplication;
 import com.hc_android.hc_css.contract.BindActivityContract;
 import com.hc_android.hc_css.entity.IneValuateEntity;
+import com.hc_android.hc_css.entity.LoginEntity;
+import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.entity.VerityResultEntity;
 import com.hc_android.hc_css.presenter.BindActivityPresenter;
 import com.hc_android.hc_css.utils.Constant;
@@ -71,6 +75,7 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
             public void onClick(View v) {
                 String et = updateEt.getText().toString();
                 if (TextUtils.isEmpty(et)){
+                    cdbRegisterTimer.stop();
                     ToastUtils.showShort("您的输入不能为空");
                     return;
                 }
@@ -105,9 +110,9 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
         }else {
             String et = updateEt.getText().toString();
             if (title.equals("手机号")) {
-                mPresenter.pVercode(et, null);
+                mPresenter.pVercode(et, null,"bind",null);
             }else {
-                mPresenter.pVercode(null, et);
+                mPresenter.pVercode(null, et,"bind",null);
             }
         }
     }
@@ -120,6 +125,22 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
                 finish();
                 break;
             case R.id.update_save:
+                String tel = updateEt.getText().toString().trim();
+                String code = updateCode.getText().toString().trim();
+                if (TextUtils.isEmpty(tel)){
+                    ToastUtils.showShort("请输入账号");
+                    return;
+                }
+                if (TextUtils.isEmpty(code)){
+                    ToastUtils.showShort("请输入验证码");
+                    return;
+                }
+                if (title.equals("手机号")) {
+                    mPresenter.pBind(tel,null,code);
+                }else {
+                    mPresenter.pBind(null,tel,code);
+
+                }
                 showLoadingView("全局");
                 break;
         }
@@ -146,11 +167,41 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
 
     @Override
     public void showBindSuccess(IneValuateEntity.DataBean dataBean) {
-
+        hideLoading();
+        if (dataBean.get_suc() == 1) {
+            String s = updateEt.getText().toString();
+            LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
+            if (title.equals("手机号")) {
+                userBean.setTel(s);
+            } else {
+                userBean.setEmail(s);
+            }
+            UserEntity userEntity = BaseApplication.getUserEntity();
+            userEntity.setUserbean(userBean);
+            BaseApplication.setUserEntity(userEntity);
+            Intent intent = new Intent();
+            intent.putExtra("_CONTENT_TEXT", s);
+            setResult(RESULT_OK, intent);
+            finish();
+        }else {
+            if (dataBean.getText()!=null){
+                new ChoiceDialog(this, dataBean.getText(), 1);
+            }
+        }
     }
 
     @Override
     public void showVercode(IneValuateEntity.DataBean dataBean) {
+
+    }
+
+    @Override
+    public void showRegisiterSuccess(IneValuateEntity.DataBean dataBean) {
+
+    }
+
+    @Override
+    public void showRegisiterEroor(String msg) {
 
     }
 

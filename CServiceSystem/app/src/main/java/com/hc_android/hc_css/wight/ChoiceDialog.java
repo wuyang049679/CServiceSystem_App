@@ -36,7 +36,7 @@ public class ChoiceDialog {
                 alertDialog.dismiss();
                 if (choiceCancelCallBack!=null) {
                     choiceCancelCallBack.cancelBack();
-                    choiceCancelCallBack.okBack();
+                    choiceCancelCallBack.okBack("cancel");
                 }
             }
         });
@@ -46,7 +46,7 @@ public class ChoiceDialog {
                 alertDialog.dismiss();
                 if (choiceCancelCallBack!=null) {
                     choiceCancelCallBack.cancelBack();
-                    choiceCancelCallBack.okBack();
+                    choiceCancelCallBack.okBack("ok");
                 }
             }
         });
@@ -78,7 +78,7 @@ public class ChoiceDialog {
 
     public interface ChoiceCancelCallBack{
         void cancelBack();
-        void okBack();
+        void okBack(String msg);
     }
 
 

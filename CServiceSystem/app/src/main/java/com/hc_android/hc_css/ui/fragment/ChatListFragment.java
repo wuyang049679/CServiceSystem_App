@@ -1239,7 +1239,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         }
 
                         @Override
-                        public void okBack() {
+                        public void okBack(String s) {
                         }
                     });
                 }

@@ -213,7 +213,7 @@ public class MsgNotifiActivity extends BaseActivity<MsgNotifiActivityPresenter, 
                         }
 
                         @Override
-                        public void okBack() {
+                        public void okBack(String s) {
                             Intent intent = new Intent();
                             intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                             Uri uri = Uri.fromParts("package", BaseApplication.getContext().getApplicationContext().getPackageName(), null);
@@ -258,7 +258,7 @@ public class MsgNotifiActivity extends BaseActivity<MsgNotifiActivityPresenter, 
                         }
 
                         @Override
-                        public void okBack() {
+                        public void okBack(String s) {
                             Intent intent = new Intent();
                             intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                             Uri uri = Uri.fromParts("package", BaseApplication.getContext().getApplicationContext().getPackageName(), null);

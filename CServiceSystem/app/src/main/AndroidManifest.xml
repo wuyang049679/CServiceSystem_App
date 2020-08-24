@@ -61,7 +61,9 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.activity.BindActivity"></activity>
+        <activity android:name=".ui.activity.VerActivity"></activity>
+        <activity android:name=".ui.activity.RegisterActivity" />
+        <activity android:name=".ui.activity.BindActivity" />
         <activity android:name=".ui.activity.realauth.RemStateActivity" />
         <activity android:name=".ui.activity.realauth.RemittanceActivity" />
         <activity android:name=".ui.activity.realauth.BusinessActivity" />
@@ -83,8 +85,8 @@
         <activity android:name=".ui.activity.MsgNotifiActivity" />
         <activity android:name=".ui.activity.UpdatePwdActivity" />
         <activity
-            android:launchMode="singleTask"
-            android:name=".ui.activity.PersonalActivity" />
+            android:name=".ui.activity.PersonalActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.activity.UpdateActivity"
             android:windowSoftInputMode="stateVisible" />

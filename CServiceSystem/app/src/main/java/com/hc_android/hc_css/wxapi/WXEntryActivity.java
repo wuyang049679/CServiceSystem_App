@@ -87,97 +87,21 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			case BaseResp.ErrCode.ERR_OK:
 				//用户同意授权。
 				final String code = ((SendAuth.Resp) baseResp).code;
+				final String state = ((SendAuth.Resp) baseResp).state;
 				wxCode =code;
 				Log.d(TAG, "code: " + code);
-				Intent intent = new Intent(this, PersonalActivity.class);
+				Log.d(TAG, "((SendAuth.Resp) baseResp): " + ((SendAuth.Resp) baseResp).state);
+				Intent intent = new Intent();
+				if (state.equals("ufile_wx_login_ver")){
+				intent.setClass(this, PersonalActivity.class);
+				}else if (state.equals("ufile_wx_login")){
+				intent.setClass(this, LoginActivity.class);
+				}
 				intent.putExtra(Constant.CODE,wxCode);
 				startActivity(intent);
 				finish();
 				break;
 		}
-	}
-
-
-
-
-
-	//获取access_token
-	private void getAccessToken(final String code) {
-
-		//这个接口需用get请求
-		String path = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WX_APP_ID + "&secret="
-				+ WX_APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
-
-		OkHttpClient client = new OkHttpClient();
-		final Request request = new Request.Builder()
-				.url(path)
-				.build();
-		Call call = client.newCall(request);
-		call.enqueue(new Callback() {
-			@Override
-			public void onFailure(Call call, IOException e) {
-				Log.d(TAG, "onFailure: 失败");
-//                mDialog.dismiss();
-				finish();
-			}
-
-			@Override
-			public void onResponse(Call call, Response response) throws IOException {
-				final String result = response.body().string();
-				Log.d(TAG, "请求微信服务器成功: " + result);
-
-				try {
-					JSONObject jsonObject = new JSONObject(result);
-					openid = jsonObject.getString("openid");
-					accessToken = jsonObject.getString("access_token");
-
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-
-				getUserInfo();
-
-
-			}
-		});
-	}
-
-
-
-
-
-	//获取用户信息
-	private void getUserInfo() {
-		String path = "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openid;
-		OkHttpClient client = new OkHttpClient();
-		Request request = new Request.Builder()
-				.url(path)
-				.build();
-		Call call = client.newCall(request);
-		call.enqueue(new Callback() {
-			@Override
-			public void onFailure(Call call, IOException e) {
-				Log.d(TAG, "onFailure: userinfo" + e.getMessage());
-				finish();
-			}
-
-			@Override
-			public void onResponse(Call call, Response response) throws IOException {
-//                Log.d(TAG, "onResponse: userinfo" + response.body().string());    //okhttp中 response.body().string()只允许调用一次
-
-				final String result = response.body().string();
-				try {
-					JSONObject jsonObject = new JSONObject(result);
-					unionId = jsonObject.getString("unionid");
-					headImgUrl = jsonObject.getString("headimgurl");
-					nickname = jsonObject.getString("nickname");
-					Log.d(TAG,"getUserInfo: unionId = "+unionId+"  headImgUrl = "+ headImgUrl + "  nickname = "+ nickname);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				finish();
-			}
-		});
 	}
 
 
