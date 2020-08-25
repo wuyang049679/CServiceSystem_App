@@ -19,7 +19,7 @@ public interface BindActivityContract {
 
     interface View extends BaseView<IneValuateEntity.DataBean> {
         void showRelievebindSuccess(IneValuateEntity.DataBean  dataBean);
-        void showEroor(String msg);
+        void showEroor(int code, String msg);
         void showBindSuccess(IneValuateEntity.DataBean  dataBean);
         void showVercode(IneValuateEntity.DataBean  dataBean);
         void showRegisiterSuccess(IneValuateEntity.DataBean  dataBean);

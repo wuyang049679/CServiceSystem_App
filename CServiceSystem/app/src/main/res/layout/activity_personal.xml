@@ -291,7 +291,7 @@
             android:layout_toLeftOf="@+id/img_jt5"
             android:layout_toRightOf="@id/mobile"
             android:layout_marginRight="@dimen/window_margin"
-            android:text="未设置"
+            android:text="未绑定"
             android:textSize="14sp"
             android:textColor="@color/black_aa"
             android:gravity="right"

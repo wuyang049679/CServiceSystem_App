@@ -27,7 +27,7 @@ public class BindActivityPresenter extends BasePresenterIm<BindActivityContract.
 
             @Override
             protected void onFailed(int code, String msg) {
-                mView.showEroor(msg);
+                mView.showEroor(code,msg);
             }
 
             @Override
@@ -48,7 +48,7 @@ public class BindActivityPresenter extends BasePresenterIm<BindActivityContract.
 
             @Override
             protected void onFailed(int code, String msg) {
-                mView.showEroor(msg);
+                mView.showEroor(code,msg);
             }
 
             @Override

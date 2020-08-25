@@ -160,8 +160,9 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
     }
 
     @Override
-    public void showEroor(String msg) {
+    public void showEroor(int code, String msg) {
         cdbRegisterTimer.stop();
+        if (code == 10005)msg = "请输入正确的手机号码或邮箱";
         ToastUtils.showShort(msg);
     }
 
@@ -179,10 +180,24 @@ public class BindActivity extends BaseActivity<BindActivityPresenter, IneValuate
             UserEntity userEntity = BaseApplication.getUserEntity();
             userEntity.setUserbean(userBean);
             BaseApplication.setUserEntity(userEntity);
-            Intent intent = new Intent();
-            intent.putExtra("_CONTENT_TEXT", s);
-            setResult(RESULT_OK, intent);
-            finish();
+
+            ChoiceDialog choiceDialog = new ChoiceDialog(this, "绑定成功", 1);
+            choiceDialog.setCancelCallBack(new ChoiceDialog.ChoiceCancelCallBack() {
+                @Override
+                public void cancelBack() {
+
+                }
+
+                @Override
+                public void okBack(String msg) {
+                    Intent intent = new Intent();
+                    intent.putExtra("_CONTENT_TEXT", s);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
+
+
         }else {
             if (dataBean.getText()!=null){
                 new ChoiceDialog(this, dataBean.getText(), 1);

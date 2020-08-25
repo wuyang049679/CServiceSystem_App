@@ -11,7 +11,7 @@
         android:gravity="center"
         android:textColor="@color/theme_app"
         android:textSize="18sp"
-        android:text="更换绑定"
+        android:text="更换"
         android:layout_width="match_parent"
         android:layout_height="48dp"/>
     <View
@@ -26,7 +26,7 @@
         android:gravity="center"
         android:textColor="@color/theme_app"
         android:textSize="18sp"
-        android:text="解除绑定"
+        android:text="解绑"
         android:layout_width="match_parent"
         android:layout_height="48dp"/>
     <View

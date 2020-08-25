@@ -191,5 +191,12 @@ public class RemStateActivity extends BaseActivity<RemStateActivityPresenter, Ve
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent intent = new Intent(RemStateActivity.this, MainActivity.class);
+        intent.putExtra("_ACTION","FRESH");
+        startActivity(intent);
+        finish();
+    }
 }

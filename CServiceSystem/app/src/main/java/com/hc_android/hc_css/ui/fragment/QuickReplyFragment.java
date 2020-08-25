@@ -217,11 +217,13 @@ public class QuickReplyFragment extends BaseFragment<MDiaglogFragmentPresenter, 
                         QuickEntity.DataBean.ListBean bean = listBeans.get(i);
                         //如果是图片就查看是否包含
                         if (bean.getType() != null && bean.getType().equals("text")) {
-                            if (bean.getContent() != null && bean.getContent().contains(s))
+                            if (bean.getContent() != null && bean.getContent().contains(s)) {
                                 list.add(bean);
+                            } else if (bean.getName() != null && bean.getName().contains(s)) {
+                                list.add(bean);
+                            }
                         } else {
-                            if (bean.getName() != null && bean.getName().contains(s))
-                                list.add(bean);
+                            if (bean.getName() != null && bean.getName().contains(s)) list.add(bean);
                         }
                     }
                     tagLin.setVisibility(View.GONE);

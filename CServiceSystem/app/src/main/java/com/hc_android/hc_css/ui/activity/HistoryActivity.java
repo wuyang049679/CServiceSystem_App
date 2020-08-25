@@ -21,6 +21,7 @@ import com.hc_android.hc_css.base.BaseActivity;
 import com.hc_android.hc_css.base.BaseApplication;
 import com.hc_android.hc_css.contract.HistoryActivityContract;
 import com.hc_android.hc_css.entity.ConditionEntity;
+import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.MessageDialogEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
 import com.hc_android.hc_css.entity.ScreenSaveEntity;
@@ -88,13 +89,13 @@ public class HistoryActivity extends BaseActivity<HistoryActivityPresenter, Mess
 
     @Override
     protected void initData() {
-
         showLoadingView();
         ScreenSaveEntity screen_save = new ScreenSaveEntity();
         screen_save.setServicename("全部成员");
         ConditionEntity conditionEntity = DataModify(screen_save);
         condition = JsonParseUtils.parseToJson(conditionEntity);
         mPresenter.pGetHistoryList(condition, 30, skip);
+        LocalDataSource.setScreenList(null);
     }
 
     @Override
@@ -215,6 +216,11 @@ public class HistoryActivity extends BaseActivity<HistoryActivityPresenter, Mess
                 serviceBean.setName(saveEntity.getServicename());
                 if (saveEntity.getServicename().equals("全部成员")){
                     serviceBean.setId(null);
+                    LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
+                    //判断是否开启对话协助权限
+                    if (userBean != null && !userBean.getAuthority().isAssist()){
+                    serviceBean.setId(userBean.getId());
+                    }
                 }
             }
             conditionEntity.setService(serviceBean);//设置客服信息

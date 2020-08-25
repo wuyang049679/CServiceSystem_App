@@ -279,6 +279,7 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                 String title2 = "微信";
                 bundle.putString(Constant._TITLE, title2);
                 if (NullUtils.isNull(userBean.getWechat())) {
+                    _type = TYPE_WECHAT;
                     wxLogin();
                 } else {
                     showDiaLog(title2,bundle,TYPE_WECHAT);
@@ -401,7 +402,22 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
 
     @Override
     public void showWeChatLogin(LoginEntity.DataBean dataBean) {
-        ToastUtils.showShort(dataBean.getHash());
+        String dialogs = "微信绑定失败";
+        if (dataBean!=null && dataBean.get_suc() == 1) {
+            if (_type!=null) {
+                LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
+                if (_type.equals(TYPE_EMAIL)) userBean.setEmail(null);
+                if (_type.equals(TYPE_TEL)) userBean.setTel(null);
+                if (_type.equals(TYPE_WECHAT))
+                    userBean.setWechat(new LoginEntity.DataBean.InfoBean.WechatBean());
+            }
+            UserEntity userEntity = BaseApplication.getUserEntity();
+            userEntity.setUserbean(userBean);
+            BaseApplication.setUserEntity(userEntity);
+            clickText.setText("已绑定");
+            dialogs = "微信绑定成功";
+        }
+        new ChoiceDialog(this, dialogs, 1);
     }
 
     @Override
@@ -468,18 +484,17 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
                     customDialog.dismiss();
                 })
                 .addViewOnclick(R.id.state_change, view -> {
-                    if (type.equals(TYPE_WECHAT)){
-                        wxLogin();
-                    }else {
-                        startActivity(BindActivity.class, bundle);
+                    if (!type.equals(TYPE_WECHAT)){
+                        startActivityForResult(BindActivity.class, bundle, PERSONAL_ACT);
                     }
                     customDialog.dismiss();
                 })
                 .build();
         TextView textView = (TextView) customDialog.getView(R.id.state_bind);
         TextView change = (TextView) customDialog.getView(R.id.state_change);
-        textView.setText("解除绑定" + string);
-        change.setText("更换绑定" + string);
+        textView.setText("解绑");
+        change.setText("更换");
+        if (type.equals(TYPE_WECHAT))change.setText("取消");
         customDialog.show();
     }
 

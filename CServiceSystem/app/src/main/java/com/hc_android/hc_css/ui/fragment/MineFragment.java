@@ -319,7 +319,13 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
 
                 } else {
 //                    FrescoUtils.setRoundGif(userHeader, UriUtils.getUri(Constant.ONLINEPIC, Address.IMG_URL + userBean.getHead()));//fresco圆形gif无效
-                    ImageLoaderManager.loadCircleImage(getHcActivity(), Address.IMG_URL + userBean.getHead(), userIv);
+                    String head;
+                    if (!NullUtils.isNull(userBean.getHead())) {
+                        head = Address.IMG_URL + userBean.getHead();
+                    } else {
+                        head = Address.SYSTEM_URL + "image/defaultAvatar.jpeg";
+                    }
+                    ImageLoaderManager.loadCircleImage(getHcActivity(), head, userIv);
                     textName.setText(userBean.getNickname());
                     textQm.setText(userBean.getAutograph());
                 }

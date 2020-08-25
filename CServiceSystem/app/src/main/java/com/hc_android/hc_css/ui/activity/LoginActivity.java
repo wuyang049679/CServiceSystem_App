@@ -1,33 +1,25 @@
 package com.hc_android.hc_css.ui.activity;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.azhon.appupdate.config.UpdateConfiguration;
-import com.azhon.appupdate.listener.OnDownloadListener;
-import com.azhon.appupdate.manager.DownloadManager;
-import com.gyf.immersionbar.ImmersionBar;
 import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.base.BaseActivity;
 import com.hc_android.hc_css.base.BaseApplication;
@@ -36,24 +28,18 @@ import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.presenter.LoginActivityPresenter;
 import com.hc_android.hc_css.utils.Constant;
-import com.hc_android.hc_css.utils.FileUtils;
 import com.hc_android.hc_css.utils.ValidateUtils;
 import com.hc_android.hc_css.utils.android.EasyPermissionUtils;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.ToastUtils;
-import com.hc_android.hc_css.utils.apkupdate.ApkDownloadManager;
-import com.hc_android.hc_css.utils.apkupdate.ApkUpdateUtils;
 import com.hc_android.hc_css.wight.AddAndSubEditText;
-import com.huawei.updatesdk.service.otaupdate.AppUpdateActivity;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEntity.DataBean> implements LoginActivityContract.View  {
+public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEntity.DataBean> implements LoginActivityContract.View {
 
 
     @BindView(R.id.username)
@@ -71,6 +57,10 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
     ProgressBar progressWxlogin;
     @BindView(R.id.act_lin)
     ConstraintLayout actLin;
+    @BindView(R.id.tv_register)
+    TextView tvRegister;
+    @BindView(R.id.lin_register)
+    LinearLayout linRegister;
 
     private String usernames;
     private String passwords;
@@ -170,7 +160,7 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
     public void showDataError(String errorMessage) {
         super.showDataError(errorMessage);
         showShortToast(errorMessage);
-        isLoading(false,false);
+        isLoading(false, false);
     }
 
     @Override
@@ -183,13 +173,12 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
     }
 
 
-
     /**
      * 登录点击事件
      *
      * @param view
      */
-    @OnClick({R.id.btn_login, R.id.btn_chat_login, R.id.tv_register })
+    @OnClick({R.id.btn_login, R.id.btn_chat_login, R.id.lin_register})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -213,7 +202,7 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
             case R.id.btn_chat_login:
                 wxLogin();
                 break;
-            case R.id.tv_register:
+            case R.id.lin_register:
                 startActivity(RegisterActivity.class);
                 break;
         }
@@ -226,7 +215,7 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
         usernames = username.getText().toString().trim();
         passwords = password.getText().toString();
         if (ValidateUtils.isPhone(usernames) || ValidateUtils.isEmail(usernames)) {
-            isLoading(true,false);
+            isLoading(true, false);
             String[] perms = {
                     // 把你想要申请的权限放进这里就行，注意用逗号隔开
                     Manifest.permission.READ_PHONE_STATE,
@@ -234,12 +223,12 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
             String imei = null;
             boolean flag = EasyPermissionUtils.checkPermission(this, perms);
             if (flag) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 //                    使用AndroidId代替，缺点是应用签署密钥或用户（如系统恢复出产设置）不同返回的Id不同。与实际测试结果相符。
 //经实际测试：相同签名密钥的不同应用androidId相同，不同签名的应用androidId不同。恢复出产设置或升级系统没测。
                     imei = Settings.System.getString(this.getContentResolver(),
                             Settings.Secure.ANDROID_ID);
-                }else {
+                } else {
                     TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(this.TELEPHONY_SERVICE);
                     imei = telephonyManager.getDeviceId();
                 }
@@ -256,13 +245,13 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
      *
      * @param isLoading
      */
-    private void isLoading(boolean isLoading,boolean isWeChat) {
+    private void isLoading(boolean isLoading, boolean isWeChat) {
 
         if (isLoading) {
-            if (isWeChat){//如果是微信登录
+            if (isWeChat) {//如果是微信登录
                 btnChatLogin.setText("");
                 progressWxlogin.setVisibility(View.VISIBLE);
-            }else  {
+            } else {
                 btnLogin.setText("");
                 progressLogin.setVisibility(View.VISIBLE);
             }
@@ -309,8 +298,8 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
 
     @Override
     public void showWeChatLogin(LoginEntity.DataBean dataBean) {
-        if (dataBean.getHash()!=null){
-        mPresenter.pCheckLogin(dataBean.getHash());
+        if (dataBean.getHash() != null) {
+            mPresenter.pCheckLogin(dataBean.getHash());
         }
     }
 
@@ -320,7 +309,7 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
         super.onNewIntent(intent);
         String wxCode = intent.getStringExtra(Constant.CODE);
         if (wxCode != null) {
-            isLoading(true,true);
+            isLoading(true, true);
             mPresenter.pWxLogin(wxCode);
         } else {
             if (intent.hasExtra(Constant.CODE)) {

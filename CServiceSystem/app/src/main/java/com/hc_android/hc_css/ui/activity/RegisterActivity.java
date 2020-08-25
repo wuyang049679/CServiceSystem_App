@@ -117,7 +117,7 @@ public class RegisterActivity extends BaseActivity<BindActivityPresenter, IneVal
                 finish();
                 break;
             case R.id.cdb_register_timer:
-                String et = tel.getText().toString();
+                String et = tel.getText().toString().trim();
                 if (TextUtils.isEmpty(et)){
                     ToastUtils.showShort("您输入的手机号不能为空");
                     new Handler().postDelayed(new Runnable() {
@@ -149,7 +149,8 @@ public class RegisterActivity extends BaseActivity<BindActivityPresenter, IneVal
                 if (TextUtils.isEmpty(company)) hint = "请输入公司名称";
                 if (TextUtils.isEmpty(code)) hint = "请输入验证码";
                 if (TextUtils.isEmpty(tels)) hint = "请输入手机号码";
-                if (!TextUtils.isEmpty(pwd) && pwd.length() < 6 || pwd.length() > 18) hint = "请输入6至18位的字符密码";
+                if (!TextUtils.isEmpty(tels) && (tels.length() != 11 )) hint = "请输入正确的手机号码";
+                if (!TextUtils.isEmpty(pwd) && (pwd.length() < 6 || pwd.length() > 18 )) hint = "请输入6至18位的字符密码";
                 if (hint!=null){
                     ToastUtils.showShort(hint);
                     return;
@@ -174,8 +175,9 @@ public class RegisterActivity extends BaseActivity<BindActivityPresenter, IneVal
     }
 
     @Override
-    public void showEroor(String msg) {
+    public void showEroor(int code, String msg) {
         cdbRegisterTimer.stop();
+        if (code == 10005)msg = "请输入正确的手机号码";
         ToastUtils.showShort(msg);
     }
 
@@ -200,7 +202,18 @@ public class RegisterActivity extends BaseActivity<BindActivityPresenter, IneVal
             return;
         }
         if (dataBean.get_suc() == 1){
-            new ChoiceDialog(this, "注册成功" , 1);
+            ChoiceDialog dialog = new ChoiceDialog(this, "注册成功", 1);
+            dialog.setCancelCallBack(new ChoiceDialog.ChoiceCancelCallBack() {
+                @Override
+                public void cancelBack() {
+
+                }
+
+                @Override
+                public void okBack(String msg) {
+                    finish();
+                }
+            });
         }
     }
 

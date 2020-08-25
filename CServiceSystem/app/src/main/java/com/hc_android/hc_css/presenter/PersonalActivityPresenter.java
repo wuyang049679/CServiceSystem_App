@@ -86,16 +86,13 @@ public class PersonalActivityPresenter extends BasePresenterIm<PersonalActivityC
         personalActivityModel.wXlogin(code).subscribe(new RxSubscribe<LoginEntity.DataBean>() {
             @Override
             protected void onSuccess(LoginEntity.DataBean loginEntity) {
-                if (loginEntity.get_suc()!=0) {
-                    mView.showWeChatLogin(loginEntity);
-                }else {
-                    onFailed(0,loginEntity.getText());
-                }
+               mView.showWeChatLogin(loginEntity);
+
             }
 
             @Override
             protected void onFailed(int code, String msg) {
-                mView.showDataError(msg);
+                mView.showWeChatLogin(null);
             }
 
             @Override

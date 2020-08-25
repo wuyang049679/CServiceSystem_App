@@ -15,6 +15,7 @@ import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.app.CacheData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class LocalDataSource  {
@@ -28,6 +29,7 @@ public class LocalDataSource  {
     private static List<QuickEntity.DataBean.ListBean> QUICKETEAMLIST;//快捷的列表团队的
     private static List<TagEntity.DataBean.ListBean> TAGLIST;//全局的tag列表
     private static ScreenSaveEntity SCREEN_LIST;//筛选条件保存
+    private static HashMap<String, String> hashMap_screen;
 
     /**
      *
@@ -121,13 +123,17 @@ public class LocalDataSource  {
         SharedPreferencesUtils.setParam("TAGLIST",s);
     }
     public static ScreenSaveEntity getScreenList() {
-        String quicketeamlist = (String) SharedPreferencesUtils.getParam("SCREENLIST" +BaseApplication.getUserBean().getId(), "");
-        return JsonParseUtils.parseToObject(quicketeamlist,ScreenSaveEntity.class);
+        String screens = null;
+        if (hashMap_screen !=null)screens = hashMap_screen.get(BaseApplication.getUserBean().getId());
+//        String quicketeamlist = (String) SharedPreferencesUtils.getParam("SCREENLIST" +BaseApplication.getUserBean().getId(), "");
+        return JsonParseUtils.parseToObject(screens,ScreenSaveEntity.class);
     }
 
     public static void setScreenList(ScreenSaveEntity screenList) {
+        if (hashMap_screen == null)hashMap_screen = new HashMap<>();
         String s = JsonParseUtils.parseToJson(screenList);
-        SharedPreferencesUtils.setParam("SCREENLIST"+ BaseApplication.getUserBean().getId(),s);//绑定客服id，防止条件错乱
+//        SharedPreferencesUtils.setParam("SCREENLIST"+ BaseApplication.getUserBean().getId(),s);//绑定客服id，防止条件错乱
+        hashMap_screen.put(BaseApplication.getUserBean().getId(),s);
     }
 
     /**

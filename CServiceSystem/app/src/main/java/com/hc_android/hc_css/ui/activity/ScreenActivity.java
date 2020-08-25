@@ -16,6 +16,7 @@ import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.adapter.PopWindowListAdapter;
 import com.hc_android.hc_css.base.BaseActivity;
 import com.hc_android.hc_css.base.BaseApplication;
+import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.ParamEntity;
 import com.hc_android.hc_css.entity.ScreenSaveEntity;
 import com.hc_android.hc_css.entity.TagEntity;
@@ -399,9 +400,7 @@ public class ScreenActivity extends BaseActivity {
             screenRemark.setText("");
             screenIp.setText("");
             screenText.setText("");
-            if (BaseApplication.getUserBean()!=null&&BaseApplication.getUserBean().getName() != null) {
-                name.setText(BaseApplication.getUserBean().getName());
-            }
+            name.setText("全部成员");
             bqTv.setText("");
             pjTv.setText("");
             jrfsTv.setText("");
@@ -415,6 +414,7 @@ public class ScreenActivity extends BaseActivity {
             endStartTime.setText("");
             endEndStart.setText("");
             endEndEnd.setText("");
+
         }else {
             if (!NullUtils.isNull(saveEntity.getVague()))srceenCard.setText(saveEntity.getVague());
             if (!NullUtils.isNull(saveEntity.getKeyWord()))screenSource.setText(saveEntity.getKeyWord());
@@ -435,6 +435,11 @@ public class ScreenActivity extends BaseActivity {
             if (!NullUtils.isNull(saveEntity.getEndAtime())) endStartTime.setText(saveEntity.getEndAtime());
             if (!NullUtils.isNull(saveEntity.getEndBdate()))endEndStart.setText(saveEntity.getEndBdate());
             if (!NullUtils.isNull(saveEntity.getEndBtime()))endEndEnd.setText(saveEntity.getEndBtime());
+        }
+        //判断是否开启对话协助权限
+        LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
+        if (userBean != null && !userBean.getAuthority().isAssist()){
+            linZdcy.setVisibility(View.GONE);
         }
     }
     /**
