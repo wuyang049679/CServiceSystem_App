@@ -16,6 +16,7 @@ public interface ChatSetActivityContract {
         Observable<BaseEntity<ReceptionEntity.DataBean>> endDialog(String idList, String offEnd, String autoEnd);
         Observable<BaseEntity<IneValuateEntity.DataBean>> blackAdd(String dialogId, String item);
         Observable<BaseEntity<IneValuateEntity.DataBean>> blackDel(String dialogId, String customerId);
+        Observable<BaseEntity<IneValuateEntity.DataBean>> disturb(String dialogId, String disturb);
     }
 
     interface View extends BaseView<CardEntity.DataBean> {
@@ -23,6 +24,7 @@ public interface ChatSetActivityContract {
         void  showEndDialog(ReceptionEntity.DataBean messageEntity);
         void blackAddSuccess(IneValuateEntity.DataBean dataBean);
         void blackDelSuccess(IneValuateEntity.DataBean dataBean);
+        void disturbSuccess(IneValuateEntity.DataBean dataBean);
     }
 
     interface Presenter {
@@ -31,5 +33,6 @@ public interface ChatSetActivityContract {
         void pEndDialog(String idList,String offEnd,String autoEnd);
         void pBlackAdd(String dialogId, String item);
         void pBlackDel(String dialogId, String customerId);
+        void pDisturb(String dialogId, String disturb);
     }
 }

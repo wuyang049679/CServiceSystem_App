@@ -34,8 +34,10 @@ import com.hc_android.hc_css.base.BaseApplication;
 import com.hc_android.hc_css.base.BaseConfig;
 import com.hc_android.hc_css.entity.ErrorEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
+import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.ui.activity.MainActivity;
 import com.hc_android.hc_css.utils.Constant;
+import com.hc_android.hc_css.utils.DateUtils;
 import com.hc_android.hc_css.utils.JsonParseUtils;
 import com.hc_android.hc_css.utils.NullUtils;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
@@ -95,11 +97,13 @@ public class EventServiceImpl implements EventService {
     private static final String MESSAGE_REPORT_STATE = "report_state";
     private static EventService INSTANCE;
     private static EventListener mEventListener;
-    private static Socket mSocket;
+    private  Socket mSocket;
     private List<String> roomList;
     private boolean isConnect=true;
     private boolean isFirst=true;
     private static final int MESSAGE_KEEPLINK=1;
+    private static final int OPTIME = 2000;
+    private long lasttime = 0;
     private Handler postDelayed=new Handler(getMainLooper());
     private Handler handler=new Handler(new Handler.Callback() {
         @Override
@@ -153,9 +157,12 @@ public class EventServiceImpl implements EventService {
 
 
         //判断是否已连接，如果连接重新连接
-        if (mSocket!=null&&mSocket.connected()){
-            disconnect();
-        }
+//        if (mSocket!=null&&mSocket.connected()){
+//            Log.i(TAG,"open进来了");
+//            mSocket.open();
+//            return;
+//        }
+        disconnect();
         IO.Options opts = new IO.Options();
         opts.transports = new String[]{WebSocket.NAME};
         //失败重试次数
@@ -365,6 +372,7 @@ public class EventServiceImpl implements EventService {
         public void call(Object... args) {
             Log.i(TAG, "call: onConnect");
             if (mEventListener != null) mEventListener.onConnect(args);
+
         }
     };
     private Emitter.Listener onError = new Emitter.Listener() {
@@ -454,10 +462,11 @@ public class EventServiceImpl implements EventService {
                         e.printStackTrace();
                     }
                 } else {
-
                     MessageEntity message = JsonParseUtils.parseToObject(args[i].toString(), MessageEntity.class);
                     MessageEvent event = new MessageEvent(MessageEventType.EventMessage, message);
                     EventBus.getDefault().postSticky(event);
+
+
                 }
             }
         }

@@ -218,7 +218,7 @@ public class HistoryActivity extends BaseActivity<HistoryActivityPresenter, Mess
                     serviceBean.setId(null);
                     LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
                     //判断是否开启对话协助权限
-                    if (userBean != null && !userBean.getAuthority().isAssist()){
+                    if (userBean != null && userBean.getAuthority() !=null && !userBean.getAuthority().isAssist()){
                     serviceBean.setId(userBean.getId());
                     }
                 }

@@ -383,4 +383,9 @@ public interface Apistore {
      */
     @GET("/account/register")
     Observable<BaseEntity<IneValuateEntity.DataBean>> regisiter(@QueryMap HashMap<String, String> map);
+    /**
+     * 消息免打扰
+     */
+    @GET("/dialog/disturb")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> disturb(@QueryMap HashMap<String, String> map);
 }

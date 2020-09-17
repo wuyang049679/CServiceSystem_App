@@ -57,7 +57,19 @@
             fresco:layout_constraintRight_toRightOf="@id/simple_drawViews"
             fresco:layout_constraintTop_toTopOf="@id/simple_drawViews"
             />
+        <TextView
+            android:visibility="gone"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="3dp"
+            android:id="@+id/msg_disturb"
+            fresco:layout_constraintRight_toRightOf="@+id/id_space"
+            fresco:layout_constraintLeft_toLeftOf="@id/id_space"
+            fresco:layout_constraintBottom_toTopOf="@id/id_space"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/draw_cirle"
 
+            />
         <TextView
             android:id="@+id/msg_count_tv"
             fresco:layout_constraintLeft_toRightOf="@id/id_space"
@@ -111,14 +123,24 @@
             android:singleLine="true"
             android:id="@+id/tv_content"
             fresco:layout_constraintBottom_toBottomOf="parent"
+            fresco:layout_constraintRight_toLeftOf="@+id/iv_disturb"
             fresco:layout_constraintLeft_toRightOf="@id/simple_drawViews"
-            fresco:layout_constraintRight_toRightOf="parent"
             android:layout_marginLeft="10dp"
+            android:paddingRight="10dp"
             android:textSize="13sp"
             android:textColor="@color/black_999"
             android:text=""
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
+        <ImageView
+            android:visibility="gone"
+            android:layout_marginRight="@dimen/window_margin"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            fresco:layout_constraintRight_toLeftOf="@+id/btn_jd"
+            android:id="@+id/iv_disturb"
+            android:src="@mipmap/disturb"
+            android:layout_width="14dp"
+            android:layout_height="14dp"/>
         <Button
             android:visibility="gone"
             android:id="@+id/btn_jd"

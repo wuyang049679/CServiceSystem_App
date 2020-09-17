@@ -244,6 +244,7 @@ public class MessageDialogEntity implements Serializable{
             private String endtime;
             private String state;
             private boolean top;
+            private boolean disturb;
             private String source;
             private String address;
             private DeviceBean device;
@@ -266,6 +267,7 @@ public class MessageDialogEntity implements Serializable{
             private AnalysisUrlBean analysisUrl;
             private WechatInfoBean wechatInfo;
             private PathMsgBean pathMsgBean;
+
 
 
             public PathMsgBean getPathMsgBean() {
@@ -409,9 +411,18 @@ public class MessageDialogEntity implements Serializable{
                 this.state = state;
             }
 
+            public boolean isDisturb() {
+                return disturb;
+            }
+
+            public void setDisturb(boolean disturb) {
+                this.disturb = disturb;
+            }
+
             public boolean isTop() {
                 return top;
             }
+
 
             public void setTop(boolean top) {
                 this.top = top;

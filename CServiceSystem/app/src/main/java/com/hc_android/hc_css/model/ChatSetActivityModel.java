@@ -75,4 +75,16 @@ public class ChatSetActivityModel implements ChatSetActivityContract.Model {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> disturb(String dialogId, String disturb) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.DIALOGID,dialogId);
+        hashMap.put("disturb",disturb);
+
+        return ApiManager.getApistore().disturb(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 }

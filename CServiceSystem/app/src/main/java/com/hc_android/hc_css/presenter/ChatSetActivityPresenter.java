@@ -117,4 +117,24 @@ public class ChatSetActivityPresenter extends BasePresenterIm<ChatSetActivityCon
             }
         });
     }
+
+    @Override
+    public void pDisturb(String dialogId, String disturb) {
+        chatSetActivityModel.disturb(dialogId,disturb).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                mView.disturbSuccess(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
 }

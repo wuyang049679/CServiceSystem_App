@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonObject;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.adapter.DialogListAdapter;
@@ -56,6 +57,8 @@ import com.hc_android.hc_css.wight.LocalDataSource;
 import com.hc_android.hc_css.wight.RecyclerViewNoBugLinearLayoutManager;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -636,7 +639,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             //更新未读数
             if (listBean.getServiceId().equals(serviceId) || listBean.getState().equals("unassigned")) {
                 if (!listBean.isAssignGrade() || listBean.getServiceId().equals(serviceId) || BaseApplication.getUserBean().isFounding()) {
-                    if (listBean.getUnreadNum() != 0) {
+                    if (listBean.getUnreadNum() != 0 && !listBean.isDisturb()) {
                         unReadCount += listBean.getUnreadNum();
                     }
                 }
@@ -860,7 +863,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 String dialogId = message.getDialogId();
                 if (dialogId != null) {
                     for (int i = 0; i < listUIBeans.size(); i++) {
-                        if (listUIBeans.get(i).getId().equals(dialogId)) {
+                        if (listUIBeans.get(i)!=null&& listUIBeans.get(i).getId()!=null && listUIBeans.get(i).getId().equals(dialogId)) {
                            notifisychronze(NOTIFI_ITEM,i);
                         }
                     }
@@ -998,7 +1001,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         if (message.getServiceId().equals(BaseApplication.getUserBean().getId())
                                 && message.getMessage().getSendType().equals("customer")) {//serviceId是否为自己，是否是顾客发送
 //                            未接待、同事的对话 都不提醒
-                            if (listBeans.get(i).getItemType() == Constant.HAVERECEIVED) {
+                            if (listBeans.get(i).getItemType() == Constant.HAVERECEIVED && !listBeans.get(i).isDisturb()) {
                                 //通知和铃声
                                 if (AppConfig.isIsOpenNewMsg()) {//是否开启了新消息
                                     NotificationUtils notificationUtils = new NotificationUtils(getHcActivity());
@@ -1140,8 +1143,14 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         }
                         //更新未读消息
                         if (item.getRead() != 0) listUIBean.setUnreadNum(0);//清空未读消息
-                        //置顶
-                        if (item.isTop()) listUIBean.setTop(true);
+                        //置顶和免打扰
+                        try {
+                            JSONObject jsonObject = new JSONObject(message.getItem().toString());
+                            if (jsonObject.has("top"))listUIBean.setTop(item.isTop());
+                            if (jsonObject.has("disturb"))listUIBean.setDisturb(item.isDisturb());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         if (item.getTag() != null) listUIBean.setTag(item.getTag());
 
                         //备注

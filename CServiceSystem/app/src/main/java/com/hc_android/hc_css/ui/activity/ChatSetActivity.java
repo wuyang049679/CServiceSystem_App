@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -130,6 +132,10 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
     LinearLayout wechatLin;
     @BindView(R.id.fftg)
     TextView fftg;
+    @BindView(R.id.switch_disturb)
+    Switch switchDisturb;
+    @BindView(R.id.lin_disturb)
+    RelativeLayout linDisturb;
 
     private TextView clickText;
     private MessageDialogEntity.DataBean.ListBean itembean;
@@ -246,6 +252,14 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
                 wechatListAdapter.notifyDataSetChanged();
             }
         }
+        //消息免打扰
+        switchDisturb.setChecked(itembean.isDisturb());
+        switchDisturb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPresenter.pDisturb(itembean.getId(), String.valueOf(isChecked));
+            }
+        });
     }
 
 
@@ -264,14 +278,18 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
         if (!NullUtils.isNull(INTENT_TYPE) && INTENT_TYPE.equals(Constant.HISTORYACT_)) {
             linZgts.setVisibility(View.GONE);
             linJsdh.setVisibility(View.GONE);
+            linDisturb.setVisibility(View.GONE);
         }
         if (!NullUtils.isNull(INTENT_TYPE) && INTENT_TYPE.equals(Constant.NOTRECEIVEDACT_)) {
             linZgts.setVisibility(View.GONE);
+            linDisturb.setVisibility(View.GONE);
         }
-        if (BaseApplication.getUserBean()!= null && BaseApplication.getUserBean().getAuthority() != null && !BaseApplication.getUserBean().getAuthority().isAssist()) {
+        if (BaseApplication.getUserBean() != null && BaseApplication.getUserBean().getAuthority() != null && !BaseApplication.getUserBean().getAuthority().isAssist()) {
             linZgts.setVisibility(View.GONE);
         }
         setMsgCount();
+
+
     }
 
     @Override
@@ -658,6 +676,11 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
     public void blackDelSuccess(IneValuateEntity.DataBean dataBean) {
         itembean.getCustomer().setBlack(false);
         jrhmd.setText("加入黑名单");
+    }
+
+    @Override
+    public void disturbSuccess(IneValuateEntity.DataBean dataBean) {
+
     }
 
     /**

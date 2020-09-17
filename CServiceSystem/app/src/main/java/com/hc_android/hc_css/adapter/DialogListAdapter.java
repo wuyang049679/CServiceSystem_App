@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -374,20 +375,33 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
      * @param helper
      */
     private void setMsgPoint(MessageDialogEntity.DataBean.ListBean item, BaseViewHolder helper) {
-        TextView ponit_tv = helper.getView(R.id.msg_count_tv);
         //设置未读消息数
+        TextView ponit_tv = helper.getView(R.id.msg_count_tv);
+        TextView disturb = helper.getView(R.id.msg_disturb);
+        ImageView iv_disturb = helper.getView(R.id.iv_disturb);
+        if (item.isDisturb()){
+            iv_disturb.setVisibility(View.VISIBLE);
+        }else {
+            iv_disturb.setVisibility(View.GONE);
+        }
         if (item.getUnreadNum() == 0) {
+            disturb.setVisibility(View.GONE);
             ponit_tv.setVisibility(View.GONE);
         } else {
-            ponit_tv.setVisibility(View.VISIBLE);
-            ponit_tv.setText(item.getUnreadNum()+"");
-            if (item.getUnreadNum()>9&&item.getUnreadNum()<=99) {
-                ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.radius_red));
-            } else if (item.getUnreadNum() > 99){
-                ponit_tv.setText("99+");
-                ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.radius_red));
+            if (item.isDisturb()){
+                ponit_tv.setVisibility(View.GONE);
+                disturb.setVisibility(View.VISIBLE);
             }else {
-                ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.oval_red));
+                ponit_tv.setVisibility(View.VISIBLE);
+                ponit_tv.setText(item.getUnreadNum() + "");
+                if (item.getUnreadNum() > 9 && item.getUnreadNum() <= 99) {
+                    ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.radius_red));
+                } else if (item.getUnreadNum() > 99) {
+                    ponit_tv.setText("99+");
+                    ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.radius_red));
+                } else {
+                    ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.oval_red));
+                }
             }
         }
     }

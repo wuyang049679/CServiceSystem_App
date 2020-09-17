@@ -750,6 +750,46 @@
         </RelativeLayout>
         </LinearLayout>
         <RelativeLayout
+            android:id="@+id/lin_disturb"
+            android:layout_marginTop="18dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <View
+                android:background="@color/black_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+            <View
+                android:layout_marginLeft="@dimen/window_margin_h"
+                android:layout_alignParentBottom="true"
+                android:background="@color/black_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+            <TextView
+                android:layout_marginLeft="12dp"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="消息免打扰"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Switch
+                android:id="@+id/switch_disturb"
+                android:background="@null"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="12dp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="40dp"
+                android:textOn="   "
+                android:textOff="   "
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/track" />
+
+        </RelativeLayout>
+        <RelativeLayout
             android:id="@+id/lin_zgts"
             android:clickable="true"
             android:layout_marginTop="18dp"

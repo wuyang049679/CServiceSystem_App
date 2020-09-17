@@ -70,7 +70,7 @@ public class LoginEntity {
         private InfoBean info;
         private String validity;
         private String text;
-
+        private String type;
 
 
         public String getText() {
