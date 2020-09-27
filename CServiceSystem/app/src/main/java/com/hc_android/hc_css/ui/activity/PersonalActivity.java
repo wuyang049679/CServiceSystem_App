@@ -403,6 +403,9 @@ public class PersonalActivity extends BaseActivity<PersonalActivityPresenter, To
     @Override
     public void showWeChatLogin(LoginEntity.DataBean dataBean) {
         String dialogs = "微信绑定失败";
+        if (dataBean.getErrCode()!=null && dataBean.getErrCode().equals("alreadyBound")){
+            dialogs = "您的微信已绑定其他账号";
+        }
         if (dataBean!=null && dataBean.get_suc() == 1) {
             if (_type!=null) {
                 LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();

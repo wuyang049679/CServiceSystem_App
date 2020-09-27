@@ -71,7 +71,16 @@ public class LoginEntity {
         private String validity;
         private String text;
         private String type;
+        private String errCode;
 
+
+        public String getErrCode() {
+            return errCode;
+        }
+
+        public void setErrCode(String errCode) {
+            this.errCode = errCode;
+        }
 
         public String getText() {
             return text;
@@ -433,6 +442,15 @@ public class LoginEntity {
             public static class CompanyBean {
                 String edition;
                 RealNameAuthBean realNameAuth;
+                MsgUndoBean msgUndo;
+
+                public MsgUndoBean getMsgUndo() {
+                    return msgUndo;
+                }
+
+                public void setMsgUndo(MsgUndoBean msgUndo) {
+                    this.msgUndo = msgUndo;
+                }
 
                 public RealNameAuthBean getRealNameAuth() {
                     return realNameAuth;
@@ -535,6 +553,17 @@ public class LoginEntity {
                 public static class CouponBean {
                 }
 
+                public static class MsgUndoBean{
+                    private boolean state;
+
+                    public boolean isState() {
+                        return state;
+                    }
+
+                    public void setState(boolean state) {
+                        this.state = state;
+                    }
+                }
                 public static class RealNameAuthBean {
 
                     /**
@@ -998,6 +1027,15 @@ public class LoginEntity {
                 private boolean chatListTag;
                 private boolean quickEnd;
                 private boolean visitorNumber;
+                private boolean inputing;
+
+                public boolean isInputing() {
+                    return inputing;
+                }
+
+                public void setInputing(boolean inputing) {
+                    this.inputing = inputing;
+                }
 
                 public boolean isActiveHide() {
                     return activeHide;

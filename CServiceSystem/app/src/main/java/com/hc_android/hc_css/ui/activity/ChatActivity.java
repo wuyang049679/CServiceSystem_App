@@ -481,7 +481,9 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
 
         if (message.getId() != null && userBean.getId().equals(message.getServiceId()) && !message.getSendType().equals("system") && !message.isUndo()) {
             String id = message.getId();
+            if (userBean.getCompany()!=null && userBean.getCompany().getMsgUndo() !=null && !userBean.getCompany().getMsgUndo().isState())return;
             if (!NullUtils.isNull(id)) {
+
                 if (DateUtils.getCurrentTimeMillis() - message.getTime() >= (1000 * 60 * 2)) {
 //                    ToastUtils.showShort("发送时间超过两分钟,不能撤回");
                 } else {
@@ -1402,6 +1404,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                 }
                 break;
             case MESSAGE_INPUTING:
+                if (userBean.getPersonality()!=null &&!userBean.getPersonality().isInputing())return;
                 //等第一数据加载完成再添加头部避免首次就加载历史聊天记录，触发UpFetch
                 if (messages.getDialogId() != null && messages.getDialogId().equals(itembean.getId())) {
 

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.hc_android.hc_css.base.BaseApplication;
 import com.hc_android.hc_css.entity.MessageEntity;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.DateUtils;
@@ -109,6 +110,9 @@ public class SelectableTextView extends TextView implements PromptPopWindow.Curs
                         }
                     }
                     if (!enUndo){
+                        promptPopWindow.showOperation(false);
+                    }
+                    if (BaseApplication.getUserBean().getCompany()!=null && !BaseApplication.getUserBean().getCompany().getMsgUndo().isState()){
                         promptPopWindow.showOperation(false);
                     }
                 }

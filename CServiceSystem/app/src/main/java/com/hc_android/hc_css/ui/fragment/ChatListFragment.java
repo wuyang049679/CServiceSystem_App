@@ -93,6 +93,7 @@ import static com.hc_android.hc_css.utils.Constant.MESSAGE_REPORT_STATE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_SERVICELEAVE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_SERVICEONLY;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_STATEUPATE;
+import static com.hc_android.hc_css.utils.Constant.MESSAGE_SYSTEMNOTICE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_UNDO;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_UPATEDIALOG;
 import static com.hc_android.hc_css.utils.Constant.UI_FRESH;
@@ -115,6 +116,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     private DialogListAdapter dialogListAdapter;
     private List<MessageDialogEntity.DataBean.ListBean> haveListBeans;
+    private List<MessageDialogEntity.DataBean.ListBean> disturbListBeans;
     private List<MessageDialogEntity.DataBean.ListBean> notListBean;
     private List<MessageDialogEntity.DataBean.ListBean> colleagueListBean;
     private List<MessageDialogEntity.DataBean.ListBean> listUIBeans;//展示的listUI集合
@@ -177,6 +179,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         listUIBeans = new ArrayList<>();
         notListBean = new ArrayList<>();
         haveListBeans = new ArrayList<>();
+        disturbListBeans = new ArrayList<>();
         colleagueListBean = new ArrayList<>();
         dialogListAdapter = new DialogListAdapter(listUIBeans);
         RecyclerViewNoBugLinearLayoutManager layoutParams = new RecyclerViewNoBugLinearLayoutManager(getHcActivity());
@@ -341,10 +344,10 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     }
                     showContentView();
 
-                    //请求完成数据之后批量自动结束对话
-                    endDialogList(messageEntity);
                     //最后所有数据请求完成之后刷新
                     refreshUI(listBeans,null);
+                    //请求完成数据之后批量自动结束对话
+                    endDialogList(messageEntity);
                     //获取同事成员列表
                     mPresenter.pGetTeamList();
                 }
@@ -369,40 +372,34 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     long autoTime = (BaseApplication.getUserEntity().getAutoEnd().getTime()) * 60 * 1000;//分钟转毫秒
                     for (Iterator<MessageDialogEntity.DataBean.ListBean> it = listBeans.iterator(); it.hasNext(); ) {
                         MessageDialogEntity.DataBean.ListBean listBean = it.next();
-                        long lastMsg = 0;
+                        long lastMsg = listBean.getLastMsg().getTime() != 0 ? listBean.getLastMsg().getTime() : DateUtils.getDate(listBean.getAddtime()).getTime();//是否存在lastmsg
                         if (listBean.getState().equals("active")) {
                             if (listBean.getReceptionTime() != null) {
                                 long receptionTime = DateUtils.getDate(listBean.getReceptionTime()).getTime();
                                 //接待时间如果大于最后一条消息时间则以最后一条消息时间为最后时间
                                 if (receptionTime > listBean.getLastMsg().getTime()) {
-                                    lastMsg = listBean.getLastMsg().getTime();
+                                    lastMsg = receptionTime;
                                 }
-                            } else{
-                                lastMsg = listBean.getLastMsg().getTime() != 0 ? listBean.getLastMsg().getTime() : DateUtils.getDate(listBean.getAddtime()).getTime();//是否存在lastmsg
                             }
                             long time = autoTime - (DateUtils.getCurrentTimeInLong() - lastMsg);//比较时间差
-                            if (time <= 0) {
+                            if (lastMsg !=0 && time <= 0) {
                                 autoList.add(listBean.getId());
                                 it.remove();
                             }
                         }
                     }
 
-                    int counts = (int) Math.ceil((autoList.size()) / 200f);//计算需要上传次数(向上取整)
-                    if (counts > 0) {
-                        for (int i = 0; i < counts; i++) {
-                            String idList = null;
-                            int size = autoList.size() - i * 200 > 200 ? (i + 1) * 200 : autoList.size();//计算size(每次最多结束200)
-                            for (int x = i * 200; x < size; x++) {
-                                if (idList == null) {
-                                    idList = autoList.get(x);
-                                } else {
-                                    idList += "," + autoList.get(x);
-                                }
+                    if (autoList!=null && autoList.size()!=0) {
+                        String idList = null;
+                        for (int x = 0; x < autoList.size(); x++) {
+                            if (idList == null) {
+                                idList = autoList.get(x);
+                            } else {
+                                idList += "," + autoList.get(x);
                             }
-
-                            mPresenter.pEndDialog(idList, null, "true");
                         }
+                        if (idList != null) mPresenter.pEndDialog(idList, "true", null);
+
                     }
                 }
                 //离线超过时间没有新消息
@@ -412,37 +409,35 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         MessageDialogEntity.DataBean.ListBean listBean = it.next();
                         if (listBean.getState().equals("active") && listBean.getCustomerOffTime() != null) {
                             if (listBean.getSource().equals("web") || listBean.getSource().equals("link")) {
-                                long time = 0;
+                                long customOffTime = DateUtils.getDate(listBean.getCustomerOffTime()).getTime();
+
                                 if (listBean.getReceptionTime() != null) {
                                     long receptionTime = DateUtils.getDate(listBean.getReceptionTime()).getTime();
                                     //接待时间如果大于最后一条消息时间则以最后一条消息时间为最后时间
-                                    if (receptionTime > DateUtils.getDate(listBean.getCustomerOffTime()).getTime()) {
-                                        time = DateUtils.getDate(listBean.getCustomerOffTime()).getTime();
+                                    if (receptionTime > customOffTime) {
+                                        customOffTime = receptionTime;
                                     }
-                                } else{
-                                    time = offTime - (DateUtils.getCurrentTimeInLong() - DateUtils.getDate(listBean.getCustomerOffTime()).getTime());//比较时间差
-                                 }
-                                if (time <= 0) {
+                                }
+                                long time = offTime - (DateUtils.getCurrentTimeInLong() - customOffTime);//比较时间差
+                                if (customOffTime!=0 && time <= 0) {
                                     offList.add(listBean.getId());
                                     it.remove();
                                 }
                             }
                         }
                     }
-                    int counts = (int) Math.floor(offList.size() / 200f);//计算需要上传次数
-                    if (counts > 0) {
-                        for (int i = 0; i < counts; i++) {
-                            String idList = null;
-                            int size = offList.size() - i * 200 > 200 ? (i + 1) * 200 : offList.size();
-                            for (int x = i * 200; x < size; x++) {
-                                if (idList == null) {
-                                    idList = offList.get(x);
-                                } else {
-                                    idList += "," + offList.get(x);
-                                }
+
+                    if (offList!=null && offList.size()!=0) {
+                        String idList = null;
+                        for (int x = 0; x < offList.size(); x++) {
+                            if (idList == null) {
+                                idList = offList.get(x);
+                            } else {
+                                idList += "," + offList.get(x);
                             }
-                            mPresenter.pEndDialog(idList, "true", null);
                         }
+                        if (idList != null) mPresenter.pEndDialog(idList, "true", null);
+
                     }
                 }
             }
@@ -462,7 +457,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             refreshUI(listBeans,null);
             //自己的对话时才通知
             if (messageEntity.getDialog().getServiceId()!=null&&messageEntity.getDialog().getServiceId().equals(BaseApplication.getUserBean().getId())) {
-                if (AppConfig.isIsOpenNewDialog()&&messageEntity.getDialog().getState()!=null&&messageEntity.getDialog().getState().equals("active")) {
+                if (AppConfig.isIsOpenNewDialog()&&messageEntity.getDialog().getState()!=null&&messageEntity.getDialog().getState().equals("active") && !messageEntity.getDialog().isDisturb()) {
                     NotificationUtils notificationUtils = new NotificationUtils(getHcActivity());
                     notificationUtils.sendNotification(getHcActivity(), unReadCount, messageEntity.getDialog());
                 }
@@ -527,6 +522,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         notListBean.clear();
         colleagueListBean.clear();
         haveListBeans.clear();
+        disturbListBeans.clear();
         //先置顶排序后按时间倒序排序
         listSort(list);
         //数据分类 为接待/已经待/同事的对话
@@ -551,7 +547,11 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 colleagueListBean.add(listBean);
             } else {
                 listBean.setItemtype(Constant.HAVERECEIVED);
+                if (listBean.isDisturb()){
+                    disturbListBeans.add(listBean);
+                }else {
                 haveListBeans.add(listBean);
+                }
             }
         }
 
@@ -585,6 +585,10 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             bean.setUnreadNum(unReadNum);//设置同事未读数量设置为0
             bean.setTop(false);//不参与置顶排序
             listUIBeans.add(bean); //添加同事集合
+        }
+        //添加免打扰
+        if (disturbListBeans!=null && disturbListBeans.size() !=0){
+            listUIBeans.addAll(disturbListBeans);
         }
         //将添加了同事的item 再ui集合里面根据lastTime排序
         listSort(listUIBeans);
@@ -681,6 +685,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 try {
                     long dt1 = o1.getLastMsg().getTime();
                     long dt2 =o2.getLastMsg().getTime();
+
                     //先置顶排序后时间倒序排序
                     if (o1.isTop() && o2.isTop()) {  //同时为top时根据时间倒序判断是否交换位置
                         if (dt1 < dt2) {
@@ -690,10 +695,22 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         } else {
                             return 0;
                         }
-                    } else if (o1.isTop()) {
+                    }else if (o1.isTop()) {
                         return -1;
                     } else if (o2.isTop()) {
                         return 1;
+                    }if (o1.isDisturb() && o2.isDisturb()){
+                        if (dt1 < dt2) {
+                            return 1;
+                        } else if (dt1 > dt2) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }else if (o1.isDisturb()){
+                        return 1;
+                    }else if (o2.isDisturb()){
+                        return -1;
                     } else {
                         //时间排序
                         if (dt1 < dt2) {
@@ -917,7 +934,19 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 }
 
              break;
+
+            case MESSAGE_SYSTEMNOTICE:
+
+                //自己的对话时才通知
+                if (message.getServiceId()!=null&&message.getServiceId().equals(BaseApplication.getUserBean().getId())) {
+                    if (AppConfig.isIsOpenNewDialog()) {
+                        NotificationUtils notificationUtils = new NotificationUtils(getHcActivity());
+                        notificationUtils.sendNotification(getHcActivity(), unReadCount, message.getTitle(),message.getBody());
+                    }
+                }
+                break;
         }
+
     }
 
 
@@ -1165,6 +1194,10 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             case MESSAGE_REPORT_STATE:
                 break;
 
+            //收到转人工通知消息需要通知提醒
+            case MESSAGE_SYSTEMNOTICE:
+                break;
+
         }
 
 
@@ -1216,6 +1249,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 }
                 wifiError.setVisibility(View.GONE);
                 haveListBeans.clear();
+                disturbListBeans.clear();
                 notListBean.clear();
                 colleagueListBean.clear();
                 listUIBeans.clear();//展示的listUI集合
@@ -1260,6 +1294,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
     public void initload() {
         haveListBeans.clear();
+        disturbListBeans.clear();
         notListBean.clear();
         colleagueListBean.clear();
         listUIBeans.clear();//展示的listUI集合

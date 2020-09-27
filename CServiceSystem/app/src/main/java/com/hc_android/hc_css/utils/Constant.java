@@ -104,6 +104,7 @@ public class Constant {
     public static final String MESSAGE_REALTIME_DEL = "realtime_del";
     public static final String MESSAGE_STATEUPATE = "stateUpate";
     public static final String MESSAGE_UPATEDIALOG = "upateDialog";
+    public static final String MESSAGE_SYSTEMNOTICE = "systemNotice";
     public static final String MESSAGE_REPORT_STATE = "report_state";
     public static final String EVENTBUS_NEWDIALOG = "eventBus_newdialog";//eventBus消息通知
     public static final String MESSAGE_UNDO = "messageUndo";//消息撤回

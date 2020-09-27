@@ -95,9 +95,23 @@ public class NotificationUtils extends ContextWrapper {
     /**
      * 发送通知
      */
-    public void sendNotification(String title, String content) {
-        NotificationCompat.Builder builder = getNotification(title, content);
-        getManager().notify(1, builder.build());
+    public void sendNotification(Context contexts,int unReadCount, String title, String content) {
+        if (isSendNotice()) {//是否开启通知
+            playVibrate();//震动
+            playSound(contexts);//提示
+        }
+        if (ActivityUtils.isAppIsInBackground(contexts)&&isSendNotice()) {
+            String text = "";
+            String tit = "";
+            if (content != null) text = content;
+            if (title != null) tit = title;
+            notificationId++;
+            NotificationCompat.Builder builder = getNotification(title,tit+": " + text);
+//            builder.setOnlyAlertOnce(true);//设置通知声音只响一次
+            Notification notification=builder.build();
+            ShortcutBadger.applyNotification(getApplicationContext(), notification, unReadCount);
+            getManager().notify(notificationId, notification);
+        }
     }
     /**
      * 发送通知

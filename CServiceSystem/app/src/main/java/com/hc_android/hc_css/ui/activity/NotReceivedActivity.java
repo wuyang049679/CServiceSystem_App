@@ -52,6 +52,7 @@ import static com.hc_android.hc_css.utils.Constant.MESSAGE_REPORT_STATE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_SERVICELEAVE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_SERVICEONLY;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_STATEUPATE;
+import static com.hc_android.hc_css.utils.Constant.MESSAGE_SYSTEMNOTICE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_UPATEDIALOG;
 import static com.hc_android.hc_css.utils.Constant.UI_FRESH;
 import static com.hc_android.hc_css.utils.socket.MessageEventType.EventMessage;
@@ -298,6 +299,10 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
                     break;
                 //收到客服汇报的在线状态
                 case MESSAGE_REPORT_STATE:
+                    break;
+
+                //收到转人工通知消息需要通知提醒
+                case MESSAGE_SYSTEMNOTICE:
                     break;
 
             }

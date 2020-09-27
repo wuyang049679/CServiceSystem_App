@@ -210,6 +210,7 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
     public void setRealName() {
         Log.i(TAG,"刷新进来了" );
         userBean = BaseApplication.getUserBean();
+
         smrzTv.setText("");
         smrzLin.setClickable(true);
         smrzLin.setEnabled(true);
