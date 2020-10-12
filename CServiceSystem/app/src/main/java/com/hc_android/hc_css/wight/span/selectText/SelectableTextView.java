@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -417,5 +418,50 @@ public class SelectableTextView extends TextView implements PromptPopWindow.Curs
     }
     public interface OperationItemClickListener{
         void onClickUndo(OperationItem item);
+    }
+
+
+
+
+    private long mTime;
+    private boolean mLinkIsResponseLongClick = false;
+
+
+
+    public boolean isLinkIsResponseLongClick() {
+        return mLinkIsResponseLongClick;
+    }
+
+    public void setLinkIsResponseLongClick(boolean linkIsResponseLongClick) {
+        this.mLinkIsResponseLongClick = linkIsResponseLongClick;
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        CharSequence text = getText();
+
+        if (text == null) {
+            return super.onTouchEvent(event);
+        }
+
+        //修复复制文字和点击手机号码、邮箱事件同时响应问题
+        if (!mLinkIsResponseLongClick && text instanceof Spannable) {
+            int end = text.length();
+            Spannable spannable = (Spannable) text;
+            ClickableSpan[] clickableSpans = spannable.getSpans(0, end, ClickableSpan.class);
+
+            if (clickableSpans == null || clickableSpans.length == 0) {
+                return super.onTouchEvent(event);
+            }
+
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                mTime = System.currentTimeMillis();
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (System.currentTimeMillis() - mTime > 500) {
+                    return true;
+                }
+            }
+        }
+
+        return super.onTouchEvent(event);
     }
 }

@@ -316,7 +316,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
 
                 final MessageEntity.MessageBean message = (MessageEntity.MessageBean) adapter.getItem(position);
                 if (message == null) {
-                    return false;
+                    return true;
                 }
 //                if (message.getId() != null && userBean.getId().equals(message.getServiceId()) && !message.getSendType().equals("system") && !message.isUndo()) {
 //                    String id = message.getId();

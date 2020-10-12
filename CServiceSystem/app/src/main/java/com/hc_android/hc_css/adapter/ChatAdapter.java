@@ -162,10 +162,12 @@ public class ChatAdapter extends BaseMultiItemQuickAdapter<MessageEntity.Message
                     view.addView(addViewText());
                     sendState(item, view);
                     SelectableTextView textView = view.findViewById(R.id.content_tv);
-                    helper.addOnLongClickListener(R.id.content_tv);
+//                    helper.addOnLongClickListener(R.id.content_tv);
                     textView.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
+                            textView.isLinkIsResponseLongClick();
+                            textView.setLinkIsResponseLongClick(false);
                             textView.setInitDate(item,true);//设置是否显示撤回菜单
                             textView.setonClickUndoListener(new SelectableTextView.OperationItemClickListener() {//撤回点击事件
                                 @Override
