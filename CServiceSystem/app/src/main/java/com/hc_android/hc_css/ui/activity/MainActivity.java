@@ -269,7 +269,7 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
     @Override
     public void downloading(int max, int progress) {
         float i = (float) progress /(float) max;
-        pd1.setProgress((int) (i*100));
+        if (pd1!=null)pd1.setProgress((int) (i*100));
 
     }
 

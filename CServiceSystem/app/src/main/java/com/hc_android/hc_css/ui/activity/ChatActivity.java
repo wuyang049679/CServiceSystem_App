@@ -271,7 +271,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                     List<MessageEntity.MessageBean> chatList = LocalDataSource.getChatList(this.chatList, chatHash, itembean, true);
                     //判断是否有全局消息缓存
                     this.chatList.addAll(chatList);
-                    sendReadMsg(this.chatList);
+//                    sendReadMsg(this.chatList);
                 }
 
             } else if (itembean.getLastMsg() == null || itembean.getLastMsg().getId() == null) {//如果没lastMsg id就可以直接拿缓存
@@ -279,9 +279,10 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                 List<MessageEntity.MessageBean> chatList = LocalDataSource.getChatList(this.chatList, chatHash, itembean, true);
                 //判断是否有全局消息缓存
                 this.chatList.addAll(chatList);
-                sendReadMsg(this.chatList);
+
             }
         }
+        if (itembean.getUnreadNum()>0)sendReadMsg(chatList);
         chatAdapter = new ChatAdapter(chatList);
         emojiAdapter = new EmojiAdapter(imageList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -1147,7 +1148,8 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
         for (int i = chatList.size() - 1; i >= 0; i--) {
             if (chatList.get(i).getKey() != null) {
                 String key1 = chatList.get(i).getKey();
-                if (key1.equals(key)) {
+
+                if (key1.equals(key) && chatList.get(i).getSendState()!=null && chatList.get(i).getSendState().equals(Constant._ISLOADING)) {
                     chatList.get(i).setSendState(Constant._ISFAILED);
                     CacheData.updateCache(itembean.getId(), chatList.get(i));
                     MessageEntity.MessageBean messageBean = chatList.get(i);
@@ -1284,12 +1286,13 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                 }
             }
 
-            if (mids.length() > 0) {
-                //同事的聊天只有该同事自己进入才发送已读通知
-                if (itembean.getServiceId().equals(BaseApplication.getUserBean().getId())) {
+
+             //同事的聊天只有该同事自己进入才发送已读通知
+             if (itembean.getServiceId().equals(BaseApplication.getUserBean().getId())) {
+                    itembean.setUnreadNum(0);
                     mPresenter.pSendRead(itembean.getId(), itembean.getCustomerId(), mids, userBean.getEntId());
-                }
-            }
+             }
+
         }
     }
 
@@ -1573,6 +1576,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
         super.onDestroy();
         GSYVideoManager.releaseAllVideos();
         MediaManager.release();
+
     }
 
     /**
@@ -1786,6 +1790,10 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
      */
     private void setMsgCount() {
         int unReadCount = AppConfig.unReadCount;
+        int unreadNum = itembean.getUnreadNum();
+        if (unreadNum!=0){
+            unReadCount = unReadCount - unreadNum;
+        }
         if (unReadCount == 0) {
             msgCountTv.setVisibility(View.GONE);
         } else {
@@ -1832,6 +1840,8 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
     public void dismissDialog() {
         if (mDialogFragment != null) mDialogFragment.dismiss();
     }
+
+
 }
 
 

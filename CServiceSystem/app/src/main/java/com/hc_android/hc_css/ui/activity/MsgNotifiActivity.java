@@ -238,8 +238,8 @@ public class MsgNotifiActivity extends BaseActivity<MsgNotifiActivityPresenter, 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         UpdateUserEntity userEntitys = new UpdateUserEntity();
-        LoginEntity.DataBean.InfoBean.AppNoticeBean appNotice = userEntity.getAppNotice();
-        LoginEntity.DataBean.InfoBean.NoticeBean notice = userEntity.getNotice();
+        LoginEntity.DataBean.InfoBean.AppNoticeBean appNotice = userEntity.getAppNotice()!= null? userEntity.getAppNotice() : new LoginEntity.DataBean.InfoBean.AppNoticeBean();
+        LoginEntity.DataBean.InfoBean.NoticeBean notice = userEntity.getNotice()!=null ? userEntity.getNotice() : new  LoginEntity.DataBean.InfoBean.NoticeBean();
 
         switch (compoundButton.getId()) {
             case R.id.email_switch:

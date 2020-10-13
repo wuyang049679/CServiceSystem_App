@@ -259,6 +259,7 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
 
     @Override
     public void showEndDialog(ReceptionEntity.DataBean messageEntity) {
+        if (colleagueListBean.size() <= POSITION)return;
         colleagueListBeans.remove(POSITION);
         listAdapter.notifyItemRemoved(POSITION);
         if (colleagueListBeans.size() == 0) {

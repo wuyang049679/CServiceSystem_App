@@ -67,8 +67,12 @@ public class JsonParseUtils {
             return null;
         }
         /*T t = getSingleton().fromJson(dataStr, cls);*/
-        T t = JSON.parseObject(dataStr, cls);
-        return t;
+        try {
+            T t = JSON.parseObject(dataStr, cls);
+            return t;
+        }catch (Exception e){
+            return null;
+        }
     }
     /**
      * Json转Object

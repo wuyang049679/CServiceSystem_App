@@ -26,6 +26,7 @@ public class RetryWithDelay implements
 
     @Override
     public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+
         return throwableObservable
                 .flatMap(new Function<Throwable, ObservableSource<?>>() {
                     @Override
@@ -37,6 +38,7 @@ public class RetryWithDelay implements
                             return Observable.timer(retryDelayMillis,
                                     TimeUnit.MILLISECONDS);
                         }
+                        Log.i("wy_activity",throwable.toString());
                         return Observable.error(throwable);
                     }
                 });

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -600,6 +601,14 @@ public class ChatAdapter extends BaseMultiItemQuickAdapter<MessageEntity.Message
         if (item.getSendState() != null) {
             if (item.getSendState().equals(Constant._ISLOADING)) {
                 view.addView(addSendLoading(), 0);
+                if (mContext!=null){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                    ((ChatActivity)mContext).showSendFailed(" ",item.getKey());
+                        }
+                    },30000);
+                }
             }
             if (item.getSendState().equals(Constant._ISFAILED)) {
                 view.addView(addSendFailed(), 0);

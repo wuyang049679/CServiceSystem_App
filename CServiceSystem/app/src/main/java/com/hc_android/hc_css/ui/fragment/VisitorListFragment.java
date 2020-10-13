@@ -440,7 +440,7 @@ public class VisitorListFragment extends BaseFragment<VisitorListFragmentPresent
                     needDel = true;
                 }
                 if (needDel) {
-                    visitorAdapter.remove(i);
+                    if (i < listBeans.size())visitorAdapter.remove(i);
                 }
             }
             showContentView();
@@ -485,7 +485,7 @@ public class VisitorListFragment extends BaseFragment<VisitorListFragmentPresent
                 }
 
                 if (needDel) {
-                    visitorAdapter.remove(i);
+                    if (i < listBeans.size())visitorAdapter.remove(i);
                 }
             }
             if (listBeans.size() == 0) {
@@ -541,6 +541,7 @@ public class VisitorListFragment extends BaseFragment<VisitorListFragmentPresent
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        if (listBeans.size()<= position)return;
         VisitorEntity.DataBean.ListBean visitorEntity = (VisitorEntity.DataBean.ListBean) listBeans.get(position);
         realtimeId = visitorEntity.get_id();//防止id字段拿不到报错
         if (realtimeId == null) {

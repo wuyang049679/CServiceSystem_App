@@ -8,8 +8,8 @@ ext {
             applicationId    : "com.hc_android.hc_css",
             minSdkVersion    : 21,
             targetSdkVersion : 29,
-            versionCode      : 13,
-            versionName      : "2.4.0",
+            versionCode      : 15,
+            versionName      : "2.4.2",
     ]
 
     //support配置

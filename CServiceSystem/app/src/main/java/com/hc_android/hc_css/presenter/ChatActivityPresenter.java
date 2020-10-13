@@ -89,7 +89,7 @@ public class ChatActivityPresenter extends BasePresenterIm<ChatActivityContract.
 
     @Override
     public void pSendMsg(String dialogId, String serviceId, String customerId, String socketId, String type, String contents, String key, int entId) {
-        chatActivityModel.sendMsg(dialogId,serviceId,customerId,socketId,type,contents,key,entId).subscribe(new RxSubscribe<SendEntity.DataBean>() {
+        chatActivityModel.sendMsg(dialogId,serviceId,customerId,socketId,type,contents,key,entId).retryWhen(new RetryWithDelay(25,1000 )).subscribe(new RxSubscribe<SendEntity.DataBean>() {
             @Override
             protected void onSuccess(SendEntity.DataBean dataBean) {
                 if (dataBean.get_suc()==1){
@@ -130,6 +130,7 @@ public class ChatActivityPresenter extends BasePresenterIm<ChatActivityContract.
 
             @Override
             protected void onFailed(int code, String msg) {
+                Log.i("wy_activity", "key:onFailed" + msg);
                 if (mView!=null){mView.showSendFailed(msg,key);}
                 else {
                     MessageEntity.MessageBean messageBean=new MessageEntity.MessageBean();
@@ -150,7 +151,7 @@ public class ChatActivityPresenter extends BasePresenterIm<ChatActivityContract.
     @Override
     public  void pGetToken(MessageDialogEntity.DataBean.ListBean itembean, MessageEntity.MessageBean messageBean, String type) {
 
-        chatActivityModel.getToken(type).subscribe(new RxSubscribe<TokenEntity.DataBean>() {
+        chatActivityModel.getToken(type).retryWhen(new RetryWithDelay(25,1000 )).subscribe(new RxSubscribe<TokenEntity.DataBean>() {
             @Override
             protected void onSuccess(TokenEntity.DataBean dataBean) {
                 if (mView != null) {//如何界面关闭就直接访问如果没有就回调
