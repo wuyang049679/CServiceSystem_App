@@ -57,7 +57,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MessageDialogEntity.DataBean.ListBean item) {
 
-        if (item.getItemType()==Constant.HAVERECEIVED) {//已接待
+        if (item.getItemType() == Constant.HAVERECEIVED) {//已接待
 
             setTitle(item, helper);
             setMsgPoint(item, helper);
@@ -97,9 +97,9 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             setMsgPoint(item, helper);
             setUpdateTime(item, helper);
             setContent(item, helper);
-            if (!assist){
-              helper.getConvertView().setVisibility(View.GONE);
-            }
+//            if (!assist){
+//              helper.getConvertView().setVisibility(View.GONE);
+//            }
         }
         if (item.getItemType()==Constant.COLLEAGUE_ACT) {//同事的对话列表
             helper.addOnClickListener(R.id.close_btn);

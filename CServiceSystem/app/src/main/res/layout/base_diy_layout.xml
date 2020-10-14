@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         fresco:actualImageScaleType="focusCrop"
         android:layout_centerInParent="true"
-        android:background="@drawable/mycourse_lonely"
         android:id="@+id/state_diy_img"  />
 
     <TextView

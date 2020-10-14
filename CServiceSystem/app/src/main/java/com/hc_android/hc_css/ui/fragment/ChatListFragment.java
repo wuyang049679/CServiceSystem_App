@@ -567,7 +567,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             lastMsgBean.setTime(10000000);//如果没有同事的对话时，设置一个较小的时间戳，防止排序报错,将同事对话排在最后
             bean.setLastMsg(lastMsgBean);
             bean.setItemtype(Constant.COLLEAGUE);
-            listUIBeans.add(bean);
+            if(BaseApplication.getUserBean().getAuthority().isAssist())listUIBeans.add(bean);
         } else {
             //将同事 的最新一条数据添加到UI  list
             MessageDialogEntity.DataBean.ListBean bean = new MessageDialogEntity.DataBean.ListBean();
@@ -584,7 +584,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             bean.setUnCount(colleagueListBean.size());//设置同事对话数量
             bean.setUnreadNum(unReadNum);//设置同事未读数量设置为0
             bean.setTop(false);//不参与置顶排序
-            listUIBeans.add(bean); //添加同事集合
+            if(BaseApplication.getUserBean().getAuthority().isAssist())listUIBeans.add(bean); //添加同事集合
         }
         //添加免打扰
         if (disturbListBeans!=null && disturbListBeans.size() !=0){
