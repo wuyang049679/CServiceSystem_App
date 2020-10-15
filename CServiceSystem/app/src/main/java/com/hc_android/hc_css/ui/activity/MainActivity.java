@@ -218,6 +218,7 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
     protected void onDestroy() {
         super.onDestroy();
         Log.i("tag","关闭了");
+
     }
 
     @Override

@@ -331,7 +331,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public void onTyping() {
         if (!isFirst) {//首次登陆进来不重连
-            String hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
+            String hash = BaseApplication.getUserEntity().getHash();
+            if (hash == null)hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
             if (mSocket == null) {
                 try {
                     connect(hash);

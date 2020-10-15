@@ -27,6 +27,7 @@ import com.hc_android.hc_css.contract.LoginActivityContract;
 import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.presenter.LoginActivityPresenter;
+import com.hc_android.hc_css.service.PushSendService;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.ValidateUtils;
 import com.hc_android.hc_css.utils.android.EasyPermissionUtils;
@@ -141,7 +142,6 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
 
     @Override
     public void showDataSuccess(LoginEntity.DataBean datas) {
-
         SharedPreferencesUtils.setParam(Constant.HASH, datas.getHash());
         SharedPreferencesUtils.setParam(Constant.USERNAME, usernames);
         SharedPreferencesUtils.setParam(Constant.PASSWORD, passwords);

@@ -46,6 +46,7 @@ public abstract class RxSubscribe<T> implements Observer<BaseEntity<T>> {
         if (baseModel.code == 200) {
             onSuccess(baseModel.data);
         } else if (baseModel.code == 10003) {
+            Log.i("wy_activity", "hash过期");
             onFailed(baseModel.code,baseModel.msg);
             //通知hash过期重新登录
             MessageEntity message = new MessageEntity();

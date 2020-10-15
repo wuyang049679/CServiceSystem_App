@@ -249,7 +249,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         if (BaseApplication.getUserBean()!=null&&BaseApplication.getUserBean().getState()!=null) {
             String state = BaseApplication.getUserBean().getState();
             if (!state.equals("break")) {
-                String hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
+                String hash = (String) BaseApplication.getUserEntity().getHash();
 
                 try {
                     EventServiceImpl.getInstance().connect(hash);
@@ -899,6 +899,13 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             case EVENTBUS_NETWORK_STATE:
                 if (message.isConnected()) {
                     wifiError.setVisibility(View.GONE);
+                    //网络重连时,尝试连接socket是否断开
+                    if (BaseApplication.getUserBean()!=null) {
+                        String state = BaseApplication.getUserBean().getState();
+                        if (state==null||!state.equals("break")) {
+                            EventServiceImpl.getInstance().onTyping();
+                        }
+                    }
                 } else {
                     wifiError.setVisibility(View.VISIBLE);
                     ((TextView) wifiError.getChildAt(1)).setText("当前网络不可用，请检查你的网络设置");

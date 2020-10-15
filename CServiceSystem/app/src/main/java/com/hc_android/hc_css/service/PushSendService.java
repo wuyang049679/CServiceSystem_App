@@ -13,6 +13,7 @@ import com.hc_android.hc_css.ui.activity.MainActivity;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.JsonParseUtils;
 import com.hc_android.hc_css.utils.android.RomUtil;
+import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.ToastUtils;
 import com.hc_android.hc_css.utils.thread.RetryWithDelay;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
@@ -61,17 +62,17 @@ public class PushSendService {
      */
 
     public static void sendToken(String token,String type){
-
+        String hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
         UpdateUserEntity userEntity=new UpdateUserEntity();
         userEntity.setRegistrationId(token);
         userEntity.setRegistrationIdType(type);
         String info = JsonParseUtils.parseToJson(userEntity);
         HashMap<String,String> hashMap=new HashMap<>();
         hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
-        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put(Constant.KEY_HASH, hash);
         hashMap.put("info",info);
         ApiManager.getApistore().accountModify(hashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).retryWhen(new RetryWithDelay(3,1000)).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
             @Override
             protected void onSuccess(IneValuateEntity.DataBean dataBean) {
 
@@ -80,7 +81,8 @@ public class PushSendService {
 
             @Override
             protected void onFailed(int code, String msg) {
-                ToastUtils.showShort("发送失败");
+                Log.i(TAG,"PUSH发送失败");
+//                ToastUtils.showShort("PUSH发送失败");
             }
 
             @Override

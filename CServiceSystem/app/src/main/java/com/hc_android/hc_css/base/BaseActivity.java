@@ -20,6 +20,7 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.service.NetworkConnectChangedReceiver;
 import com.hc_android.hc_css.ui.activity.FileBrowsActivity;
+import com.hc_android.hc_css.ui.activity.LoginActivity;
 import com.hc_android.hc_css.ui.activity.StartActivity;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.android.EasyPermissionUtils;
@@ -52,7 +53,6 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
     public int mUserId = -1;
     private ImmersionBar mImmersionBar;
     private CustomDialog dialog;
-    private NetworkConnectChangedReceiver mNetWorkChangReceiver;
     public static int activityActive; //全局变量,表示当前在前台的activity数量
     private boolean isBackground;
     private LoadingDialog loadingDialog;
@@ -105,11 +105,7 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
             }
         }
 
-        //注册网络状态监听广播
-        mNetWorkChangReceiver = new NetworkConnectChangedReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(mNetWorkChangReceiver, filter);
+
     }
 
     protected  void addOclick(){};
@@ -239,7 +235,6 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
             mPresenter.unsubcrible();
 
         }
-        unRegisterSomething();
         ImmersionBar.destroy(this,null);
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
@@ -249,12 +244,7 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
 //        DToast.cancelActivityToast(this);
     }
 
-    /**
-     * 解除注册一些东西
-     */
-    public void unRegisterSomething() {
-        unregisterReceiver(mNetWorkChangReceiver);
-    }
+
 
     /**
      * 通过Class跳转界面
@@ -488,6 +478,12 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
     @Override
     protected void onStart() {
         //app 从后台唤醒，进入前台
+        if (BaseApplication.getUserBean()!=null &&(!(mActivity instanceof  StartActivity) )&&(!(mActivity instanceof  LoginActivity) )) {
+            String state = BaseApplication.getUserBean().getState();
+            if (state==null||!state.equals("break")) {
+                    EventServiceImpl.getInstance().onTyping();
+            }
+        }
         if (activityActive==0){
             Log.i(TAG, "程序从后台唤醒");
             NotificationUtils notificationUtils=new NotificationUtils(this);
@@ -495,8 +491,8 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
             if (BaseApplication.getUserBean()!=null) {
                 String state = BaseApplication.getUserBean().getState();
                 if (state==null||!state.equals("break")) {
-                    EventServiceImpl.getInstance().keepLink();//发送一次心跳
-                    EventServiceImpl.getInstance().onTyping();
+//                    EventServiceImpl.getInstance().keepLink();//发送一次心跳
+//                    EventServiceImpl.getInstance().onTyping();
                 }
             }
 

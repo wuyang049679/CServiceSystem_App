@@ -3,6 +3,8 @@ package com.hc_android.hc_css.base;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Process;
@@ -20,6 +22,7 @@ import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.UserEntity;
 
 import com.hc_android.hc_css.greendao.gen.DaoManager;
+import com.hc_android.hc_css.service.NetworkConnectChangedReceiver;
 import com.hc_android.hc_css.service.OPPOPushReceiver;
 import com.hc_android.hc_css.utils.FileUtils;
 import com.hc_android.hc_css.utils.JsonParseUtils;
@@ -54,7 +57,7 @@ public class BaseApplication extends MultiDexApplication {
     public static UserEntity userEntity;
     private static long mMainThreadId;//主线程id
     private static Handler mHandler;//主线程Handler
-
+    private NetworkConnectChangedReceiver mNetWorkChangReceiver;
 
     //static 代码段可以防止内存泄露
     static {
@@ -147,8 +150,20 @@ public class BaseApplication extends MultiDexApplication {
             PushManager.getInstance().register(this,AppParam.APPKEY_OPPO,AppParam.APPSECRET_OPPO,new OPPOPushReceiver());
         }
 
+
+        //注册网络状态监听广播
+        mNetWorkChangReceiver = new NetworkConnectChangedReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mNetWorkChangReceiver, filter);
     }
 
+    /**
+     * 解除注册一些东西
+     */
+    public void unRegisterSomething() {
+        unregisterReceiver(mNetWorkChangReceiver);
+    }
     /**
      * 退出app
      */
@@ -187,7 +202,7 @@ public class BaseApplication extends MultiDexApplication {
     public static UserEntity getUserEntity() {
 
 
-       if (userEntity==null)userEntity=JsonParseUtils.parseToObject((String)SharedPreferencesUtils.getParam("UserEntity",""),UserEntity.class);
+       if (userEntity==null)userEntity = JsonParseUtils.parseToObject((String)SharedPreferencesUtils.getParam("UserEntity",""),UserEntity.class);
        return userEntity;
     }
 
