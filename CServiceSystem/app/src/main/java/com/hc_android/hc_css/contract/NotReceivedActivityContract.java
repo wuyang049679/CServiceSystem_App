@@ -9,7 +9,7 @@ import io.reactivex.Observable;
 public interface NotReceivedActivityContract {
     interface Model {
 
-        Observable<BaseEntity<ReceptionEntity.DataBean>> receptionDialog(String dialogId);
+        Observable<BaseEntity<ReceptionEntity.DataBean>> receptionDialog(String dialogId, boolean upLimit);
         Observable<BaseEntity<ReceptionEntity.DataBean>> endDialog(String idList,String offEnd,String autoEnd);
     }
 
@@ -18,7 +18,7 @@ public interface NotReceivedActivityContract {
     }
 
     interface Presenter {
-        void pReceptionDialog(String dialogId);
+        void pReceptionDialog(String dialogId, boolean upLimi);
         void pEndDialog(String idList,String offEnd,String autoEnd);
     }
 }

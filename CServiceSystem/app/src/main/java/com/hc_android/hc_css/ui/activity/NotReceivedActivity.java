@@ -125,11 +125,14 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
                         mPresenter.pEndDialog(idList, null, null);
                         break;
                     case R.id.btn_jd:
+                        boolean upLimit = false;
                         if (mCountAll < BaseApplication.getUserBean().getMaxChat()) {
-                            mPresenter.pReceptionDialog(notListBean.get(position).getId());
+
                         } else {
-                            ToastUtils.showShort("同时对话已经数达到最大值，请先处理当前对话");
+                            upLimit =true;
+//                            ToastUtils.showShort("同时对话已经数达到最大值，请先处理当前对话");
                         }
+                        mPresenter.pReceptionDialog(notListBean.get(position).getId(), upLimit);
                         break;
                     case R.id.lin_constrain:
                         LocalDataSource.setITEMBEAN(item);

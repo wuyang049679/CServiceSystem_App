@@ -94,7 +94,7 @@ public interface Apistore {
      * @return
      */
     @GET("dialog/reception")
-    Observable<BaseEntity<ReceptionEntity.DataBean>> receptionDialog(@QueryMap HashMap<String, String> map);
+    Observable<BaseEntity<ReceptionEntity.DataBean>> receptionDialog(@QueryMap HashMap<String, Object> map);
 
     /**
      * 对话结束

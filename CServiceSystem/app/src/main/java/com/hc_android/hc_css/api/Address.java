@@ -7,7 +7,7 @@ package com.hc_android.hc_css.api;
 
 public class Address {
 
-    private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.ONLINE;
+    private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.TEST;
 
     /**
      * 推送服务器地址
@@ -56,8 +56,8 @@ public class Address {
         switch (serverEnvironment) {
             // 测试环境
             case TEST:
-                BASEURL = "http://192.168.31.125:16999/";
-                SOCKET_URL="http://192.168.31.125:17106/";
+                BASEURL = "http://192.168.31.122:16999/";
+                SOCKET_URL="http://192.168.31.122:17106/";
 //                SOCKET_URL="https://socket.aihecong.com/";
                 break;
             // 线上环境

@@ -19,8 +19,8 @@ public class NotReceivedActivityPresenter extends BasePresenterIm<NotReceivedAct
     }
 
     @Override
-    public void pReceptionDialog(String dialogId) {
-        receivedActivityModel.receptionDialog(dialogId).subscribe(new RxSubscribe<ReceptionEntity.DataBean>() {
+    public void pReceptionDialog(String dialogId, boolean upLimit) {
+        receivedActivityModel.receptionDialog(dialogId, upLimit).subscribe(new RxSubscribe<ReceptionEntity.DataBean>() {
             @Override
             protected void onSuccess(ReceptionEntity.DataBean dataBean) {
                 mView.showDataSuccess(dataBean);

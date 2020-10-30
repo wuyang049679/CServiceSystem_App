@@ -534,7 +534,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             if (listBean.getState().equals("unassigned")) {
                 boolean isAdd = true;//是否添加
                 //是否是专属客服，如果是的，比较serviceId是否是本人serviceId,如果不是则看不到这条信息，管理员都可以看到(最后查看自己是否开启对话协助)
-                if (listBean.isAssignGrade()&&!listBean.getServiceId().equals(BaseApplication.getUserBean().getId()) && !BaseApplication.getUserBean().getAuthority().isAssist()){
+                if (listBean.isAssignGrade()&&!listBean.getServiceId().equals(BaseApplication.getUserBean().getId())){
                     isAdd=false;
                 }
                 if (BaseApplication.getUserBean().isFounding()){//如果是管理员直接添加
