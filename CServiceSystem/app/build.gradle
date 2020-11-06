@@ -194,5 +194,4 @@ dependencies {
     }
     implementation files('libs/windvane-min-8.0.3.2.3.jar')
 
-
 }

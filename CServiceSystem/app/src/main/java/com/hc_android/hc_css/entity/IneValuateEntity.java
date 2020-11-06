@@ -68,6 +68,24 @@ public class IneValuateEntity {
         private String invitationTime;
         private boolean existence;
         private String text;
+        private String state;
+        private String txt;
+
+        public String getTxt() {
+            return txt;
+        }
+
+        public void setTxt(String txt) {
+            this.txt = txt;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
 
         public String getText() {
             return text;

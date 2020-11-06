@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.View;
 
 import com.gyf.immersionbar.ImmersionBar;
@@ -15,10 +16,16 @@ import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.presenter.StartActivityPresenter;
 import com.hc_android.hc_css.utils.Constant;
+import com.hc_android.hc_css.utils.DateUtils;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.SystemUtils;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.provider.ContactsContract.Intents.Insert.ACTION;
 
 public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEntity.DataBean> implements StartActivityContract.View {
 
@@ -66,6 +73,7 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 
 
         }
+
 
     }
 

@@ -38,7 +38,16 @@ public class MessageEntity implements Serializable {
     private boolean isConnected;//网络是否连接
     private String title;
     private String body;
+    private LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean worktime;
 
+
+    public LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean getWorktime() {
+        return worktime;
+    }
+
+    public void setWorktime(LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean worktime) {
+        this.worktime = worktime;
+    }
 
     public String getTitle() {
         return title;

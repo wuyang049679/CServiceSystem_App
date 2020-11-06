@@ -96,6 +96,7 @@ import static com.hc_android.hc_css.utils.Constant.MESSAGE_STATEUPATE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_SYSTEMNOTICE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_UNDO;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_UPATEDIALOG;
+import static com.hc_android.hc_css.utils.Constant.MESSAGE_WORKTIME_STATE;
 import static com.hc_android.hc_css.utils.Constant.UI_FRESH;
 import static com.hc_android.hc_css.utils.socket.MessageEventType.EventMessage;
 
@@ -248,6 +249,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 //判断在线状态
         if (BaseApplication.getUserBean()!=null&&BaseApplication.getUserBean().getState()!=null) {
             String state = BaseApplication.getUserBean().getState();
+            state = setOnline(state, BaseConfig.ONLINE_STATE_DEFULTE);
+            UserEntity userEntity = BaseApplication.getUserEntity();
+            LoginEntity.DataBean.InfoBean userbean = userEntity.getUserbean();
+            userbean.setState(state);
+            userEntity.setUserbean(userbean);
+            BaseApplication.setUserEntity(userEntity);
             if (!state.equals("break")) {
                 String hash = (String) BaseApplication.getUserEntity().getHash();
 
@@ -269,7 +276,54 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             }
         }
     }
-
+    /**
+     * 自动切换在线离线
+     */
+    public  String  setOnline(String state, int type){
+        String autoState = state;
+        LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
+        if (userBean.getCompany().getWorktime() == null)return autoState;
+        if (!userBean.getCompany().getWorktime().isState())return autoState;
+        if (userBean.getCompany().getWorktime().getList() == null)return autoState;
+        if (userBean.getCompany().getWorktime().getList().size() == 0)return autoState;
+        List<LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean> list = userBean.getCompany().getWorktime().getList();
+        //进入自动设置在线时间处理，重置在线时间
+        autoState = "off";
+        int currWeek = DateUtils.getCurrWeek();
+        if (currWeek !=0)currWeek = currWeek -1;
+        if (currWeek == 0)currWeek = 7;
+        int hourTime = Integer.parseInt(DateUtils.getHourTime());
+        for (int i = 0; i < list.size(); i++) {
+            LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean listBean = list.get(i);
+            List<String> serviceList = listBean.getServiceList();
+            List<Integer> weekList = listBean.getWeekList();
+            List<LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean.TimeListBean> timeList = listBean.getTimeList();
+            if (!listBean.isDisable() && weekList.contains(currWeek) && (serviceList ==null || serviceList.contains(userBean.getId()))){ //是否禁用、包含星期、客服id
+                for (int i1 = 0; i1 < timeList.size(); i1++) {
+                    LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean.TimeListBean timeListBean = timeList.get(i1);
+                    int start = getTime(timeListBean.getStart());
+                    int end = getTime(timeListBean.getEnd());
+                    if (start <= hourTime && hourTime < end){
+                        autoState = "on";
+                    }
+                }
+            }
+        }
+        //判断状态是否需要更改
+        if (autoState.equals("on") || !state.equals("break")){ //为在线时间段或者，不在线时间段时需要在线切隐身的情况
+            Log.i(TAG,"状态切换autoState："+autoState +"状态切换state："+state );
+            //状态不同的时候才切换
+            if (!state.equals(autoState)) BaseConfig.setStateChange(autoState, true,type);
+        }
+        //如果原始为离线状态，然客服不属于上班时间段直接
+        if (autoState.equals("off") && state.equals("break"))autoState = state;
+        Log.i(TAG,"状态切换："+autoState);
+        return autoState;
+    }
+    public int getTime(String time){
+        int intTime = (Integer.parseInt(time.split(":")[0]) * 100) + Integer.parseInt(time.split(":")[1]);
+        return intTime;
+    }
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -742,7 +796,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 UserEntity userEntity = BaseApplication.getUserEntity();
                 userEntity.setSocketId(message.getSocketId());
                 LoginEntity.DataBean.InfoBean userbean = userEntity.getUserbean();
-                userbean.setState(message.getState());
+//                userbean.setState(message.getState());
                 userEntity.setUserbean(userbean);
                 BaseApplication.setUserEntity(userEntity);
                 EventServiceImpl.getInstance().keepLink();
@@ -951,6 +1005,18 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         notificationUtils.sendNotification(getHcActivity(), unReadCount, message.getTitle(),message.getBody());
                     }
                 }
+                break;
+             //上班时间段更改配置
+            case  MESSAGE_WORKTIME_STATE:
+                if (message.getWorktime()== null)return;
+                UserEntity userEntity1 = BaseApplication.getUserEntity();
+                if (userEntity1.getUserbean() ==null)return;
+                LoginEntity.DataBean.InfoBean.CompanyBean company = userEntity1.getUserbean().getCompany();
+                company.setWorktime(message.getWorktime());
+                BaseApplication.setUserEntity(userEntity1);
+                String state = userEntity1.getUserbean().getState();
+                //自动切换上班时间
+                setOnline(state, BaseConfig.ONLINE_STATE_WORKTIME);
                 break;
         }
 

@@ -18,11 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.hc_android.hc_css.R;
+import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.service.NetworkConnectChangedReceiver;
 import com.hc_android.hc_css.ui.activity.FileBrowsActivity;
 import com.hc_android.hc_css.ui.activity.LoginActivity;
 import com.hc_android.hc_css.ui.activity.StartActivity;
 import com.hc_android.hc_css.utils.Constant;
+import com.hc_android.hc_css.utils.DateUtils;
 import com.hc_android.hc_css.utils.android.EasyPermissionUtils;
 import com.hc_android.hc_css.utils.android.RomUtil;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
@@ -40,9 +42,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import me.jessyan.autosize.utils.LogUtils;
+
+import static com.hc_android.hc_css.base.BaseConfig.ONLINE_STATE_WORKTIME;
 
 
 public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppCompatActivity implements BaseView<V> {
@@ -478,29 +483,34 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
     @Override
     protected void onStart() {
         //app 从后台唤醒，进入前台
+        awaken();
+        super.onStart();
+
+    }
+
+    //从后台唤醒操作
+    private void awaken() {
         if (BaseApplication.getUserBean()!=null &&(!(mActivity instanceof  StartActivity) )&&(!(mActivity instanceof  LoginActivity) )) {
             String state = BaseApplication.getUserBean().getState();
             if (state==null||!state.equals("break")) {
-                    EventServiceImpl.getInstance().onTyping();
+                EventServiceImpl.getInstance().onTyping();
             }
+            if (state != null) setOnline(state);
         }
         if (activityActive==0){
             Log.i(TAG, "程序从后台唤醒");
             NotificationUtils notificationUtils=new NotificationUtils(this);
             notificationUtils.clearNotice();//清除消息通知栏
-            if (BaseApplication.getUserBean()!=null) {
-                String state = BaseApplication.getUserBean().getState();
-                if (state==null||!state.equals("break")) {
+            LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
+            if (userBean == null)return;
+            String state = userBean.getState();
+            if (state == null || !state.equals("break")) {
 //                    EventServiceImpl.getInstance().keepLink();//发送一次心跳
 //                    EventServiceImpl.getInstance().onTyping();
-                }
             }
-
         }
         activityActive++;
         isBackground = false;
-
-        super.onStart();
     }
 
     @Override
@@ -517,6 +527,52 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
         super.onStop();
     }
 
+    /**
+     * 自动切换在线离线
+     */
+    public  String  setOnline(String state){
+        String autoState = state;
+        LoginEntity.DataBean.InfoBean userBean = BaseApplication.getUserBean();
+        if (userBean.getCompany().getWorktime() == null)return autoState;
+        if (!userBean.getCompany().getWorktime().isState())return autoState;
+        if (userBean.getCompany().getWorktime().getList() == null)return autoState;
+        if (userBean.getCompany().getWorktime().getList().size() == 0)return autoState;
+        List<LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean> list = userBean.getCompany().getWorktime().getList();
+        //进入自动设置在线时间处理，重置在线时间
+        autoState = "off";
+        int currWeek = DateUtils.getCurrWeek();
+        if (currWeek !=0)currWeek = currWeek -1;
+        if (currWeek == 0)currWeek = 7;
+        int hourTime = Integer.parseInt(DateUtils.getHourTime());
+        for (int i = 0; i < list.size(); i++) {
+            LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean listBean = list.get(i);
+            List<String> serviceList = listBean.getServiceList();
+            List<Integer> weekList = listBean.getWeekList();
+            List<LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean.TimeListBean> timeList = listBean.getTimeList();
+            if (!listBean.isDisable() && weekList.contains(currWeek) && (serviceList ==null || serviceList.contains(userBean.getId()))){ //是否禁用、包含星期、客服id
+                for (int i1 = 0; i1 < timeList.size(); i1++) {
+                    LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean.TimeListBean timeListBean = timeList.get(i1);
+                    int start = getTime(timeListBean.getStart());
+                    int end = getTime(timeListBean.getEnd());
+                    if (start <= hourTime && hourTime < end){
+                        autoState = "on";
+                    }
+                }
+            }
+        }
 
-
+        //判断状态是否需要更改
+        if (autoState.equals("on") || !state.equals("break")){ //为在线时间段或者，不在线时间段时需要在线切隐身的情况
+            Log.i(TAG,"状态切换autoState111："+autoState +"状态切换state222："+state);
+            //状态不同的时候才切换
+            if (!state.equals(autoState)) BaseConfig.setStateChange(autoState, true, ONLINE_STATE_WORKTIME);
+        }
+        //如果原始为离线状态，然客服不属于上班时间段直接
+        if (autoState.equals("off") && state.equals("break"))autoState = state;
+        return autoState;
+    }
+    public int getTime(String time){
+        int intTime = (Integer.parseInt(time.split(":")[0]) * 100) + Integer.parseInt(time.split(":")[1]);
+        return intTime;
+    }
 }

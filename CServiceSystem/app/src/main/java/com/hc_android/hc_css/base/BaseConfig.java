@@ -35,6 +35,7 @@ public class BaseConfig {
     public final static int ONLINE_STATE_DEFULTE=1000;//在线状态_默认类型
     public final static int ONLINE_STATE_MAX=1002;//在线状态_坐席数已满
     public final static int ONLINE_STATE_REALAUTHEN=1004;//在线状态_要求实名认证
+    public final static int ONLINE_STATE_WORKTIME=1005;//在线状态_上班时间自动刷新
 
     public static String _ONLINE_STATE="";
 
@@ -57,10 +58,13 @@ public class BaseConfig {
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
                 @Override
                 protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                    Log.i("wy_activity", "_dataBean : " +dataBean.getState());
+                    Log.i("wy_activity", " 切换类型："+type);
+                    if (type == BaseConfig.ONLINE_STATE_DEFULTE)return;
                     if (dataBean.get_suc() == 1) {
-
-                        _ONLINE_STATE = OnlineState;
-                        switch (_ONLINE_STATE){
+                        String _online  = dataBean.getState();
+                        if (_online == null)_online = OnlineState;
+                        switch (dataBean.getState()){
                             case "on":
                             case "off":
                                 String hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
@@ -69,14 +73,22 @@ public class BaseConfig {
                                 } catch (URISyntaxException e) {
                                     e.printStackTrace();
                                 }
+                                if (type == BaseConfig.ONLINE_STATE_WORKTIME){
+                                    BaseApplication.getUserBean().setState(_online);
+                                    MessageEntity message = new MessageEntity();
+                                    message.setAct(EVENTBUS_NOTIFICATION_STATE);//通知离线
+                                    message.setState(_online);
+                                    MessageEvent event = new MessageEvent(EventMessage, message);
+                                    EventBus.getDefault().postSticky(event);
+                                }
                                 break;
                             case "break":
-                                _ONLINE_STATE=OnlineState;
-                                BaseApplication.getUserBean().setState(OnlineState);
+                                Log.i("wy_activity", "_dataBean 离线切换: " +dataBean.getState());
+                                BaseApplication.getUserBean().setState(_online);
                                 EventServiceImpl.getInstance().disconnect();
                                 MessageEntity message = new MessageEntity();
                                 message.setAct(EVENTBUS_NOTIFICATION_STATE);//通知离线
-                                message.setState(OnlineState);
+                                message.setState(_online);
                                 message.setConfigId(type);
                                 MessageEvent event = new MessageEvent(EventMessage, message);
                                 EventBus.getDefault().postSticky(event);

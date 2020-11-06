@@ -2,6 +2,7 @@ package com.hc_android.hc_css.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import com.hc_android.hc_css.entity.ParamEntity;
 import com.hc_android.hc_css.presenter.MineFragmentPresenter;
 import com.hc_android.hc_css.ui.activity.HistoryActivity;
 import com.hc_android.hc_css.ui.activity.LoginActivity;
+import com.hc_android.hc_css.ui.activity.MainActivity;
 import com.hc_android.hc_css.ui.activity.MsgNotifiActivity;
 import com.hc_android.hc_css.ui.activity.PersonalActivity;
 import com.hc_android.hc_css.ui.activity.ProblemFbActivity;
@@ -32,8 +34,10 @@ import com.hc_android.hc_css.ui.activity.realauth.DisclaimerActivity;
 import com.hc_android.hc_css.ui.activity.realauth.RealAuthenActivity;
 import com.hc_android.hc_css.ui.activity.realauth.RemStateActivity;
 import com.hc_android.hc_css.utils.Constant;
+import com.hc_android.hc_css.utils.DateUtils;
 import com.hc_android.hc_css.utils.NullUtils;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
+import com.hc_android.hc_css.utils.android.ToastUtils;
 import com.hc_android.hc_css.utils.android.image.ImageLoaderManager;
 import com.hc_android.hc_css.utils.socket.EventServiceImpl;
 import com.hc_android.hc_css.utils.socket.MessageEvent;
@@ -48,6 +52,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
+import static android.provider.ContactsContract.Intents.Insert.ACTION;
 import static com.hc_android.hc_css.utils.Constant.EVENTBUS_NOTIFICATION_STATE;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_INPUTING;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_JOIN;
@@ -166,6 +171,7 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
                 .titleBar(R.id.fg_mine_include)
                 .init();
         conmonTitleTextView.setText(getHcActivity().getResources().getString(R.string.text_mine));
+
     }
 
     @Override
@@ -186,6 +192,7 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
             if (!NullUtils.isNull(userBean.getAutograph())) {
                 textQm.setText(userBean.getAutograph());
             }
+
             setRealName();
 //            if (userBean.getAppNotice().isPush()) {
 //                NotificationManagerCompat manager = NotificationManagerCompat.from(BaseApplication.getContext().getApplicationContext());
@@ -203,6 +210,47 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
         }
     }
 
+    /**
+     * 自动切换在线离线
+     */
+    public  void  setOnline(){
+        userBean = BaseApplication.getUserBean();
+        if (userBean.getCompany().getWorktime() == null)return;
+        if (!userBean.getCompany().getWorktime().isState())return;
+        if (userBean.getCompany().getWorktime().getList() == null)return;
+        if (userBean.getCompany().getWorktime().getList().size() == 0)return;
+        List<LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean> list = userBean.getCompany().getWorktime().getList();
+        String state = "break";
+        int currWeek = DateUtils.getCurrWeek();
+        int hourTime = Integer.parseInt(DateUtils.getHourTime());
+        Log.i(TAG,"currWeek"+currWeek);
+        Log.i(TAG,"hourTime"+hourTime);
+        for (int i = 0; i < list.size(); i++) {
+            LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean listBean = list.get(i);
+            List<String> serviceList = listBean.getServiceList();
+            List<Integer> weekList = listBean.getWeekList();
+            List<LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean.TimeListBean> timeList = listBean.getTimeList();
+            if (!listBean.isDisable() && weekList.contains(currWeek) && serviceList.contains(userBean.getId())){ //是否禁用、包含星期、客服id
+                for (int i1 = 0; i1 < timeList.size(); i1++) {
+                    LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean.ListBean.TimeListBean timeListBean = timeList.get(i1);
+                    int start = getTime(timeListBean.getStart());
+                    int end = getTime(timeListBean.getEnd());
+                    if (start <= hourTime && hourTime <= end){
+                        state = "on";
+                    }
+                }
+            }
+        }
+        STATE_ONLINE = state;
+        if (userBean.getState().equals(STATE_ONLINE))return;
+        Log.i(TAG,"STATE_ONLINE:"+STATE_ONLINE);
+        mPresenter.pAccountState(state);
+    }
+    public int getTime(String time){
+        int intTime = (Integer.parseInt(time.split(":")[0]) * 100) + Integer.parseInt(time.split(":")[1]);
+        Log.i(TAG,"intTime"+intTime);
+        return intTime;
+    }
     /**
      * 设置实名认证状态
      */
@@ -502,6 +550,10 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
     @Override
     public void showState(IneValuateEntity.DataBean dataBean) {
         String hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
+        if (dataBean.getTxt()!=null){
+            ToastUtils.showShort(dataBean.getTxt());
+            return;
+        }
         switch (STATE_ONLINE) {
             case "on":
                 try {

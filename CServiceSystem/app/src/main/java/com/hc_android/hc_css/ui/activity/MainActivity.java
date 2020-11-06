@@ -1,37 +1,27 @@
 package com.hc_android.hc_css.ui.activity;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.azhon.appupdate.config.UpdateConfiguration;
 import com.azhon.appupdate.listener.OnDownloadListener;
-import com.azhon.appupdate.manager.DownloadManager;
+
 import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.base.BaseActivity;
 import com.hc_android.hc_css.base.BaseApplication;
-import com.hc_android.hc_css.base.BaseConfig;
 import com.hc_android.hc_css.contract.MainActivityContract;
 import com.hc_android.hc_css.entity.AppUpdateEntity;
 import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
 import com.hc_android.hc_css.entity.TagEntity;
-import com.hc_android.hc_css.entity.UserEntity;
-
-import com.hc_android.hc_css.greendao.gen.CacheBean;
-import com.hc_android.hc_css.greendao.gen.CommonDaoUtils;
-import com.hc_android.hc_css.greendao.gen.DaoUtilsStore;
 
 import com.hc_android.hc_css.presenter.MainActivityPresenter;
 import com.hc_android.hc_css.service.PushSendService;
@@ -39,27 +29,26 @@ import com.hc_android.hc_css.ui.fragment.ChatListFragment;
 import com.hc_android.hc_css.ui.fragment.MineFragment;
 import com.hc_android.hc_css.ui.fragment.VisitorListFragment;
 import com.hc_android.hc_css.utils.Constant;
+import com.hc_android.hc_css.utils.DateUtils;
 import com.hc_android.hc_css.utils.NullUtils;
 import com.hc_android.hc_css.utils.android.AppUtils;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.app.CacheData;
-import com.hc_android.hc_css.utils.socket.EventServiceImpl;
 import com.hc_android.hc_css.utils.socket.MessageEvent;
+
 import com.hc_android.hc_css.wight.ChoiceDialog;
 import com.hc_android.hc_css.wight.LocalDataSource;
 import com.next.easynavigation.view.EasyNavigationBar;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.hc_android.hc_css.utils.Constant.MESSAGE_LOGINSUC;
-import static com.hc_android.hc_css.utils.Constant.MESSAGE_STATEUPATE;
+import static android.provider.ContactsContract.Intents.Insert.ACTION;
 import static com.hc_android.hc_css.utils.socket.MessageEventType.EventMessage;
 
 /**
@@ -122,6 +111,8 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
 
         CrashReport.putUserData(this,"_serviceId",BaseApplication.getUserBean().getId());
         CacheData.getAllCache();
+
+
     }
 
     @Override

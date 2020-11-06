@@ -56,7 +56,14 @@ public class DateUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return sdf.format(Calendar.getInstance().getTime());
     }
-
+	/**
+	 * 获取系统时间(格式：HHmm)
+	 * @return String 返回时间
+	 */
+	public static String getHourTime() {
+		SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+		return sdf.format(Calendar.getInstance().getTime());
+	}
     /**
      * 获取系统时间(格式：yyyyMMddHHmmss)
      * @return String 返回时间

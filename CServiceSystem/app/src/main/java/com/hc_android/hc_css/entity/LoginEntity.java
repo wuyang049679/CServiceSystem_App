@@ -1,5 +1,7 @@
 package com.hc_android.hc_css.entity;
 
+import java.util.List;
+
 public class LoginEntity {
 
 
@@ -443,6 +445,15 @@ public class LoginEntity {
                 String edition;
                 RealNameAuthBean realNameAuth;
                 MsgUndoBean msgUndo;
+                WorktimeBean worktime;
+
+                public WorktimeBean getWorktime() {
+                    return worktime;
+                }
+
+                public void setWorktime(WorktimeBean worktime) {
+                    this.worktime = worktime;
+                }
 
                 public MsgUndoBean getMsgUndo() {
                     return msgUndo;
@@ -831,6 +842,106 @@ public class LoginEntity {
 
                         public void setMoney(String money) {
                             this.money = money;
+                        }
+                    }
+                }
+
+                public static class WorktimeBean {
+
+
+                    /**
+                     * state : true
+                     * list : [{"serviceList":["5f44bc5c1fc1be28a4a0496b"],"timeList":[{"end":"23:00","start":"10:12"}],"weekList":[1,2,3,4],"disable":false},{"serviceList":["5f4618b85d695731949a73a2"],"timeList":[{"end":"23:00","start":"10:12"}],"weekList":[1,2,4],"disable":false}]
+                     */
+
+                    private boolean state;
+                    private List<ListBean> list;
+
+                    public boolean isState() {
+                        return state;
+                    }
+
+                    public void setState(boolean state) {
+                        this.state = state;
+                    }
+
+                    public List<ListBean> getList() {
+                        return list;
+                    }
+
+                    public void setList(List<ListBean> list) {
+                        this.list = list;
+                    }
+
+                    public static class ListBean {
+                        /**
+                         * serviceList : ["5f44bc5c1fc1be28a4a0496b"]
+                         * timeList : [{"end":"23:00","start":"10:12"}]
+                         * weekList : [1,2,3,4]
+                         * disable : false
+                         */
+
+                        private boolean disable;
+                        private List<String> serviceList;
+                        private List<TimeListBean> timeList;
+                        private List<Integer> weekList;
+
+                        public boolean isDisable() {
+                            return disable;
+                        }
+
+                        public void setDisable(boolean disable) {
+                            this.disable = disable;
+                        }
+
+                        public List<String> getServiceList() {
+                            return serviceList;
+                        }
+
+                        public void setServiceList(List<String> serviceList) {
+                            this.serviceList = serviceList;
+                        }
+
+                        public List<TimeListBean> getTimeList() {
+                            return timeList;
+                        }
+
+                        public void setTimeList(List<TimeListBean> timeList) {
+                            this.timeList = timeList;
+                        }
+
+                        public List<Integer> getWeekList() {
+                            return weekList;
+                        }
+
+                        public void setWeekList(List<Integer> weekList) {
+                            this.weekList = weekList;
+                        }
+
+                        public static class TimeListBean {
+                            /**
+                             * end : 23:00
+                             * start : 10:12
+                             */
+
+                            private String end;
+                            private String start;
+
+                            public String getEnd() {
+                                return end;
+                            }
+
+                            public void setEnd(String end) {
+                                this.end = end;
+                            }
+
+                            public String getStart() {
+                                return start;
+                            }
+
+                            public void setStart(String start) {
+                                this.start = start;
+                            }
                         }
                     }
                 }

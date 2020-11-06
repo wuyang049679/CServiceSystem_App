@@ -106,6 +106,7 @@ public class Constant {
     public static final String MESSAGE_UPATEDIALOG = "upateDialog";
     public static final String MESSAGE_SYSTEMNOTICE = "systemNotice";
     public static final String MESSAGE_REPORT_STATE = "report_state";
+    public static final String MESSAGE_WORKTIME_STATE = "workTime"; //上班时间段更改配置
     public static final String EVENTBUS_NEWDIALOG = "eventBus_newdialog";//eventBus消息通知
     public static final String MESSAGE_UNDO = "messageUndo";//消息撤回
     public static final String UI_FRESH = "ui_fresh";//界面刷新
