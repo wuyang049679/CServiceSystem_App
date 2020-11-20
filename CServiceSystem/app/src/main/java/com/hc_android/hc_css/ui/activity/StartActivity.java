@@ -1,11 +1,13 @@
 package com.hc_android.hc_css.ui.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TimeUtils;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.hc_android.hc_css.R;
@@ -17,6 +19,8 @@ import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.presenter.StartActivityPresenter;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.DateUtils;
+import com.hc_android.hc_css.utils.JsonParseUtils;
+import com.hc_android.hc_css.utils.NullUtils;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.SystemUtils;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
@@ -44,7 +48,7 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 
     @Override
     protected View injectTarget() {
-        return findViewById(R.id.act_start_lin);
+        return null;
     }
 
     @Override
@@ -52,25 +56,20 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
         //判断本地是否有hash来验证是否登录过
         hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
 
-        if (TextUtils.isEmpty(hash)) {
-            showDataError("请登录");
+        UserEntity userEntity = BaseApplication.getUserEntity();
+        userEntity.setHash(hash);
+        BaseApplication.setUserEntity(userEntity);
+        if (NullUtils.isNull(hash.trim())) {
+//            showDataError("请登录");
+            Intent intent = new Intent(StartActivity.this, LoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.activity_open, R.anim.activity_close);
+            finish();
         } else {
-            mPresenter.pCheckLogin(hash);
-//            UserEntity userEntity=new UserEntity();
-//            userEntity.setHash(hash);
-//            BaseApplication.setUserEntity(userEntity);
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    startActivity(MainActivity.class);
-//                    finish();
-//                    /**
-//                     * 延时执行的代码
-//                     */
-//
-//                }
-//            },1000); // 延时1秒
-
+//            mPresenter.pCheckLogin(hash);
+            startActivity(MainActivity.class);
+            overridePendingTransition(R.anim.activity_open, R.anim.activity_close);
+            finish();
 
         }
 
@@ -89,6 +88,12 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 
     @Override
     public int getContentView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { //适配全面屏
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+
+        }
         return R.layout.activity_start;
 
     }
@@ -106,13 +111,13 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 
     @Override
     public void showDataSuccess(LoginEntity.DataBean datas) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setHash(datas.getHash());
-        userEntity.setUserbean(datas.getInfo());
-        BaseApplication.setUserEntity(userEntity);
-        startActivity(MainActivity.class);
-        overridePendingTransition(R.anim.activity_open, R.anim.activity_close);
-        finish();
+//        UserEntity userEntity = new UserEntity();
+//        userEntity.setHash(datas.getHash());
+//        userEntity.setUserbean(datas.getInfo());
+//        BaseApplication.setUserEntity(userEntity);
+//        startActivity(MainActivity.class);
+//        overridePendingTransition(R.anim.activity_open, R.anim.activity_close);
+//        finish();
     }
 
 }

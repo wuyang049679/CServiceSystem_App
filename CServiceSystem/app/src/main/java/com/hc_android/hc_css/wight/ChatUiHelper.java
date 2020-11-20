@@ -7,32 +7,52 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import android.widget.ListPopupWindow;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hc_android.hc_css.R;
+
+import com.hc_android.hc_css.adapter.ChannelCompanyAdapter;
 import com.hc_android.hc_css.adapter.EmojiAdapter;
+import com.hc_android.hc_css.adapter.QuickListAdapter;
 import com.hc_android.hc_css.entity.EmojiEntity;
+
+import com.hc_android.hc_css.entity.QuickEntity;
 import com.hc_android.hc_css.ui.activity.ChatActivity;
+import com.hc_android.hc_css.utils.DateUtils;
 import com.hc_android.hc_css.utils.FileUtils;
 import com.hc_android.hc_css.utils.NullUtils;
 import com.hc_android.hc_css.wight.media.RecordButton;
@@ -46,6 +66,7 @@ public class ChatUiHelper {
     private Activity mActivity;
     private LinearLayout mContentLayout;//整体界面布局
     private FrameLayout mBottomLayout;//底部布局
+    private RelativeLayout inputLin; // 输入布局
     private ConstraintLayout mEmojiLayout;//表情布局
     private ConstraintLayout mAddLayout;//添加布局
     private TextView mSendBtn;//发送按钮
@@ -54,13 +75,16 @@ public class ChatUiHelper {
     private ImageView mAudioIv;//录音图片
 
 
-    private EditText mEditText;
+    private AutoCompleteTextView mEditText;
     private InputMethodManager mInputManager;
     private SharedPreferences mSp;
     private ImageView mIvEmoji;
     private RecyclerView recyclerView;
     private RecyclerView chatRecycler;
     private ImageView eEoDel;
+    private List<QuickEntity.DataBean.ListBean> listBeans = new ArrayList<>();
+
+    private ChannelCompanyAdapter autoCompleteAdapter;
 
     public ChatUiHelper() {
 
@@ -74,7 +98,6 @@ public class ChatUiHelper {
         mChatUiHelper.mSp = activity.getSharedPreferences(SHARE_PREFERENCE_NAME, Context.MODE_PRIVATE);
         return mChatUiHelper;
     }
-
     public static final int EVERY_PAGE_SIZE = 21;
     private List<EmojiEntity> mListEmoji;
     private EmojiAdapter emojiAdapter;
@@ -132,6 +155,7 @@ public class ChatUiHelper {
     //绑定整体界面布局
     public ChatUiHelper bindContentLayout(LinearLayout bottomLayout) {
         mContentLayout = bottomLayout;
+        inputLin = mContentLayout.findViewById(R.id.input_lin);
         return this;
     }
 
@@ -139,8 +163,7 @@ public class ChatUiHelper {
     //绑定输入框
     @SuppressLint("ClickableViewAccessibility")
     public ChatUiHelper bindEditText(EditText editText) {
-        mEditText = editText;
-
+        mEditText = (AutoCompleteTextView)editText;
 //        mEditText.requestFocus();
         mEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -172,10 +195,14 @@ public class ChatUiHelper {
                 if (mEditText.getText().toString().trim().length() > 0) {
                     mSendBtn.setVisibility(View.VISIBLE);
                     mAddButton.setVisibility(View.GONE);
+                    setListPopupWindow();
                 } else {
                     mSendBtn.setVisibility(View.GONE);
                     mAddButton.setVisibility(View.VISIBLE);
+
                 }
+
+
             }
 
             @Override
@@ -186,6 +213,9 @@ public class ChatUiHelper {
 
         return this;
     }
+
+
+
 
     //绑定底部布局
     public ChatUiHelper bindBottomLayout(FrameLayout bottomLayout) {
@@ -257,6 +287,7 @@ public class ChatUiHelper {
         mAudioButton.setVisibility(View.GONE);
         mEditText.setVisibility(View.VISIBLE);
         mAudioIv.setImageResource(R.mipmap.yygl);
+
     }
 
 
@@ -368,6 +399,7 @@ public class ChatUiHelper {
 
     private void hideMoreLayout() {
         mAddLayout.setVisibility(View.GONE);
+
     }
 
     private void showMoreLayout() {
@@ -432,11 +464,27 @@ public class ChatUiHelper {
 
 
     /**
+     * 输入自动匹配快捷回复
+     */
+    private void setListPopupWindow(){
+            if (autoCompleteAdapter == null) {
+                List<QuickEntity.DataBean.ListBean> quickelistall = LocalDataSource.getQUICKELISTALL();
+                if (!NullUtils.isEmptyList(quickelistall)) {
+                    autoCompleteAdapter = new ChannelCompanyAdapter(quickelistall);
+                    mEditText.setDropDownBackgroundDrawable(new BitmapDrawable());
+                    mEditText.setAdapter(autoCompleteAdapter);
+                    mEditText.setDropDownAnchor(R.id.input_lin);
+                    mEditText.showDropDown();
+                }
+            }
+    }
+    /**
      * 隐藏软件盘
      */
     public void hideSoftInput() {
         mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
     }
+
 
 
     /**

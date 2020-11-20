@@ -201,14 +201,19 @@ public class BaseApplication extends MultiDexApplication {
      */
     public static UserEntity getUserEntity() {
 
-
-       if (userEntity==null)userEntity = JsonParseUtils.parseToObject((String)SharedPreferencesUtils.getParam("UserEntity",""),UserEntity.class);
+        if (userEntity.getUserbean() == null){
+            userEntity = new UserEntity();
+            LoginEntity.DataBean.InfoBean infoBean = JsonParseUtils.parseToObject((String) SharedPreferencesUtils.getParam("_UserEntity", ""), LoginEntity.DataBean.InfoBean.class);
+            userEntity.setUserbean(infoBean == null ? new LoginEntity.DataBean.InfoBean() : infoBean);
+        }
        return userEntity;
     }
 
     public static void setUserEntity(UserEntity userEntity) {
-        String s = JsonParseUtils.parseToJson(userEntity);
-        SharedPreferencesUtils.setParam("UserEntity",s);
+        if (userEntity.getUserbean() != null) {
+            String s = JsonParseUtils.parseToJson(userEntity.getUserbean());
+            if (userEntity.getUserbean() != null) SharedPreferencesUtils.setParam("_UserEntity", s);
+        }
         BaseApplication.userEntity = userEntity;
     }
 
@@ -218,8 +223,12 @@ public class BaseApplication extends MultiDexApplication {
      */
     public static LoginEntity.DataBean.InfoBean getUserBean() {
 
-        if (userEntity==null)userEntity=JsonParseUtils.parseToObject((String)SharedPreferencesUtils.getParam("UserEntity",""),UserEntity.class);
-        return userEntity.getUserbean()!=null?userEntity.getUserbean():new LoginEntity.DataBean.InfoBean();
+        if (userEntity==null || userEntity.getUserbean() ==null){
+            userEntity = new UserEntity();
+            LoginEntity.DataBean.InfoBean infoBean = JsonParseUtils.parseToObject((String) SharedPreferencesUtils.getParam("_UserEntity", ""), LoginEntity.DataBean.InfoBean.class);
+            userEntity.setUserbean(infoBean ==null ? new LoginEntity.DataBean.InfoBean() : infoBean);
+        }
+        return userEntity.getUserbean();
     }
 
 

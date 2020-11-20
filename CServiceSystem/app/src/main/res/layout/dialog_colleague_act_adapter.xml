@@ -75,7 +75,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="9dp"
-                android:layout_marginRight="9dp"
                 android:background="@color/colorAccent"
                 fresco:layout_constraintRight_toRightOf="@id/simple_drawViews"
                 fresco:layout_constraintTop_toTopOf="@id/simple_drawViews"
@@ -94,8 +93,10 @@
 
                 />
             <TextView
+                android:visibility="gone"
                 android:id="@+id/msg_count_tv"
-                fresco:layout_constraintLeft_toRightOf="@id/id_space"
+                fresco:layout_constraintRight_toRightOf="@+id/id_space"
+                fresco:layout_constraintLeft_toLeftOf="@id/id_space"
                 fresco:layout_constraintBottom_toTopOf="@id/id_space"
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"

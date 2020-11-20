@@ -10,6 +10,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -105,7 +106,12 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
 
     @Override
     protected void initView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
 
+        }
         AddAndSubEditText.TextChangeListener textChangeListener = new AddAndSubEditText.TextChangeListener(btnLogin);
 //        监听输入不为空
         textChangeListener.addAllEditText(username, password);

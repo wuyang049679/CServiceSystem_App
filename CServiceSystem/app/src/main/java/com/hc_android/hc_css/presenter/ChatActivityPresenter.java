@@ -14,6 +14,8 @@ import com.hc_android.hc_css.entity.FileEntity;
 import com.hc_android.hc_css.entity.IneValuateEntity;
 import com.hc_android.hc_css.entity.MessageDialogEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
+import com.hc_android.hc_css.entity.QuickEntity;
+import com.hc_android.hc_css.entity.QuickGroupEntity;
 import com.hc_android.hc_css.entity.SendEntity;
 import com.hc_android.hc_css.entity.TokenEntity;
 import com.hc_android.hc_css.model.ChatActivityModel;
@@ -290,4 +292,41 @@ public class ChatActivityPresenter extends BasePresenterIm<ChatActivityContract.
     }
 
 
+    @Override
+    public void pGetQuickList(String serviceId, boolean team) {
+        chatActivityModel.getQuickList(serviceId,team).subscribe(new RxSubscribe<QuickEntity.DataBean>() {
+            @Override
+            protected void onSuccess(QuickEntity.DataBean dataBean) {
+                mView.showQuickList(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
+    public void pQuickUse(String id) {
+        chatActivityModel.quickUse(id).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+
+            }
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
 }

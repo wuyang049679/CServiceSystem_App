@@ -7,6 +7,7 @@ import com.hc_android.hc_css.entity.CustomPathEntity;
 import com.hc_android.hc_css.entity.IneValuateEntity;
 import com.hc_android.hc_css.entity.MessageDialogEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
+import com.hc_android.hc_css.entity.QuickEntity;
 import com.hc_android.hc_css.entity.SendEntity;
 import com.hc_android.hc_css.entity.TokenEntity;
 
@@ -21,7 +22,8 @@ public interface ChatActivityContract {
         Observable<BaseEntity<TokenEntity.DataBean>> sendRead(String dialogId,String customerId,String mids,int entId);//发送消息已读
         Observable<BaseEntity<IneValuateEntity.DataBean>> sendIneValuate(String dialogId);//发送评价邀请
         Observable<BaseEntity<IneValuateEntity.DataBean>> msgUndo(String msgId,String serviceId,int entId);//消息撤回
-
+        Observable<BaseEntity<QuickEntity.DataBean>> getQuickList(String serviceId, boolean team);//快捷回复列表
+        Observable<BaseEntity<IneValuateEntity.DataBean>> quickUse(String id);//快捷回复使用
     }
 
     interface View extends BaseView<CustomPathEntity.DataBean> {
@@ -34,6 +36,7 @@ public interface ChatActivityContract {
         void showIneValuate(IneValuateEntity.DataBean dataBean);
         void showMsgUndo(IneValuateEntity.DataBean dataBean);
         void showMsgUndoFiled(String msg,String key);
+        void showQuickList(QuickEntity.DataBean dataBean);
 
     }
 
@@ -45,6 +48,7 @@ public interface ChatActivityContract {
         void pSendRead(String dialogId,String customerId,String mids,int entId);
         void pSendIneValuate(String dialogId);
         void pMsgUndo(String msgId,String serviceId,int entId);
-
+        void pGetQuickList(String serviceId,boolean team);
+        void pQuickUse(String id);
     }
 }

@@ -31,8 +31,8 @@ public class QuickListAdapter extends BaseQuickAdapter<QuickEntity.DataBean.List
         listBean.setLastMsg(lastMsgBean);
         String name=DataProce.getContent(listBean);
         if (!NullUtils.isNull(item.getName()))name=item.getName();
-        helper.setText(R.id.quick_list_text, name);
-        helper.setText(R.id.quick_list_type,DataProce.getItemType(item.getType()));
+        if (name != null)helper.setText(R.id.quick_list_text, name);
+        if (item.getType() != null)helper.setText(R.id.quick_list_type,DataProce.getItemType(item.getType()));
         if (AppConfig.getConfigEntity().isDisplayCounts()) {
             TextView view = helper.getView(R.id.quick_list_count);
             view.setVisibility(View.VISIBLE);

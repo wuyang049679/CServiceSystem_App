@@ -6,21 +6,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.adapter.DialogListAdapter;
 import com.hc_android.hc_css.adapter.PopWindowListAdapter;
+import com.hc_android.hc_css.api.persistentcookie.ClearableCookieJar;
 import com.hc_android.hc_css.base.BaseActivity;
 import com.hc_android.hc_css.base.BaseApplication;
 import com.hc_android.hc_css.contract.ColleagueActivityContract;
+import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.MessageDialogEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
 import com.hc_android.hc_css.entity.ReceptionEntity;
 import com.hc_android.hc_css.entity.TeamEntity;
+import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.presenter.ColleagueActivityPresenter;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.DateUtils;
@@ -32,8 +34,12 @@ import com.hc_android.hc_css.utils.socket.MessageEvent;
 import com.hc_android.hc_css.wight.CustomDialog;
 import com.hc_android.hc_css.wight.LocalDataSource;
 import com.hc_android.hc_css.wight.RecyclerViewNoBugLinearLayoutManager;
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,6 +80,16 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
     TextView msgCountTv;
     @BindView(R.id.inject_target)
     LinearLayout injectTarget;
+    @BindView(R.id.btn_choose)
+    LinearLayout btnChoose;
+    @BindView(R.id.colleague_include)
+    ConstraintLayout colleagueInclude;
+    @BindView(R.id.flowLayout_link)
+    TagFlowLayout flowLayoutLink;
+    @BindView(R.id.flowLayout_state)
+    TagFlowLayout flowLayoutState;
+    @BindView(R.id.select_lin)
+    LinearLayout selectLin;
     private List<MessageDialogEntity.DataBean.ListBean> colleagueListBean;
     private List<MessageDialogEntity.DataBean.ListBean> colleagueListBeans;
     private DialogListAdapter listAdapter;
@@ -81,8 +97,10 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
     private PopWindowListAdapter popWindowListAdapter;
     private int POSITION;
     private String serviceId;
-
-
+    public static String SCREENMODE = "all";//筛选类型接入方式
+    private static String SCREENSTATE = "allState";//筛选类型接入状态
+    private boolean hasScreen;
+    private List<MessageDialogEntity.DataBean.ListBean> listScreenUIBeans;
     @Override
     public ColleagueActivityPresenter getPresenter() {
         return new ColleagueActivityPresenter();
@@ -100,7 +118,58 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
 
     @Override
     protected void initData() {
+        UserEntity userEntity = BaseApplication.getUserEntity();
+        LoginEntity.DataBean.InfoBean.ScreenBean screen = userEntity.getUserbean().getScreen();
+        if (screen != null) {
+            hasScreen = screen.isOpen();
+            SCREENMODE = screen.getMode();
+            SCREENSTATE = screen.getState();
+            if (hasScreen) {
+                selectLin.setVisibility(View.VISIBLE);
 
+            }
+        }
+        //设置筛选列表的位置
+        List<String> accessModes = Arrays.asList(getResources().getStringArray(R.array.access_mode));
+        List<String> screenStatus = Arrays.asList(getResources().getStringArray(R.array.screen_status));
+        List<String> accessModes_sn = Arrays.asList(getResources().getStringArray(R.array.access_mode_sn));
+        List<String> screenStatus_sn = Arrays.asList(getResources().getStringArray(R.array.screen_status_sn));
+        int accessModes_index = accessModes_sn.indexOf(SCREENMODE);
+        int screenStatus_index = screenStatus_sn.indexOf(SCREENSTATE);
+        TagAdapter flowAdapter = getFlowAdapter(accessModes);
+        TagAdapter flowAdapter1 = getFlowAdapter(screenStatus);
+        //设置筛选栏
+        flowAdapter.setSelectedList(accessModes_index != -1 ? accessModes_index : 0);
+        flowAdapter1.setSelectedList(screenStatus_index != -1 ? screenStatus_index : 0);
+        flowLayoutLink.setAdapter(flowAdapter);
+        flowLayoutState.setAdapter(flowAdapter1);
+        flowLayoutLink.setOnTagClickListener((view, position, parent) -> {
+            String[] stringArray = getResources().getStringArray(R.array.access_mode_sn);
+
+            String s = stringArray[position];
+            if (SCREENMODE.equals(s)) {//点击已选中的时候取消改为全部筛选效果
+                flowLayoutLink.getAdapter().setSelectedList(0);
+                SCREENMODE = stringArray[0];
+            } else {
+                SCREENMODE = s;
+            }
+
+            screenDialog();
+            return true;
+        });
+        flowLayoutState.setOnTagClickListener((view, position, parent) -> {
+            String[] stringArray = getResources().getStringArray(R.array.screen_status_sn);
+
+            String s = stringArray[position];
+            if (SCREENSTATE.equals(s)) { //点击已选中的时候取消改为全部筛选效果
+                flowLayoutState.getAdapter().setSelectedList(0);
+                SCREENSTATE = stringArray[0];
+            } else {
+                SCREENSTATE = s;
+            }
+            screenDialog();
+            return true;
+        });
     }
 
     @Override
@@ -120,18 +189,21 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
         }
         colleagueListBeans = new ArrayList<>();
         colleagueListBeans.addAll(colleagueListBean);
+        listScreenUIBeans = new ArrayList<>();
+        listScreenUIBeans.addAll(colleagueListBeans);
         if (colleagueListBean != null) {
             RecyclerViewNoBugLinearLayoutManager layoutManager = new RecyclerViewNoBugLinearLayoutManager(this);
             colleagueRecycler.setLayoutManager(layoutManager);
-            listAdapter = new DialogListAdapter(colleagueListBeans);
+            listAdapter = new DialogListAdapter(listScreenUIBeans);
             colleagueRecycler.setAdapter(listAdapter);
+            screenDialog();
             if (colleagueListBeans.size() == 0) {
                 showEmptyView(getString(R.string.dialog_empty));
             }
         }
 
         listAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            if (adapter.getData()!=null&&adapter.getData().size()>position) {
+            if (adapter.getData().size() > position) {
                 MessageDialogEntity.DataBean.ListBean bean = (MessageDialogEntity.DataBean.ListBean) adapter.getData().get(position);
                 switch (view.getId()) {
                     case R.id.close_btn:
@@ -147,6 +219,81 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
                 }
             }
         });
+    }
+
+    /**
+     * 获取流式布局适配器
+     *
+     * @param stringList
+     * @return
+     */
+    public TagAdapter getFlowAdapter(List<String> stringList) {
+
+        return new TagAdapter<String>(stringList) {
+            @Override
+            public View getView(FlowLayout parent, int position, String s) {
+                TextView tv = new TextView(ColleagueActivity.this);
+                tv.setPadding(25, 10, 25, 10);
+                tv.setText(s);
+                tv.setTextSize(12);
+                tv.setTextColor(getResources().getColor(R.color.black_666));
+                tv.setBackground(getResources().getDrawable(R.drawable.screen_unselect));
+                return tv;
+            }
+
+            @Override
+            public void onSelected(int position, View view) {
+                super.onSelected(position, view);
+                ((TextView) view).setTextColor(getResources().getColor(R.color.white));
+                view.setBackground(getResources().getDrawable(R.drawable.screen_select));
+            }
+
+            @Override
+            public void unSelected(int position, View view) {
+                super.unSelected(position, view);
+
+                ((TextView) view).setTextColor(getResources().getColor(R.color.black_666));
+                view.setBackground(getResources().getDrawable(R.drawable.screen_unselect));
+
+            }
+        };
+    }
+
+
+    /**
+     * 筛选对话列表
+     */
+
+    public synchronized void screenDialog() {
+       if (hasScreen) {
+          List<MessageDialogEntity.DataBean.ListBean>  listBeans = new ArrayList<>();
+          listScreenUIBeans.clear();
+           for (MessageDialogEntity.DataBean.ListBean listUIBean : colleagueListBeans) {
+               boolean isAdd = false;
+               //首先判断来源是否符合，再判断状态
+               //去掉为接待和同事对话
+//               if (SCREENMODE.equals("all") || (listUIBean.getSource().equals(SCREENMODE))) {
+                   if (SCREENSTATE.equals("allState")) isAdd = true;
+                   //免打扰不加入
+                   if (SCREENSTATE.equals("unreadNum") && !listUIBean.isDisturb() && listUIBean.getUnreadNum() > 0)
+                       isAdd = true;
+                   if (SCREENSTATE.equals("msgNumber") && !listUIBean.isDisturb() && listUIBean.getLastMsg() != null) {
+                       if (listUIBean.getLastMsg() != null &&listUIBean.getLastMsg().getSendType() !=null && listUIBean.getLastMsg().getSendType().equals("customer"))
+                           isAdd = true;
+                   }
+                   if (SCREENSTATE.equals("disturb") && listUIBean.isDisturb()) isAdd = true;
+//               }
+               if (isAdd) listBeans.add(listUIBean);
+           }
+           listScreenUIBeans.clear();
+           listScreenUIBeans.addAll(listBeans);
+           if (listScreenUIBeans.size() == 0) {
+               showEmptyView("没有对话");
+           } else {
+               showContentView();
+           }
+       }
+        listAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -210,9 +357,11 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
                 .cancelTouchout(true)
                 .addViewOnclick(R.id.all_team, view -> {  //点击全部的时候全部显示
                     colleagueListBeans.clear();
-                    listAdapter.notifyItemRangeChanged(0,colleagueListBeans.size());//防止java.lang.IndexOutOfBoundsException: Inconsistency detected.
+                    listScreenUIBeans.clear();
+                    listAdapter.notifyItemRangeChanged(0, colleagueListBeans.size());//防止java.lang.IndexOutOfBoundsException: Inconsistency detected.
                     colleagueListBeans.addAll(colleagueListBean);
-                    listAdapter.notifyDataSetChanged();
+                    listScreenUIBeans.addAll(colleagueListBean);
+                    screenDialog();
                     customDialog.dismiss();
                     titleColleague.setText(getResources().getString(R.string.dialog_all));
                     if (colleagueListBeans.size() == 0) {
@@ -233,14 +382,16 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
             customDialog.dismiss();
             serviceId = bean.get_id();
             colleagueListBeans.clear();
-            listAdapter.notifyItemRangeChanged(0,colleagueListBeans.size());//防止java.lang.IndexOutOfBoundsException: Inconsistency detected.
+            listAdapter.notifyItemRangeChanged(0, colleagueListBeans.size());//防止java.lang.IndexOutOfBoundsException: Inconsistency detected.
             for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
                 if (listBean.getServiceId().equals(serviceId)) {
                     colleagueListBeans.add(listBean);
                 }
             }
+            listScreenUIBeans.clear();
+            listScreenUIBeans.addAll(colleagueListBeans);
             titleColleague.setText(name);
-            listAdapter.notifyDataSetChanged();
+            screenDialog();
             if (colleagueListBeans.size() == 0) {
                 showEmptyView(getString(R.string.dialog_empty));
             } else {
@@ -259,7 +410,7 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
 
     @Override
     public void showEndDialog(ReceptionEntity.DataBean messageEntity) {
-        if (colleagueListBean.size() <= POSITION)return;
+        if (colleagueListBean.size() <= POSITION) return;
         colleagueListBeans.remove(POSITION);
         listAdapter.notifyItemRemoved(POSITION);
         if (colleagueListBeans.size() == 0) {
@@ -270,8 +421,6 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
     @Override
     public void onSocketEvent(MessageEvent msg) {
         super.onSocketEvent(msg);
-
-
 
 
         MessageEntity message = (MessageEntity) msg.getMsg();
@@ -396,19 +545,20 @@ public class ColleagueActivity extends BaseActivity<ColleagueActivityPresenter, 
     /**
      * 更新数据
      */
-    public synchronized void updateData(){
+    public synchronized void updateData() {
 
         colleagueListBeans.clear();
-        listAdapter.notifyItemRangeChanged(0,colleagueListBeans.size());//防止java.lang.IndexOutOfBoundsException: Inconsistency detected.
-            colleagueListBean = LocalDataSource.getTEAMLIST();
-            for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
-                listBean.setItemtype(Constant.COLLEAGUE_ACT);
-                if (serviceId==null||(listBean.getServiceId() != null && listBean.getServiceId().equals(serviceId))) {
-                    colleagueListBeans.add(listBean);
-                }
+        listAdapter.notifyItemRangeChanged(0, colleagueListBeans.size());//防止java.lang.IndexOutOfBoundsException: Inconsistency detected.
+        colleagueListBean = LocalDataSource.getTEAMLIST();
+        for (MessageDialogEntity.DataBean.ListBean listBean : colleagueListBean) {
+            listBean.setItemtype(Constant.COLLEAGUE_ACT);
+            if (serviceId == null || (listBean.getServiceId() != null && listBean.getServiceId().equals(serviceId))) {
+                colleagueListBeans.add(listBean);
             }
+        }
 
     }
+
     /**
      * 设置未读数
      */

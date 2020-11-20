@@ -77,6 +77,17 @@ public class LocalDataSource  {
         SharedPreferencesUtils.setParam("QUICKELIST"+BaseApplication.getUserBean().getId(),s);
 
     }
+    public static List<QuickEntity.DataBean.ListBean> getQUICKELISTALL() {
+        String quicketeamlist = (String) SharedPreferencesUtils.getParam("QUICKELISTALL"+BaseApplication.getUserBean().getId(), "");
+        return JsonParseUtils.parseToPureList(quicketeamlist,QuickEntity.DataBean.ListBean.class);
+    }
+
+    public static void setQUICKELISTALL(List<QuickEntity.DataBean.ListBean> QUICKELIST) {
+        Gson gson=new Gson();
+        String s = gson.toJson(QUICKELIST);
+        SharedPreferencesUtils.setParam("QUICKELISTALL"+BaseApplication.getUserBean().getId(),s);
+
+    }
 
     public static List<TeamEntity.DataBean.ListBean> getTEAMSERLIST() {
         String quicketeamlist = (String) SharedPreferencesUtils.getParam("TEAMSERLIST", "");

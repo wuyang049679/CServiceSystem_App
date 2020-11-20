@@ -100,7 +100,7 @@ public class EventServiceImpl implements EventService {
     private  Socket mSocket;
     private List<String> roomList;
     private boolean isConnect=true;
-    private boolean isFirst=true;
+    private boolean isFirst = true;
     private static final int MESSAGE_KEEPLINK=1;
     private static final int OPTIME = 2000;
     private long lasttime = 0;
@@ -191,11 +191,13 @@ public class EventServiceImpl implements EventService {
     @Override
     public void joinRoom(String roomId) {
         if (roomList==null)roomList=new ArrayList<>();
-        if (!roomList.contains(roomId)) {//已经加入过了就不再重新加入
+//        if (mSocket!=null && mSocket.connected() && !roomList.contains(roomId)) {//已经加入过了就不再重新加入
+
             if (mSocket != null) mSocket.emit("join", roomId);
             roomList.add(roomId);
-        }
-//        Log.i(TAG, "roomId: "+roomId);
+        Log.i(TAG, "roomId: "+roomId);
+        if (mSocket!=null)Log.i(TAG, "mSocket: "+mSocket.connected());
+//        }
     }
     /**
      * 新对话加入房间
@@ -208,6 +210,7 @@ public class EventServiceImpl implements EventService {
         if (!roomList.contains(roomId)) {//已经加入过了就不再重新加入
             if (mSocket != null) mSocket.emit("join", roomId,ack);
             roomList.add(roomId);
+
         }
 //        Log.i(TAG, "roomId: "+roomId);
 //        mSocket.emit("keepLink", new Ack() {
@@ -286,6 +289,7 @@ public class EventServiceImpl implements EventService {
             mSocket.off();
             mSocket.close();
             mSocket=null;
+            isFirst = true;
             if (!NullUtils.isEmptyList(roomList))roomList.clear();
         }
     }

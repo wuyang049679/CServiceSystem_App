@@ -179,21 +179,21 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
         userBean = BaseApplication.getUserBean();
         if (userBean != null) {
 //            FrescoUtils.setRoundGif(userHeader, UriUtils.getUri(Constant.ONLINEPIC, Address.IMG_URL + userBean.getHead()));
-            String head = null;
-            if (!NullUtils.isNull(userBean.getHead())) {
-                head = Address.IMG_URL + userBean.getHead();
-            } else {
-                head = Address.SYSTEM_URL + "image/defaultAvatar.jpeg";
-            }
-            ImageLoaderManager.loadCircleImage(getHcActivity(), head, userIv);
-            if (!NullUtils.isNull(userBean.getNickname())) {
-                textName.setText(userBean.getNickname());
-            }
-            if (!NullUtils.isNull(userBean.getAutograph())) {
-                textQm.setText(userBean.getAutograph());
-            }
+//            String head = null;
+//            if (!NullUtils.isNull(userBean.getHead())) {
+//                head = Address.IMG_URL + userBean.getHead();
+//            } else {
+//                head = Address.SYSTEM_URL + "image/defaultAvatar.jpeg";
+//            }
+//            ImageLoaderManager.loadCircleImage(getHcActivity(), head, userIv);
+//            if (!NullUtils.isNull(userBean.getNickname())) {
+//                textName.setText(userBean.getNickname());
+//            }
+//            if (!NullUtils.isNull(userBean.getAutograph())) {
+//                textQm.setText(userBean.getAutograph());
+//            }
+            initHead();
 
-            setRealName();
 //            if (userBean.getAppNotice().isPush()) {
 //                NotificationManagerCompat manager = NotificationManagerCompat.from(BaseApplication.getContext().getApplicationContext());
 //                boolean isOpened = manager.areNotificationsEnabled();//系统是否开启消息推送判断
@@ -209,6 +209,25 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
 
         }
     }
+
+    private void initHead() {
+        userBean = BaseApplication.getUserBean();
+        String head = null;
+        if (!NullUtils.isNull(userBean.getHead())) {
+            head = Address.IMG_URL + userBean.getHead();
+        } else {
+            head = Address.SYSTEM_URL + "image/defaultAvatar.jpeg";
+        }
+        ImageLoaderManager.loadCircleImage(getHcActivity(), head, userIv);
+        if (!NullUtils.isNull(userBean.getNickname())) {
+            textName.setText(userBean.getNickname());
+        }
+        if (!NullUtils.isNull(userBean.getAutograph())) {
+            textQm.setText(userBean.getAutograph());
+        }
+        setRealName();
+    }
+
 
     /**
      * 自动切换在线离线
@@ -302,6 +321,8 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
      */
     private void setOnlineState() {
         Log.i(TAG, "setOnlineState:" + userBean.getState());
+        if (userBean.getState() == null) initHead();//防止状态切换不正确
+        userBean = BaseApplication.getUserBean();
         if (!NullUtils.isNull(userBean.getState())) {
             if (userBean.getState().equals("on")) {
                 onlineState.setText("在线");
@@ -330,6 +351,7 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
     @Override
     public void showDataSuccess(IneValuateEntity.DataBean datas) {
         EventServiceImpl.getInstance().disconnect();
+        SharedPreferencesUtils.setParam(Constant.HASH, " ");
         Intent intent = new Intent(getHcActivity(), LoginActivity.class);
         startActivity(intent);
         getHcActivity().finish();
@@ -554,6 +576,7 @@ public class MineFragment extends BaseFragment<MineFragmentPresenter, IneValuate
             ToastUtils.showShort(dataBean.getTxt());
             return;
         }
+        if (dataBean.getState() !=null)STATE_ONLINE = dataBean.getState();
         switch (STATE_ONLINE) {
             case "on":
                 try {

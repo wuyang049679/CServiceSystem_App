@@ -108,4 +108,33 @@
         <item>隐藏</item>
         <item>只看遗漏</item>
     </string-array>
+
+    <!--接入方式-->
+    <string-array name="access_mode">
+        <item>全部</item>
+        <item>网页接入</item>
+        <item>对话链接</item>
+        <item>公众号</item>
+        <item>小程序</item>
+    </string-array>
+    <string-array name="access_mode_sn">
+        <item>all</item>
+        <item>web</item>
+        <item>link</item>
+        <item>wechat</item>
+        <item>program</item>
+    </string-array>
+    <!--筛选状态-->
+    <string-array name="screen_status">
+        <item>全部</item>
+        <item>未读</item>
+        <item>未回复</item>
+        <item>免打扰</item>
+    </string-array>
+    <string-array name="screen_status_sn">
+        <item>allState</item>
+        <item>unreadNum</item>
+        <item>msgNumber</item>
+        <item>disturb</item>
+    </string-array>
 </resources>

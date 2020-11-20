@@ -1,6 +1,8 @@
 package com.hc_android.hc_css.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +35,7 @@ import com.hc_android.hc_css.entity.QuickGroupEntity;
 import com.hc_android.hc_css.presenter.MDiaglogFragmentPresenter;
 import com.hc_android.hc_css.ui.activity.ChatActivity;
 import com.hc_android.hc_css.ui.activity.QSettingActivity;
+import com.hc_android.hc_css.ui.activity.QuickActivity;
 import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.JsonParseUtils;
 import com.hc_android.hc_css.utils.NullUtils;
@@ -329,11 +332,17 @@ public class QuickReplyFragment extends BaseFragment<MDiaglogFragmentPresenter, 
                 break;
             case R.id.quick_list_lin:
                 QuickEntity.DataBean.ListBean listBean = (QuickEntity.DataBean.ListBean) adapter.getData().get(position);
+//                mPresenter.pQuickUse(((QuickEntity.DataBean.ListBean) adapter.getData().get(position)).getId());
+                String s = JsonParseUtils.parseToJson(listBean);
+                Intent intent = new Intent();
+                intent.putExtra("QUICKLIST",s);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+                getActivity().finish();
+
                 if (getHcActivity() instanceof OnSendMsgListener) {
 
                     if (listBean!=null)((OnSendMsgListener) getHcActivity()).toSendMsgForFragment(listBean);
                 }
-                mPresenter.pQuickUse(((QuickEntity.DataBean.ListBean) adapter.getData().get(position)).getId());
                 break;
         }
     }
@@ -453,7 +462,6 @@ public class QuickReplyFragment extends BaseFragment<MDiaglogFragmentPresenter, 
 
     @OnClick(R.id.quick_setting)
     public void onViewClicked() {
-        ((ChatActivity) getActivity()).dismissDialog();
         startActivity(QSettingActivity.class);
     }
 
@@ -488,27 +496,33 @@ public class QuickReplyFragment extends BaseFragment<MDiaglogFragmentPresenter, 
                     return 1;
                 });
             }
+            boolean isHas = false;
+            for (MultiItemEntity multiItemEntity : multiItemEntities) {
+                if (((ExpandEntity)multiItemEntity).getTitle().equals("未分组"))isHas = true;
+            }
             //首先添加没有id表示未分组的列表
             ExpandEntity expandEntity = new ExpandEntity("未分组", "0");
-            for (int i = 0; i < listBeans.size(); i++) {
-                String groupingId = listBeans.get(i).getGroupingId();
-                if (groupingId == null) {
-                    expandEntity.addSubItem(listBeans.get(i));
-                } else {
-                    if (groupingBeans != null && groupingBeans.size() > 0) {//groupId没有匹配的也放到未分组里面
-                        boolean isAdd = true;
-                        for (int i1 = 0; i1 < groupingBeans.size(); i1++) {
-                            if (groupingId != null && groupingId.equals(groupingBeans.get(i1).getId()))
-                                isAdd = false;
+            if (!isHas) {
+                for (int i = 0; i < listBeans.size(); i++) {
+                    String groupingId = listBeans.get(i).getGroupingId();
+                    if (groupingId == null) {
+                        expandEntity.addSubItem(listBeans.get(i));
+                    } else {
+                        if (groupingBeans != null && groupingBeans.size() > 0) {//groupId没有匹配的也放到未分组里面
+                            boolean isAdd = true;
+                            for (int i1 = 0; i1 < groupingBeans.size(); i1++) {
+                                if (groupingId != null && groupingId.equals(groupingBeans.get(i1).getId()))
+                                    isAdd = false;
+                            }
+                            if (isAdd) expandEntity.addSubItem(listBeans.get(i));
                         }
-                        if (isAdd) expandEntity.addSubItem(listBeans.get(i));
                     }
                 }
+                if (expandEntity.getSubItems() != null) {
+                    expandEntity.setCount(expandEntity.getSubItems().size() + "");
+                }
+                multiItemEntities.add(expandEntity);
             }
-            if (expandEntity.getSubItems()!=null) {
-                expandEntity.setCount(expandEntity.getSubItems().size() + "");
-            }
-            multiItemEntities.add(expandEntity);
             if (groupingBeans != null && groupingBeans.size() > 0) {
                 //添加已分组列表(223233)
                 for (int i = 0; i < groupingBeans.size(); i++) {

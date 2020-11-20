@@ -17,6 +17,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -291,9 +292,8 @@ public class NotificationUtils extends ContextWrapper {
      */
 
     public static boolean isSendNotice(){
-
         if (!AppConfig.isIsOpenNotice())return false;//是否开启消息通知
-        if (BaseApplication.getUserEntity().getSocketId()!=null&&!AppConfig.isIsOpenMeanwhile())return false;//电脑端在线，然后不开启同时提醒
+        if (BaseApplication.getUserBean().getSocketId()!=null&&!AppConfig.isIsOpenMeanwhile())return false;//电脑端在线，然后不开启同时提醒
 
         return true;
     }

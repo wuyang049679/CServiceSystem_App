@@ -77,7 +77,9 @@ public class SharedPreferencesUtils {
     public static void setParam(String key, Object value) {
         SharedPreferences sharedPreferences = BaseApplication.getContext().getSharedPreferences(SharedFILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+//        Log.i("wy_activity","key---"+key+"----value---"+value);
         if (value instanceof String) {
+//            Log.i("wy_activity","instanceof String");
             editor.putString(key, (String) value);
         } else if (value instanceof Integer) {
             editor.putInt(key, (Integer) value);
@@ -100,8 +102,10 @@ public class SharedPreferencesUtils {
      */
     public static Object getParam(String key, Object defValue) {
         SharedPreferences sharedPreferences = BaseApplication.getContext().getSharedPreferences(SharedFILE_NAME, Context.MODE_PRIVATE);
+//        Log.i("wy_activity","key---"+key +"value--"+sharedPreferences.getString(key, (String) defValue) );
         SharedPreferences.Editor edit = sharedPreferences.edit();
         if (defValue instanceof String) {
+//            Log.i("wy_activity","instanceof String");
             return sharedPreferences.getString(key, (String) defValue);
         } else if (defValue instanceof Integer) {
             return sharedPreferences.getInt(key, (Integer) defValue);
@@ -112,6 +116,7 @@ public class SharedPreferencesUtils {
         } else if (defValue instanceof Long) {
             return sharedPreferences.getLong(key, (Long) defValue);
         }
+        Log.i("wy_activity","instanceof null");
         return null;
     }
 

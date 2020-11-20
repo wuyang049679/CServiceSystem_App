@@ -7,6 +7,7 @@ import com.hc_android.hc_css.base.BaseEntity;
 import com.hc_android.hc_css.base.BasePresenterIm;
 import com.hc_android.hc_css.base.RxSubscribe;
 import com.hc_android.hc_css.contract.ChatListFragmentContract;
+import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.MessageDialogEntity;
 import com.hc_android.hc_css.entity.ReceptionEntity;
 import com.hc_android.hc_css.entity.TeamEntity;
@@ -49,7 +50,7 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
 
             @Override
             protected void onFailed(int code, String msg) {
-                ToastUtils.showShort(msg);
+                mView.showDataError(msg);
             }
 
             @Override
@@ -202,5 +203,23 @@ public class ChatListFragmentPresenter extends BasePresenterIm<ChatListFragmentC
             }
         });
     }
+    @Override
+    public void pCheckLogin(String hash) {
+        chatListFragmentModel.checkLogin(hash).subscribe(new RxSubscribe<LoginEntity.DataBean>() {
+            @Override
+            protected void onSuccess(LoginEntity.DataBean loginEntity) {
+                mView.showCheckHash(loginEntity);
+            }
 
+            @Override
+            protected void onFailed(int code, String msg) {
+                mView.showDataError(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
 }

@@ -7,6 +7,8 @@ import com.hc_android.hc_css.contract.ChatActivityContract;
 import com.hc_android.hc_css.entity.ChatEntity;
 import com.hc_android.hc_css.entity.CustomPathEntity;
 import com.hc_android.hc_css.entity.IneValuateEntity;
+import com.hc_android.hc_css.entity.QuickEntity;
+import com.hc_android.hc_css.entity.QuickGroupEntity;
 import com.hc_android.hc_css.entity.SendEntity;
 import com.hc_android.hc_css.entity.TokenEntity;
 import com.hc_android.hc_css.utils.Constant;
@@ -113,6 +115,32 @@ public class ChatActivityModel implements ChatActivityContract.Model {
         hashMap.put(Constant.SERVICEID,serviceId);
         hashMap.put("msgId",msgId);
         return ApiManager.getApistore().msgUndo(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<BaseEntity<QuickEntity.DataBean>> getQuickList(String serviceId, boolean team) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        if (serviceId!=null) {
+            hashMap.put(Constant.SERVICEID, serviceId);
+        }
+        if (team){
+            hashMap.put("team","true");
+        }
+
+        return ApiManager.getApistore().getQuickList(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> quickUse(String id) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put("id",id);
+        return ApiManager.getApistore().quickUsage(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

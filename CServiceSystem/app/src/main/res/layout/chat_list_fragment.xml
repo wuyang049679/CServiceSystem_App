@@ -1,49 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <include
-        android:id="@+id/chat_list_include"
-        layout="@layout/public_common_title"/>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/chat_list_include"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="50dp"
+        android:background="@color/theme_app">
+
         <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/wifi_error"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/backLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
             android:gravity="center"
-            android:background="@color/bg_yel"
-            android:layout_width="match_parent"
-            android:layout_height="42dp">
-            <ImageView
-                android:layout_marginRight="4dp"
-                android:src="@drawable/error_hint"
-                android:layout_width="22dp"
-                android:layout_height="22dp"/>
-            <TextView
-                android:textColor="@color/black_333"
-                android:textSize="16sp"
-                android:text="当前网络不可用，请检查你的网络设置"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:orientation="horizontal">
+
+
         </LinearLayout>
-    <LinearLayout
-        android:id="@+id/inject_lin"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <androidx.recyclerview.widget.RecyclerView
-        android:overScrollMode="never"
-        android:scrollbars="vertical"
-        android:id="@+id/chat_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7">
+
+            <TextView
+                android:id="@+id/conmonTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/dialog_loading"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="right">
+
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/window_margin"
+                android:id="@+id/btn_choose"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/more_e"
+                android:textColor="@color/white"
+             />
+        </LinearLayout>
+
     </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/wifi_error"
+        android:gravity="center"
+        android:background="@color/bg_yel"
+        android:layout_width="match_parent"
+        android:layout_height="42dp">
+        <ImageView
+            android:layout_marginRight="4dp"
+            android:src="@drawable/error_hint"
+            android:layout_width="22dp"
+            android:layout_height="22dp"/>
+        <TextView
+            android:textColor="@color/black_333"
+            android:textSize="16sp"
+            android:text="当前网络不可用，请检查你的网络设置"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/select_lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:visibility="gone"
+            android:id="@+id/flowLayout_link"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            fresco:max_select="1" />
+
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:id="@+id/flowLayout_state"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="3dp"
+            fresco:max_select="1" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/black_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/inject_lin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chat_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

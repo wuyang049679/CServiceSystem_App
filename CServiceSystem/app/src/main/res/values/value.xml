@@ -6,6 +6,8 @@
     <dimen name="popWindow_height_f">370dp</dimen>
     <dimen name="popWindow_height_state">146dp</dimen>
     <dimen name="popWindow_height_bind">100dp</dimen>
+
+
     <dimen name="chat_height">540dp</dimen>
     <dimen name="popWindow_witch">375dp</dimen>
     <dimen name="window_margin">10dp</dimen>

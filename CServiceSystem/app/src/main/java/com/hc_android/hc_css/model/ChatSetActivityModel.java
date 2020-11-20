@@ -87,4 +87,17 @@ public class ChatSetActivityModel implements ChatSetActivityContract.Model {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> top(String dialogId, boolean top) {
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.DIALOGID,dialogId);
+        hashMap.put("top",top);
+
+        return ApiManager.getApistore().top(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
 }

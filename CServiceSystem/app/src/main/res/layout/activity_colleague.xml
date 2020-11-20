@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".ui.activity.ColleagueActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/colleague_include"
         android:background="@color/theme_app"
         android:layout_width="match_parent"
@@ -53,15 +54,17 @@
             android:text="1"
             android:textColor="@color/white"
             android:textSize="11sp"
-            />
+            tools:ignore="MissingConstraints" />
         <LinearLayout
+            android:layout_marginRight="5dp"
+
             android:padding="5dp"
             android:id="@+id/btn_choose"
             android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginRight="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
@@ -69,12 +72,39 @@
             android:layout_gravity="center"
             android:layout_width="20dp"
             android:layout_height="20dp"
-
-            android:src="@mipmap/more"
+            android:src="@mipmap/more_e"
             android:textColor="@color/white"
             />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/select_lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:visibility="gone"
+            android:id="@+id/flowLayout_link"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            fresco:max_select="1" />
+
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:id="@+id/flowLayout_state"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="3dp"
+            fresco:max_select="1" />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/black_line" />
     <LinearLayout
         android:id="@+id/inject_target"
         android:layout_width="match_parent"

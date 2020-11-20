@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+        <TextView
+            android:clickable="true"
+            android:id="@+id/receivied_reception"
+            android:background="@drawable/item_down_bg"
+            android:gravity="center"
+            android:textColor="@color/theme_app"
+            android:textSize="16sp"
+            android:text="接待全部对话"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+        <View
+            android:background="@color/black_line"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <TextView
+            android:clickable="true"
+            android:id="@+id/end_reception"
+            android:background="@drawable/item_down_bg"
+            android:gravity="center"
+            android:textColor="@color/theme_app"
+            android:textSize="16sp"
+            android:text="结束全部对话"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+        <View
+            android:background="@color/black_line"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+</LinearLayout>

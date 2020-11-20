@@ -388,4 +388,9 @@ public interface Apistore {
      */
     @GET("/dialog/disturb")
     Observable<BaseEntity<IneValuateEntity.DataBean>> disturb(@QueryMap HashMap<String, String> map);
+    /**
+     * 消息置顶
+     */
+    @GET("/dialog/top")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> top(@QueryMap HashMap<String, Object> map);
 }

@@ -88,10 +88,10 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             setContent(item, helper);
         }
         if (item.getItemType()==Constant.COLLEAGUE){//同事的对话
-            boolean assist=false;
-            if (BaseApplication.getUserBean()!=null&&BaseApplication.getUserBean().getAuthority()!=null) {
-                assist = BaseApplication.getUserBean().getAuthority().isAssist();
-            }
+//            boolean assist=false;
+//            if (BaseApplication.getUserBean()!=null&&BaseApplication.getUserBean().getAuthority()!=null) {
+//                assist = BaseApplication.getUserBean().getAuthority().isAssist();
+//            }
             helper.addOnClickListener(R.id.dialog_list_colleague_lin);
             setTitle(item, helper);
             setMsgPoint(item, helper);
@@ -393,6 +393,7 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
                 disturb.setVisibility(View.VISIBLE);
             }else {
                 ponit_tv.setVisibility(View.VISIBLE);
+                disturb.setVisibility(View.GONE);
                 ponit_tv.setText(item.getUnreadNum() + "");
                 if (item.getUnreadNum() > 9 && item.getUnreadNum() <= 99) {
                     ponit_tv.setBackground(mContext.getResources().getDrawable(R.drawable.radius_red));

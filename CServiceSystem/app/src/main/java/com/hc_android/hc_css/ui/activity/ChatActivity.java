@@ -1,17 +1,13 @@
 package com.hc_android.hc_css.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.text.SpannableString;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,13 +28,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.adapter.ChatAdapter;
 import com.hc_android.hc_css.adapter.EmojiAdapter;
 import com.hc_android.hc_css.adapter.PathListAdapter;
-import com.hc_android.hc_css.api.Address;
 import com.hc_android.hc_css.base.BaseActivity;
 import com.hc_android.hc_css.base.BaseApplication;
 import com.hc_android.hc_css.contract.ChatActivityContract;
@@ -61,7 +55,6 @@ import com.hc_android.hc_css.utils.FastUtils;
 import com.hc_android.hc_css.utils.FileUtils;
 import com.hc_android.hc_css.utils.JsonParseUtils;
 import com.hc_android.hc_css.utils.NullUtils;
-import com.hc_android.hc_css.utils.UriUtils;
 import com.hc_android.hc_css.utils.android.KeyBoardUtils;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.SystemUtils;
@@ -70,7 +63,6 @@ import com.hc_android.hc_css.utils.android.app.AppConfig;
 import com.hc_android.hc_css.utils.android.app.CacheData;
 import com.hc_android.hc_css.utils.android.app.DataProce;
 import com.hc_android.hc_css.utils.android.app.UIUtils;
-import com.hc_android.hc_css.utils.android.image.FrescoUtils;
 import com.hc_android.hc_css.utils.android.image.GlideEngine;
 import com.hc_android.hc_css.utils.android.image.UploadFileUtils;
 import com.hc_android.hc_css.utils.socket.EventServiceImpl;
@@ -87,8 +79,6 @@ import com.hc_android.hc_css.wight.media.MediaManager;
 import com.hc_android.hc_css.wight.media.RecordButton;
 import com.hc_android.hc_css.wight.span.AnimatedImageSpan;
 import com.hc_android.hc_css.wight.span.OperationPopWindow;
-import com.hw.videoprocessor.VideoProcessor;
-import com.hw.videoprocessor.util.VideoProgressListener;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -102,7 +92,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,7 +184,6 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
     @BindView(R.id.msg_count_tv)
     TextView msgCountTv;
 
-
     private PathListAdapter pathListAdapter;
     private EmojiAdapter emojiAdapter;
     private List<CustomPathEntity.DataBean.ItemBean.RoutesBean> routesBeans;
@@ -214,6 +202,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
     private boolean isShow;
     private static String INTENT_TYPE;
     private String currentServiceId;
+    private final int QUICKINTENT = 10;
 
     @Override
     protected void reloadActivity() {
@@ -282,7 +271,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
 
             }
         }
-        if (itembean.getUnreadNum()>0)sendReadMsg(chatList);
+        if (itembean.getUnreadNum() > 0) sendReadMsg(chatList);
         chatAdapter = new ChatAdapter(chatList);
         emojiAdapter = new EmojiAdapter(imageList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -442,6 +431,14 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                 }
             }
         });
+        //首次进来没有访问直接获取快捷回复
+        if (AppConfig.hasQuickList_A) {
+            LocalDataSource.setQUICKELISTALL(new ArrayList<>());
+            mPresenter.pGetQuickList(BaseApplication.getUserBean().getId(), true);
+            mPresenter.pGetQuickList(null, true);
+        }
+
+
     }
 
     /**
@@ -482,7 +479,8 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
 
         if (message.getId() != null && userBean.getId().equals(message.getServiceId()) && !message.getSendType().equals("system") && !message.isUndo()) {
             String id = message.getId();
-            if (userBean.getCompany()!=null && userBean.getCompany().getMsgUndo() !=null && !userBean.getCompany().getMsgUndo().isState())return;
+            if (userBean.getCompany() != null && userBean.getCompany().getMsgUndo() != null && !userBean.getCompany().getMsgUndo().isState())
+                return;
             if (!NullUtils.isNull(id)) {
 
                 if (DateUtils.getCurrentTimeMillis() - message.getTime() >= (1000 * 60 * 2)) {
@@ -677,6 +675,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
         recyclerChat.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
                 KeyBoardUtils.closeKeybord(inputEt, ChatActivity.this);
                 emojiLin.setVisibility(View.GONE);
                 bottomLayout.setVisibility(View.GONE);
@@ -699,6 +698,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
                 if (newState == SCROLL_STATE_IDLE || newState == SCROLL_STATE_DRAGGING) {
                     // DES: 找出当前可视Item位置
                     RecyclerView.LayoutManager layoutManager = recyclerChat.getLayoutManager();
@@ -772,12 +772,14 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                     recyclerLin.setVisibility(View.VISIBLE);
                     routesBeans.clear();
                     mPresenter.pGetroutes(null, itembean.getCustomerId(), itembean.getCustomer().getVisitorId());
+
                     KeyBoardUtils.closeKeybord(inputEt, this);
                 } else {
                     recyclerLin.setVisibility(View.GONE);
                 }
                 break;
             case R.id.recycler_chat://点击聊天记录列表消失
+
                 KeyBoardUtils.closeKeybord(inputEt, this);
                 break;
             case R.id.input_et://点击输入框
@@ -845,15 +847,16 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                 break;
             case R.id.line2://点击快捷回复
                 if (FastUtils.isFastClick()) {
-                    mDialogFragment = MDialogFragment.newInstance();
-                    mDialogFragment.setDimAmount(0.5f)     //调节灰色背景透明度[0-1]，默认0.5f
-                            .setGravity(Gravity.BOTTOM)     //可选，设置dialog的位置，默认居中，可通过系统Gravity的类的常量修改，例如Gravity.BOTTOM（底部），Gravity.Right（右边），Gravity.BOTTOM|Gravity.Right（右下）
-                            .setMargin(0)     //dialog左右两边到屏幕边缘的距离（单位：dp），默认0dp
-                            .setHeight(540)     //dialog高度（单位：dp），默认为WRAP_CONTENT
-                            .setOutCancel(true)     //点击dialog外是否可取消，默认true
-                            .setAnimStyle(R.style.dialog_animation)
-                            //设置dialog进入、退出的自定义动画；根据设置的Gravity，默认提供了左、上、右、下位置进入退出的动画
-                            .show(getSupportFragmentManager());
+                    startActivityForResult(QuickActivity.class, QUICKINTENT);
+//                    mDialogFragment = MDialogFragment.newInstance();
+//                    mDialogFragment.setDimAmount(0.5f)     //调节灰色背景透明度[0-1]，默认0.5f
+//                            .setGravity(Gravity.BOTTOM)     //可选，设置dialog的位置，默认居中，可通过系统Gravity的类的常量修改，例如Gravity.BOTTOM（底部），Gravity.Right（右边），Gravity.BOTTOM|Gravity.Right（右下）
+//                            .setMargin(0)     //dialog左右两边到屏幕边缘的距离（单位：dp），默认0dp
+//                               //dialog高度（单位：dp），默认为WRAP_CONTENT
+//                            .setOutCancel(true)     //点击dialog外是否可取消，默认true
+//                            .setAnimStyle(R.style.dialog_animation)
+//                            //设置dialog进入、退出的自定义动画；根据设置的Gravity，默认提供了左、上、右、下位置进入退出的动画
+//                            .show(getSupportFragmentManager());
                 }
                 break;
             case R.id.line3://发送评价邀请
@@ -1149,7 +1152,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
             if (chatList.get(i).getKey() != null) {
                 String key1 = chatList.get(i).getKey();
 
-                if (key1.equals(key) && chatList.get(i).getSendState()!=null && chatList.get(i).getSendState().equals(Constant._ISLOADING)) {
+                if (key1.equals(key) && chatList.get(i).getSendState() != null && chatList.get(i).getSendState().equals(Constant._ISLOADING)) {
                     chatList.get(i).setSendState(Constant._ISFAILED);
                     CacheData.updateCache(itembean.getId(), chatList.get(i));
                     MessageEntity.MessageBean messageBean = chatList.get(i);
@@ -1262,6 +1265,21 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
     }
 
     /**
+     * 快捷回复列表
+     *
+     * @param dataBean
+     */
+    @Override
+    public void showQuickList(QuickEntity.DataBean dataBean) {
+        List<QuickEntity.DataBean.ListBean> quickelistall = LocalDataSource.getQUICKELISTALL();
+        if (!NullUtils.isEmptyList(dataBean.getList())) {
+            quickelistall.addAll(dataBean.getList());
+            LocalDataSource.setQUICKELISTALL(quickelistall);
+            AppConfig.hasQuickList_A = false;
+        }
+    }
+
+    /**
      * 更新消息已读
      *
      * @param list
@@ -1287,11 +1305,11 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
             }
 
 
-             //同事的聊天只有该同事自己进入才发送已读通知
-             if (itembean.getServiceId().equals(BaseApplication.getUserBean().getId())) {
-                    itembean.setUnreadNum(0);
-                    mPresenter.pSendRead(itembean.getId(), itembean.getCustomerId(), mids, userBean.getEntId());
-             }
+            //同事的聊天只有该同事自己进入才发送已读通知
+            if (itembean.getServiceId().equals(BaseApplication.getUserBean().getId())) {
+                itembean.setUnreadNum(0);
+                mPresenter.pSendRead(itembean.getId(), itembean.getCustomerId(), mids, userBean.getEntId());
+            }
 
         }
     }
@@ -1407,7 +1425,8 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                 }
                 break;
             case MESSAGE_INPUTING:
-                if (userBean.getPersonality()!=null &&!userBean.getPersonality().isInputing())return;
+                if (userBean.getPersonality() != null && !userBean.getPersonality().isInputing())
+                    return;
                 //等第一数据加载完成再添加头部避免首次就加载历史聊天记录，触发UpFetch
                 if (messages.getDialogId() != null && messages.getDialogId().equals(itembean.getId())) {
 
@@ -1619,6 +1638,14 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                //快捷回复
+                case QUICKINTENT:
+                    String quicklist = data.getStringExtra("QUICKLIST");
+                    if (quicklist != null) {
+                        QuickEntity.DataBean.ListBean listBean = JsonParseUtils.parseToObject(quicklist, QuickEntity.DataBean.ListBean.class);
+                        toSendMsgForFragment(listBean);
+                    }
+                    break;
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择结果回调
                     List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
@@ -1740,10 +1767,11 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
 
     @Override
     public void toSendMsgForFragment(QuickEntity.DataBean.ListBean listBean) {
-        mDialogFragment.dismiss();
+        if (mDialogFragment != null) mDialogFragment.dismiss();
         if (AppConfig.getConfigEntity().isAddInput() && listBean.getType().equals("text")) {
             inputEt.setText(listBean.getContent());
         } else {
+            mPresenter.pQuickUse(listBean.getId());
             sendMsg(listBean.getType(), listBean.getContent(), true);
         }
     }
@@ -1791,7 +1819,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
     private void setMsgCount() {
         int unReadCount = AppConfig.unReadCount;
         int unreadNum = itembean.getUnreadNum();
-        if (unreadNum!=0){
+        if (unreadNum != 0) {
             unReadCount = unReadCount - unreadNum;
         }
         if (unReadCount == 0) {
@@ -1840,7 +1868,6 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
     public void dismissDialog() {
         if (mDialogFragment != null) mDialogFragment.dismiss();
     }
-
 
 }
 

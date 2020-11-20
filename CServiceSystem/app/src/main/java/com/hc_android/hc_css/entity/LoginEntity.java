@@ -1,8 +1,9 @@
 package com.hc_android.hc_css.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class LoginEntity {
+public class LoginEntity implements Serializable{
 
 
     /**
@@ -59,7 +60,7 @@ public class LoginEntity {
         this.region = region;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable{
         /**
          * _suc : 1
          * hash : db499bbe3777b499e3f1616b2b54e3cf
@@ -124,7 +125,7 @@ public class LoginEntity {
             this.validity = validity;
         }
 
-        public static class InfoBean {
+        public static class InfoBean implements Serializable {
             /**
              * id : 5d8f2c3058a74e5059143765
              * name : 管理局
@@ -179,7 +180,15 @@ public class LoginEntity {
             private PersonalityBean personality;
             private WechatBean wechat;
             private String socketId;//电脑在线时返回
+            private ScreenBean screen;
 
+            public ScreenBean getScreen() {
+                return screen;
+            }
+
+            public void setScreen(ScreenBean screen) {
+                this.screen = screen;
+            }
 
             public String getEmail() {
                 return email;
@@ -389,7 +398,7 @@ public class LoginEntity {
                 this.wechat = wechat;
             }
 
-            public static class AutoreplyBean {
+            public static class AutoreplyBean implements Serializable{
                 /**
                  * welcome : {"state":false,"content":"很高兴为您服务，有什么可以为您效劳的吗？","type":"text"}
                  */
@@ -404,7 +413,7 @@ public class LoginEntity {
                     this.welcome = welcome;
                 }
 
-                public static class WelcomeBean {
+                public static class WelcomeBean implements Serializable{
                     /**
                      * state : false
                      * content : 很高兴为您服务，有什么可以为您效劳的吗？
@@ -441,7 +450,7 @@ public class LoginEntity {
                 }
             }
 
-            public static class CompanyBean {
+            public static class CompanyBean implements Serializable{
                 String edition;
                 RealNameAuthBean realNameAuth;
                 MsgUndoBean msgUndo;
@@ -479,7 +488,7 @@ public class LoginEntity {
                     this.edition = edition;
                 }
 
-                public static class ChannelBean {
+                public static class ChannelBean implements Serializable{
                     /**
                      * state : false
                      */
@@ -495,7 +504,7 @@ public class LoginEntity {
                     }
                 }
 
-                public static class EvaluateBean {
+                public static class EvaluateBean implements Serializable{
                     /**
                      * replyContent : 感谢您的评价
                      * reply : false
@@ -561,10 +570,10 @@ public class LoginEntity {
                     }
                 }
 
-                public static class CouponBean {
+                public static class CouponBean implements Serializable{
                 }
 
-                public static class MsgUndoBean{
+                public static class MsgUndoBean implements Serializable{
                     private boolean state;
 
                     public boolean isState() {
@@ -575,7 +584,7 @@ public class LoginEntity {
                         this.state = state;
                     }
                 }
-                public static class RealNameAuthBean {
+                public static class RealNameAuthBean implements Serializable{
 
                     /**
                      * authId : 497f37e1fb11eecd74f32ea01785420d
@@ -653,7 +662,7 @@ public class LoginEntity {
                         this.state = state;
                     }
 
-                    public static class BusinessBean {
+                    public static class BusinessBean implements Serializable {
                         /**
                          * capital : 壹佰万元人民币
                          * credit : 91610138397119703K
@@ -769,7 +778,7 @@ public class LoginEntity {
                         }
                     }
 
-                    public static class BankNumBean {
+                    public static class BankNumBean implements Serializable{
                         /**
                          * bankphone : 15111014495
                          * bankcardname : 1259
@@ -815,7 +824,7 @@ public class LoginEntity {
                         }
                     }
 
-                    public static class RemittanceBean {
+                    public static class RemittanceBean implements Serializable{
                         /**
                          * state : checked
                          * money : 0.91
@@ -823,6 +832,9 @@ public class LoginEntity {
 
                         private String state;
                         private String money;
+
+                        public RemittanceBean() {
+                        }
 
                         public RemittanceBean(String state) {
                             this.state = state;
@@ -846,7 +858,7 @@ public class LoginEntity {
                     }
                 }
 
-                public static class WorktimeBean {
+                public static class WorktimeBean implements Serializable{
 
 
                     /**
@@ -873,7 +885,7 @@ public class LoginEntity {
                         this.list = list;
                     }
 
-                    public static class ListBean {
+                    public static class ListBean implements Serializable{
                         /**
                          * serviceList : ["5f44bc5c1fc1be28a4a0496b"]
                          * timeList : [{"end":"23:00","start":"10:12"}]
@@ -918,7 +930,7 @@ public class LoginEntity {
                             this.weekList = weekList;
                         }
 
-                        public static class TimeListBean {
+                        public static class TimeListBean implements Serializable{
                             /**
                              * end : 23:00
                              * start : 10:12
@@ -947,10 +959,10 @@ public class LoginEntity {
                 }
             }
 
-            public static class ViewConcealmentBean {
+            public static class ViewConcealmentBean implements Serializable{
             }
 
-            public static class AppNoticeBean {
+            public static class AppNoticeBean implements Serializable{
                 /**
                  * push : true
                  * sound : true
@@ -986,7 +998,7 @@ public class LoginEntity {
                 }
             }
 
-            public static class SystemNoticeBean {
+            public static class SystemNoticeBean implements Serializable{
                 /**
                  * state : true
                  */
@@ -1002,7 +1014,7 @@ public class LoginEntity {
                 }
             }
 
-            public static class AuthorityBean {
+            public static class AuthorityBean implements Serializable{
                 /**
                  * assist : true
                  */
@@ -1018,7 +1030,7 @@ public class LoginEntity {
                 }
             }
 
-            public static class NoticeBean {
+            public static class NoticeBean implements Serializable{
                 /**
                  * email : false
                  * wechat : true
@@ -1073,7 +1085,7 @@ public class LoginEntity {
                     this.sound = sound;
                 }
 
-                public static class RangeBean {
+                public static class RangeBean implements Serializable{
                     /**
                      * newDialog : true
                      * newMessage : true
@@ -1120,7 +1132,7 @@ public class LoginEntity {
                 }
             }
 
-            public static class PersonalityBean {
+            public static class PersonalityBean implements Serializable{
                 /**
                  * activeHide : false
                  * chatListType : fold
@@ -1205,7 +1217,7 @@ public class LoginEntity {
                 }
             }
 
-            public static class WechatBean {
+            public static class WechatBean implements Serializable{
                 /**
                  * mpOpenId : opiPbwwE4FK3HR7G8kn7EG3-BwdE
                  * unionid : o6UNQ0gKJIAH_dTdqM0K-Pc8sxFU
@@ -1288,6 +1300,47 @@ public class LoginEntity {
 
                 public void setOpenid(String openid) {
                     this.openid = openid;
+                }
+            }
+
+            public static class ScreenBean implements Serializable{
+
+
+                public ScreenBean() {
+                }
+
+                private boolean open;
+                private String mode;
+                private String state;
+
+                public ScreenBean(boolean open, String mode, String state) {
+                    this.open = open;
+                    this.mode = mode;
+                    this.state = state;
+                }
+
+                public boolean isOpen() {
+                    return open;
+                }
+
+                public void setOpen(boolean open) {
+                    this.open = open;
+                }
+
+                public String getMode() {
+                    return mode;
+                }
+
+                public void setMode(String mode) {
+                    this.mode = mode;
+                }
+
+                public String getState() {
+                    return state;
+                }
+
+                public void setState(String state) {
+                    this.state = state;
                 }
             }
         }

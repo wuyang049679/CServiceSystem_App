@@ -1,5 +1,6 @@
 package com.hc_android.hc_css.ui.activity;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,6 +24,7 @@ import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
 import com.hc_android.hc_css.entity.TagEntity;
 
+import com.hc_android.hc_css.entity.UserEntity;
 import com.hc_android.hc_css.presenter.MainActivityPresenter;
 import com.hc_android.hc_css.service.PushSendService;
 import com.hc_android.hc_css.ui.fragment.ChatListFragment;
@@ -163,15 +165,22 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
 
     @Override
     public void showDataError(String errorMessage) {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        String currentClassName = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        if (!currentClassName.contains("LoginActivity")) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
 //        overridePendingTransition(R.anim.activity_open,R.anim.activity_close);
-        finish();
+            finish();
+        }
     }
 
     @Override
     public void showDataSuccess(LoginEntity.DataBean datas) {
-
+        UserEntity userEntity = new UserEntity();
+        userEntity.setHash(datas.getHash());
+        userEntity.setUserbean(datas.getInfo());
+        BaseApplication.setUserEntity(userEntity);
     }
 
 

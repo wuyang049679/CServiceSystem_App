@@ -1,9 +1,11 @@
 package com.hc_android.hc_css.entity;
 
+import java.io.Serializable;
+
 /**
  * 全局用户信息保存
  */
-public class UserEntity {
+public class UserEntity implements Serializable {
 
 
     private   String hash;

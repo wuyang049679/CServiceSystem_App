@@ -2,6 +2,7 @@ package com.hc_android.hc_css.utils;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
@@ -71,6 +72,7 @@ public class JsonParseUtils {
             T t = JSON.parseObject(dataStr, cls);
             return t;
         }catch (Exception e){
+            Log.i("wy_activity","parseToObject:"+e);
             return null;
         }
     }

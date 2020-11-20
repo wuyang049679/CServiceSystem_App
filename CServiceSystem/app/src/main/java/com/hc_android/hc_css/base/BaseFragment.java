@@ -143,7 +143,7 @@ public abstract class BaseFragment<T extends BasePresenterIm, V> extends Fragmen
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(priority = 1,threadMode = ThreadMode.MAIN)
     public void onSocketEvent(MessageEvent msg) {
 
     }

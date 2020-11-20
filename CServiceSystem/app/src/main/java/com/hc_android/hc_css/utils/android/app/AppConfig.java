@@ -54,6 +54,7 @@ public class AppConfig {
      */
     public static boolean hasQuickList_M = true;//个人的
     public static boolean hasQuickList_T = true;//团队的
+    public static boolean hasQuickList_A = true;//所有的
 
 
     /**

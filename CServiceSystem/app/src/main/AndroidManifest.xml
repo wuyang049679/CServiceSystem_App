@@ -61,7 +61,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.activity.VerActivity"></activity>
+        <activity android:name=".ui.activity.QuickActivity" />
+        <activity android:name=".ui.activity.VerActivity" />
         <activity android:name=".ui.activity.RegisterActivity" />
         <activity android:name=".ui.activity.BindActivity" />
         <activity android:name=".ui.activity.realauth.RemStateActivity" />

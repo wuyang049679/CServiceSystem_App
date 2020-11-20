@@ -2,6 +2,7 @@ package com.hc_android.hc_css.contract;
 
 import com.hc_android.hc_css.base.BaseEntity;
 import com.hc_android.hc_css.base.BaseView;
+import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.MessageDialogEntity;
 import com.hc_android.hc_css.entity.ReceptionEntity;
 import com.hc_android.hc_css.entity.TeamEntity;
@@ -14,7 +15,7 @@ public interface ChatListFragmentContract {
         Observable<BaseEntity<MessageDialogEntity.DataBean>> getDialog(String dialogId);
         Observable<BaseEntity<ReceptionEntity.DataBean>> endDialog(String idList,String offEnd,String autoEnd);
         Observable<BaseEntity<TeamEntity.DataBean>> getTeamList();
-
+        Observable<BaseEntity<LoginEntity.DataBean>> checkLogin(String hash);
     }
 
     interface View extends BaseView<MessageDialogEntity.DataBean> {
@@ -22,6 +23,7 @@ public interface ChatListFragmentContract {
         void  showNewDialog(MessageDialogEntity.DataBean messageEntity);
         void  showEndDialog(ReceptionEntity.DataBean messageEntity);
         void  showTeamList(TeamEntity.DataBean dataBean);
+        void  showCheckHash(LoginEntity.DataBean dataBean);
     }
 
     interface Presenter  {
@@ -29,5 +31,6 @@ public interface ChatListFragmentContract {
         void pGetDialog(String dialogId);
         void pEndDialog(String idList,String offEnd,String autoEnd);
         void pGetTeamList();
+        void pCheckLogin(String hash);
     }
 }

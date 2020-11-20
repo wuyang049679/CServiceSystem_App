@@ -136,6 +136,12 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
     Switch switchDisturb;
     @BindView(R.id.lin_disturb)
     RelativeLayout linDisturb;
+    @BindView(R.id.switch_top)
+    Switch switchTop;
+    @BindView(R.id.lin_top)
+    RelativeLayout linTop;
+    @BindView(R.id.tvTop)
+    TextView tvTop;
 
     private TextView clickText;
     private MessageDialogEntity.DataBean.ListBean itembean;
@@ -258,6 +264,20 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mPresenter.pDisturb(itembean.getId(), String.valueOf(isChecked));
+                itembean.setDisturb(isChecked);
+                LocalDataSource.setITEMBEAN(itembean);
+            }
+        });
+        //消息置顶
+        switchTop.setChecked(itembean.isTop());
+        tvTop.setText(itembean.isTop()? "取消置顶": "消息置顶");
+        switchTop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mPresenter.pTop(itembean.getId(), isChecked);
+                tvTop.setText(isChecked ? "取消置顶": "消息置顶");
+                itembean.setTop(isChecked);
+                LocalDataSource.setITEMBEAN(itembean);
             }
         });
     }
@@ -680,6 +700,11 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
 
     @Override
     public void disturbSuccess(IneValuateEntity.DataBean dataBean) {
+
+    }
+
+    @Override
+    public void topSuccess(IneValuateEntity.DataBean dataBean) {
 
     }
 

@@ -7,9 +7,67 @@
     android:orientation="vertical"
     tools:context=".ui.activity.NotReceivedActivity">
 
-    <include
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/not_received_include"
-        layout="@layout/public_common_title"/>
+        android:background="@color/theme_app"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:padding="9dp"
+            android:id="@+id/backImg"
+            android:src="@mipmap/back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="42dp"
+            android:layout_height="50dp" />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/msg_count_tv"
+            app:layout_constraintCircle="@+id/backImg"
+            app:layout_constraintCircleAngle="45"
+            app:layout_constraintCircleRadius="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:minWidth="18dp"
+            android:background="@drawable/oval_red"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            />
+        <TextView
+            android:id="@+id/title_act_chat"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="未接待"
+            android:textColor="@color/white"
+            android:layout_marginLeft="6dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/backImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:padding="@dimen/window_margin"
+            android:id="@+id/btn_choose"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/more_e"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     <LinearLayout
         android:id="@+id/inject_target"
         android:layout_width="match_parent"

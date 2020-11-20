@@ -137,4 +137,24 @@ public class ChatSetActivityPresenter extends BasePresenterIm<ChatSetActivityCon
             }
         });
     }
+
+    @Override
+    public void pTop(String dialogId, boolean top) {
+        chatSetActivityModel.top(dialogId,top).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                mView.topSuccess(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
 }
