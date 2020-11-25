@@ -70,6 +70,15 @@ public class IneValuateEntity {
         private String text;
         private String state;
         private String txt;
+        private String realtimeId;
+
+        public String getRealtimeId() {
+            return realtimeId;
+        }
+
+        public void setRealtimeId(String realtimeId) {
+            this.realtimeId = realtimeId;
+        }
 
         public String getTxt() {
             return txt;

@@ -44,6 +44,7 @@ import com.hc_android.hc_css.entity.IneValuateEntity;
 import com.hc_android.hc_css.entity.LoginEntity;
 import com.hc_android.hc_css.entity.MessageDialogEntity;
 import com.hc_android.hc_css.entity.MessageEntity;
+import com.hc_android.hc_css.entity.MineEntity;
 import com.hc_android.hc_css.entity.QuickEntity;
 import com.hc_android.hc_css.entity.SendEntity;
 import com.hc_android.hc_css.entity.TokenEntity;
@@ -101,6 +102,7 @@ import butterknife.OnClick;
 
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static com.hc_android.hc_css.utils.Constant.EVENTBUS_NEWDIALOG_VISITOR;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_INPUTING;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_NEW;
 import static com.hc_android.hc_css.utils.Constant.MESSAGE_OFFLINE;
@@ -203,6 +205,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
     private static String INTENT_TYPE;
     private String currentServiceId;
     private final int QUICKINTENT = 10;
+    private String realtimeId;
 
     @Override
     protected void reloadActivity() {
@@ -535,9 +538,9 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
         if (itembean.getItemType() != 0 && itembean.getItemType() == Constant.NOTRECEIVED_ACT || (userBean.getState() != null && userBean.getState().equals("break"))) {
             inputLin.setVisibility(View.GONE);
         }
-        if (!NullUtils.isNull(INTENT_TYPE) && INTENT_TYPE.equals(Constant.HISTORYACT_)) {
-            inputLin.setVisibility(View.GONE);
-        }
+//        if (!NullUtils.isNull(INTENT_TYPE) && INTENT_TYPE.equals(Constant.HISTORYACT_)) {
+//            inputLin.setVisibility(View.GONE);
+//        }
         if (itembean.getItemType() != 0 && itembean.getItemType() == Constant.COLLEAGUE_ACT) {
             inputEt.setHint("协助 Ta");
         }
@@ -888,24 +891,35 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
 
         chatAdapter.addData(messageBean);
         skip = skip + 1;
-        CacheData.saveCache(itembean.getId(), messageBean);
+
 
         onViewBottom();
+        runTime(msgType, key, content, isQuick);
+        if (INTENT_TYPE!=null && INTENT_TYPE.equals(Constant.HISTORYACT_)){
+            if (itembean.getSource().equals("wechat") || itembean.getSource().equals("program")){
+                //微信历史对话重开
+                mPresenter.pPushwechat(key,itembean.getCustomerId(),itembean.getId(),itembean.getSource(),JsonParseUtils.parseToJson(messageBean),msgType,content, BaseApplication.getUserBean().getEntId()+"");
+            }else {
+                //web,link对话重开
+                messageBean.setCustomerId(itembean.getCustomerId());
+                mPresenter.pReopen(key,itembean.getCustomerId(),itembean.getId(),itembean.getSource(),JsonParseUtils.parseToJson(messageBean));
+            }
+            return;
+        }else {
+            CacheData.saveCache(itembean.getId(), messageBean);
+        }
         switch (msgType) {
             case _TEXT:
-                runTime(msgType, key, content, isQuick);
                 if (!isQuick) {
                     mPresenter.pSendMsg(itembean.getId(), currentServiceId, itembean.getCustomerId(), BaseApplication.getUserEntity().getSocketId(), msgType, content, key, userBean.getEntId());
                 }
                 break;
             case _IMAGE:
-                runTime(msgType, key, content, isQuick);
                 if (!isQuick) {
                     mPresenter.pGetToken(itembean, messageBean, "msgimg");
                 }
                 break;
             case _VIDEO:
-                runTime(msgType, key, content, isQuick);
 
                 if (!isQuick) {
                     try {
@@ -917,42 +931,39 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
                 }
                 break;
             case _VOICE:
-                runTime(msgType, key, content, isQuick);
                 if (!isQuick) { //如果不是快捷回复就上传文件操作
                     mPresenter.pGetToken(itembean, messageBean, "voice");
                 }
                 break;
             case _CARD:
-                runTime(msgType, key, content, isQuick);
                 if (!isQuick) { //如果不是快捷回复就上传文件操作
                     mPresenter.pGetToken(itembean, messageBean, _CARD);
                 }
                 break;
             case _MENU:
-                runTime(msgType, key, content, isQuick);
                 if (!isQuick) { //如果不是快捷回复就上传文件操作
                     mPresenter.pGetToken(itembean, messageBean, _MENU);
                 }
                 break;
             case _HTML:
-                runTime(msgType, key, content, isQuick);
+
                 if (!isQuick) { //如果不是快捷回复就上传文件操作
                     mPresenter.pGetToken(itembean, messageBean, _HTML);
                 }
                 break;
             case _FORM:
-                runTime(msgType, key, content, isQuick);
+
                 if (!isQuick) { //如果不是快捷回复就上传文件操作
                     mPresenter.pGetToken(itembean, messageBean, _FORM);
                 }
                 break;
             case _FILE:
-                runTime(msgType, key, content, isQuick);
                 if (!isQuick) { //如果不是快捷回复就上传文件操作
                     mPresenter.pGetToken(itembean, messageBean, _FILE);
                 }
                 break;
         }
+
 
     }
 
@@ -1090,6 +1101,22 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
             skip = -1;
         }
         sendReadMsg(list);
+        //判断是否需要补发历史对话重开的消息
+        if(LocalDataSource.getMessageBean() != null){
+
+            String messageBean = LocalDataSource.getMessageBean();
+            MessageEntity.MessageBean messageBean1 = JsonParseUtils.parseToObject(messageBean, MessageEntity.MessageBean.class);
+            if (messageBean1.getCustomerId()!=null && messageBean1.getCustomerId().equals(itembean.getCustomerId())){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendMsg(messageBean1.getType(),messageBean1.getContents(),false);
+
+                    }
+                },1000);
+                LocalDataSource.setMessageBean(null);
+            }
+        }
     }
 
     /**
@@ -1276,6 +1303,52 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
             quickelistall.addAll(dataBean.getList());
             LocalDataSource.setQUICKELISTALL(quickelistall);
             AppConfig.hasQuickList_A = false;
+        }
+    }
+
+    @Override
+    public void showReOpen(IneValuateEntity.DataBean dataBean) {
+
+      if (dataBean.getRealtimeId() !=null){
+            realtimeId = dataBean.getRealtimeId();
+            mPresenter.pRealtimeActive(realtimeId);
+       }else {
+          MessageEntity message = new MessageEntity();
+          message.setAct(EVENTBUS_NEWDIALOG_VISITOR);//通知跳转聊天页面
+          message.setOwn(true);
+          MessageEvent event = new MessageEvent(MessageEventType.EventMessage, message);
+          EventBus.getDefault().postSticky(event);
+          Intent intent = new Intent(this, MainActivity.class);
+          startActivity(intent);
+          finish();
+      }
+
+
+    }
+
+    @Override
+    public void showActive(IneValuateEntity.DataBean dataBean) {
+        int suc = dataBean.get_suc();
+        if (suc == 0) {
+            showShortToast("该访客已离开，无法发起对话");
+        }
+        if (suc == 1) {
+            MessageEntity message = new MessageEntity();
+            message.setAct(EVENTBUS_NEWDIALOG_VISITOR);//通知跳转聊天页面
+            message.setRealtimeId(realtimeId);
+            MessageEvent event = new MessageEvent(MessageEventType.EventMessage, message);
+            EventBus.getDefault().postSticky(event);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    public void showPuhWechat(IneValuateEntity.DataBean dataBean) {
+
+        if (dataBean.get_suc() == 1){
+
         }
     }
 
@@ -1549,9 +1622,15 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
     @Override
     public void onBackPressed() {
         if (GSYVideoManager.backFromWindowFull(this)) {
+            super.onBackPressed();
+            return;
+        }
+        if (INTENT_TYPE !=null && INTENT_TYPE.equals(Constant.HISTORYACT_)){
+            super.onBackPressed();
             return;
         }
         if (!NullUtils.isNull(inputEt.getText().toString().trim())) {//草稿刷新
+
             SharedPreferencesUtils.getInstance().setParam(this, itembean.getId(), inputEt.getText().toString());
             MessageEntity message = new MessageEntity();
             //通知对话列表刷新
@@ -1822,7 +1901,7 @@ public class ChatActivity extends BaseActivity<ChatActivityPresenter, CustomPath
         if (unreadNum != 0) {
             unReadCount = unReadCount - unreadNum;
         }
-        if (unReadCount == 0) {
+        if (unReadCount <= 0) {
             msgCountTv.setVisibility(View.GONE);
         } else {
             msgCountTv.setVisibility(View.VISIBLE);

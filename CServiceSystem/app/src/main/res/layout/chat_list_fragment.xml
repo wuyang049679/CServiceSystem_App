@@ -50,7 +50,7 @@
                 android:padding="@dimen/window_margin"
                 android:id="@+id/btn_choose"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:src="@mipmap/more_e"
                 android:textColor="@color/white"
              />

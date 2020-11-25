@@ -393,4 +393,14 @@ public interface Apistore {
      */
     @GET("/dialog/top")
     Observable<BaseEntity<IneValuateEntity.DataBean>> top(@QueryMap HashMap<String, Object> map);
+    /**
+     * 历史对话重开
+     */
+    @GET("/dialog/reopen")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> reopen(@QueryMap HashMap<String, String> map);
+    /**
+     * 微信小程序历史对话重开
+     */
+    @GET("/message/pushwechat")
+    Observable<BaseEntity<IneValuateEntity.DataBean>> pushwechat(@QueryMap HashMap<String, String> map);
 }

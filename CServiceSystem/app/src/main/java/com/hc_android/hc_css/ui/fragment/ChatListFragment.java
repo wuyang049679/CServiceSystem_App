@@ -1,6 +1,7 @@
 package com.hc_android.hc_css.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -18,14 +19,21 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -159,6 +167,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     private String serviceId;
     private String realtimeId;
     private String needIntentId;//需要跳转的Id
+    private boolean isOwn = false;//历史对话重开操作
     private static final int NOTIFI_ALL = 1;//全局刷新
     private static final int NOTIFI_ITEM = 2;//单个刷新
     private static final int NOTIFI_DEL = 3;//单个删除
@@ -169,6 +178,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
     private static String SCREENSTATE = "allState";//筛选类型接入状态
     private boolean hasScreen = false; //是否需要筛选
     private CustomDialog customDialog;
+    private PopupWindow popupWindow;
 
     public ChatListFragment() {
 
@@ -382,7 +392,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             @Override
             public View getView(FlowLayout parent, int position, String s) {
                 TextView tv = new TextView(getContext());
-                tv.setPadding(25, 10, 25, 10);
+                tv.setPadding(36, 10, 36, 10);
                 tv.setText(s);
                 tv.setTextSize(12);
                 tv.setTextColor(getResources().getColor(R.color.black_666));
@@ -572,14 +582,13 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
                 if (list.size() == limit) {
 
-                    if (limit == 20) {
+                    if (limit != 15) {
                         //第一次请求20条刷新
 //                        refreshUI(listBeans, null);
                         //第二次请求将限制条数扩大到150
                         limit = 150;
                         mPresenter.pShowMessageDialog(limit, skip);
                     }
-
                 } else {
                     if (userEntity.getUserbean().getState().equals("on")) {
                         conmonTitleTextView.setText(getResources().getString(R.string.dialog_list));
@@ -722,6 +731,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         LocalDataSource.setITEMBEAN(item);
                         if (hasPermission()) {
                             startActivity(ChatActivity.class);
+                            needIntentId = null;
                         }
                     }
                 }
@@ -1189,6 +1199,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             //访客页面主动对话推送
             case EVENTBUS_NEWDIALOG_VISITOR:
                 realtimeId = message.getRealtimeId();
+                isOwn = message.isOwn();
                 break;
 
             //全局状态变化
@@ -1297,11 +1308,22 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             //结束对话后退出房间
             case MESSAGE_LEAVE:
                 //移除数据
-                boolean isOwn = true;//这里判断是否是自己手动结束，如果是自己手动结束就不做刷新处理
+                boolean isOwns = true;//这里判断是否是自己手动结束，如果是自己手动结束就不做刷新处理
                 for (Iterator<MessageDialogEntity.DataBean.ListBean> it = listBeans.iterator(); it.hasNext(); ) {
                     if (it.next().getId().equals(message.getDialogId())) {
                         it.remove();
-                        isOwn = false;
+                        isOwns = false;
+                    }
+                }
+                //需要跟新listScreenUIBeans
+                for (int i = 0; i < listScreenUIBeans.size(); i++) {
+                    if (listScreenUIBeans.get(i).getServiceId() != null && listScreenUIBeans.get(i).getServiceId().equals(serviceId) && listScreenUIBeans.get(i).getState() != null && listScreenUIBeans.get(i).getState().equals("active")) {
+                        if (listScreenUIBeans.get(i).getId().equals(message.getDialogId())) {
+                            listScreenUIBeans.remove(i);
+                            notifisychronze(NOTIFI_DEL, i);
+                            checkDialogNum(null);
+                            return;
+                        }
                     }
                 }
                 //判断如果是自己已接待的列表直接移除单个
@@ -1316,18 +1338,8 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         }
                     }
                 }
-                //需要跟新listScreenUIBeans
-                for (int i = 0; i < listScreenUIBeans.size(); i++) {
-                    if (listScreenUIBeans.get(i).getServiceId() != null && listScreenUIBeans.get(i).getServiceId().equals(serviceId) && listScreenUIBeans.get(i).getState() != null && listScreenUIBeans.get(i).getState().equals("active")) {
-                        if (listScreenUIBeans.get(i).getId().equals(message.getDialogId())) {
-                            listScreenUIBeans.remove(i);
-                            notifisychronze(NOTIFI_DEL, i);
-                            checkDialogNum(null);
-                            return;
-                        }
-                    }
-                }
-                if (!isOwn) {
+
+                if (!isOwns) {
                     refreshUI(listBeans, null);
                 }
                 break;
@@ -1392,13 +1404,16 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
             //新对话加入
             case MESSAGE_NEWDIALOG:
                 //判断新对话是否是访客列表主动对话来的
-                if (message.getRealtimeId() != null && message.getRealtimeId().equals(realtimeId)) {
+                if (isOwn || message.isForced() || (message.getRealtimeId() != null && message.getRealtimeId().equals(realtimeId))) {
                     needIntentId = message.getDialogId();
+                    isOwn = false;//状态重置
                 }
                 EventServiceImpl.getInstance().joinRoom(message.getCustomerId(), new Ack() {
                     @Override
                     public void call(Object... args) {//先加入房间等服务器回执再请求对话数据
-                        mPresenter.pGetDialog(message.getDialogId());
+
+                         mPresenter.pGetDialog(message.getDialogId());
+
                         for (int i = 0; i < args.length; i++) {
                             Log.i(TAG, "ACK: onNewDialog" + args[i]);
                         }
@@ -1739,11 +1754,60 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
 
         switch (view.getId()) {
             case R.id.btn_choose:
-                showDiaLog();
+//                showDiaLog();
+
+                showPopupWindow();
                 break;
 
         }
     }
+
+    private void showPopupWindow() {
+        if (popupWindow == null) {
+            View view = LayoutInflater.from(getHcActivity()).inflate(R.layout.popup_window_meun, null, false);
+            popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+            popupWindow.setOnDismissListener(() -> {
+                WindowManager.LayoutParams lp1 = getActivity().getWindow().getAttributes();
+                lp1.alpha = 1.0f;// 0.0-1.0
+                getActivity().getWindow().setAttributes(lp1);
+            });
+
+            view.findViewById(R.id.screen_lin).setOnClickListener(v -> {
+                int visibility = selectLin.getVisibility();
+                if (visibility == View.VISIBLE) {
+                    selectLin.setVisibility(View.GONE);
+                    hasScreen = false;
+                    SCREENMODE = "all";//筛选类型接入方式
+                    SCREENSTATE = "allState";//筛选类型接入状态
+                    flowLayoutLink.getAdapter().setSelectedList(0);
+                    flowLayoutState.getAdapter().setSelectedList(0);
+                    saveScreen(false);
+                } else {
+                    selectLin.setVisibility(View.VISIBLE);
+                    hasScreen = true;
+                    saveScreen(true);
+                }
+                refreshUI(listBeans, null);
+                popupWindow.dismiss();
+            });
+            view.findViewById(R.id.end_all).setOnClickListener(v -> {
+                chooseDialog();
+                popupWindow.dismiss();
+            });
+        }
+        TextView tv = popupWindow.getContentView().findViewById(R.id.screen_tv);
+        if (hasScreen){
+            tv.setText("隐藏筛选");
+        }else {
+            tv.setText("对话筛选");
+        }
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = 0.5f;// 0.0-1.0
+        getActivity().getWindow().setAttributes(lp);
+        popupWindow.showAsDropDown(btnChoose);
+    }
+
 
     /**
      * 结束所有对话
@@ -1887,7 +1951,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
      */
     private void chooseDialog() {
 
-        ChoiceDialog choiceDialog = new ChoiceDialog(getHcActivity(), "确定结束您的全部的对话？"+"\n"+"不包括未接待、同事的对话", 0);
+        ChoiceDialog choiceDialog = new ChoiceDialog(getHcActivity(), "确定结束全部的对话？", 0);
         choiceDialog.setCancelCallBack(new ChoiceDialog.ChoiceCancelCallBack() {
             @Override
             public void cancelBack() {

@@ -144,5 +144,42 @@ public class ChatActivityModel implements ChatActivityContract.Model {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> reopen(String key,String customerId, String historyId, String source, String message) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put("customerId",customerId);
+        hashMap.put("historyId",historyId);
+        hashMap.put("source",source);
+        hashMap.put("message",message);
+        return ApiManager.getApistore().reopen(hashMap).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> realtimeActive(String realtimeId) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.SERVICEID,BaseApplication.getUserBean().getId());
+        if (realtimeId!=null) {
+            hashMap.put("realtimeId",realtimeId);
+        }
+
+        return ApiManager.getApistore().realtimeActive(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<BaseEntity<IneValuateEntity.DataBean>> pushwechat(String key,String customerId, String historyId, String source, String message,String type, String contents, String entId) {
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put(Constant.REQUEST_TYPE,Constant.STANDARD);
+        hashMap.put(Constant.KEY_HASH, BaseApplication.getUserEntity().getHash());
+        hashMap.put("customerId",customerId);
+        hashMap.put("type",type);
+        hashMap.put("contents",contents);
+        hashMap.put("entId",entId);
+        return ApiManager.getApistore().pushwechat(hashMap).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
 
 }

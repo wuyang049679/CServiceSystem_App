@@ -195,8 +195,8 @@ public class EventServiceImpl implements EventService {
 
             if (mSocket != null) mSocket.emit("join", roomId);
             roomList.add(roomId);
-        Log.i(TAG, "roomId: "+roomId);
-        if (mSocket!=null)Log.i(TAG, "mSocket: "+mSocket.connected());
+//        Log.i(TAG, "roomId: "+roomId);
+//        if (mSocket!=null)Log.i(TAG, "mSocket: "+mSocket.connected());
 //        }
     }
     /**
@@ -207,11 +207,11 @@ public class EventServiceImpl implements EventService {
     public void joinRoom(String roomId,Ack ack) {
 
         if (roomList==null)roomList=new ArrayList<>();
-        if (!roomList.contains(roomId)) {//已经加入过了就不再重新加入
+//        if (!roomList.contains(roomId)) {//已经加入过了就不再重新加入
             if (mSocket != null) mSocket.emit("join", roomId,ack);
             roomList.add(roomId);
 
-        }
+//        }
 //        Log.i(TAG, "roomId: "+roomId);
 //        mSocket.emit("keepLink", new Ack() {
 //            @Override

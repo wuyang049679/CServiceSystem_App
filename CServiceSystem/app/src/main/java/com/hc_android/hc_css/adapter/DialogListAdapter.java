@@ -67,6 +67,12 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
             setImageView(item, helper);
             helper.addOnClickListener(R.id.close_btn);
             helper.addOnClickListener(R.id.lin_constrain);
+            if (item.isTop()){
+                helper.getView(R.id.lin_constrain).setBackground(mContext.getResources().getDrawable(R.drawable.item_down_bg_top));
+            }else {
+                helper.getView(R.id.lin_constrain).setBackground(mContext.getResources().getDrawable(R.drawable.item_down_bg));
+            }
+
         }
         if (item.getItemType()==Constant.NOTRECEIVED_ACT) {//未接待对话列表
             helper.addOnClickListener(R.id.close_btn);
@@ -217,13 +223,19 @@ public class DialogListAdapter extends BaseMultiItemQuickAdapter<MessageDialogEn
                     for (TagEntity.DataBean.ListBean listBean : taglist) {
                         if (listBean.getName().equals(o)){
                             if (listBean.getColor()!=null) {
-                                double v = ColorUtils.calculateLuminance(Color.parseColor(listBean.getColor()));
-                                if (v>=0.5){
-                                tv.setTextColor(mContext.getResources().getColor(R.color.black));
-                                }else {
-                                tv.setTextColor(mContext.getResources().getColor(R.color.white));
+                                double v = 1;
+                                try {
+                                    v = ColorUtils.calculateLuminance(Color.parseColor(listBean.getColor()));
+                                    if (v>=0.5){
+                                        tv.setTextColor(mContext.getResources().getColor(R.color.black));
+                                    }else {
+                                        tv.setTextColor(mContext.getResources().getColor(R.color.white));
+                                    }
+                                    drawable.setColor(Color.parseColor(listBean.getColor()));
+                                }catch (Exception e){
+                                  Log.i("wy_activity",e.toString());
                                 }
-                                drawable.setColor(Color.parseColor(listBean.getColor()));
+
                             }
                         }
                     }

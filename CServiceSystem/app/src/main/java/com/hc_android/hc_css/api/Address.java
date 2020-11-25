@@ -7,7 +7,7 @@ package com.hc_android.hc_css.api;
 
 public class Address {
 
-    private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.TEST;
+    private static ServerEnvironmentEnum serverEnvironment = ServerEnvironmentEnum.ONLINE;
 
     /**
      * 推送服务器地址

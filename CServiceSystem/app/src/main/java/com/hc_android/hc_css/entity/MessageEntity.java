@@ -39,7 +39,24 @@ public class MessageEntity implements Serializable {
     private String title;
     private String body;
     private LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean worktime;
+    private boolean forced;
+    private boolean isOwn;
 
+    public boolean isOwn() {
+        return isOwn;
+    }
+
+    public void setOwn(boolean own) {
+        isOwn = own;
+    }
+
+    public boolean isForced() {
+        return forced;
+    }
+
+    public void setForced(boolean forced) {
+        this.forced = forced;
+    }
 
     public LoginEntity.DataBean.InfoBean.CompanyBean.WorktimeBean getWorktime() {
         return worktime;
@@ -288,7 +305,15 @@ public class MessageEntity implements Serializable {
         private MessageDialogEntity.DataBean.ListBean listBean;
         private String sendState;
         private boolean undo;
+        private String customerId;
 
+        public String getCustomerId() {
+            return customerId;
+        }
+
+        public void setCustomerId(String customerId) {
+            this.customerId = customerId;
+        }
 
         public boolean isUndo() {
             return undo;

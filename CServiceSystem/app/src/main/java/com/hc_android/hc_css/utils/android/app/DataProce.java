@@ -8,6 +8,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -608,13 +609,20 @@ public class DataProce {
                     for (TagEntity.DataBean.ListBean listBean : taglist) {
                         if (listBean.getName().equals(o)){
                             if (listBean.getColor()!=null) {
-                                double v = ColorUtils.calculateLuminance(Color.parseColor(listBean.getColor()));
-                                if (v>=0.5){
-                                    tv.setTextColor(mContext.getResources().getColor(R.color.black));
-                                }else {
-                                    tv.setTextColor(mContext.getResources().getColor(R.color.white));
+
+                                double v = 1;
+                                try {
+                                    v = ColorUtils.calculateLuminance(Color.parseColor(listBean.getColor()));
+                                    if (v>=0.5){
+                                        tv.setTextColor(mContext.getResources().getColor(R.color.black));
+                                    }else {
+                                        tv.setTextColor(mContext.getResources().getColor(R.color.white));
+                                    }
+                                    drawable.setColor(Color.parseColor(listBean.getColor()));
+                                }catch (Exception e){
+                                    Log.i("wy_activity",e.toString());
                                 }
-                                drawable.setColor(Color.parseColor(listBean.getColor()));
+
                             }
                         }
                     }

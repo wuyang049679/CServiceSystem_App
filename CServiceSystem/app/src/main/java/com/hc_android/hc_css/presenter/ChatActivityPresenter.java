@@ -3,6 +3,7 @@ package com.hc_android.hc_css.presenter;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import com.hc_android.hc_css.R;
 import com.hc_android.hc_css.base.BaseApplication;
 import com.hc_android.hc_css.base.BaseEntity;
 import com.hc_android.hc_css.base.BasePresenterIm;
@@ -28,6 +29,7 @@ import com.hc_android.hc_css.utils.android.image.UploadFileUtils;
 import com.hc_android.hc_css.utils.socket.MessageEvent;
 import com.hc_android.hc_css.utils.socket.MessageEventType;
 import com.hc_android.hc_css.utils.thread.RetryWithDelay;
+import com.hc_android.hc_css.wight.LocalDataSource;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -298,6 +300,7 @@ public class ChatActivityPresenter extends BasePresenterIm<ChatActivityContract.
             @Override
             protected void onSuccess(QuickEntity.DataBean dataBean) {
                 mView.showQuickList(dataBean);
+
             }
 
             @Override
@@ -329,4 +332,86 @@ public class ChatActivityPresenter extends BasePresenterIm<ChatActivityContract.
             }
         });
     }
+
+    @Override
+    public void pReopen(String key,String customerId, String historyId, String source, String message) {
+        chatActivityModel.reopen(key,customerId,historyId,source,message).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+
+                if (dataBean.get_suc()==1){
+                    if (mView!=null)mView.showReOpen(dataBean);
+                }
+                if (dataBean.get_suc() == 0 && dataBean.getRealtimeId()!=null){ //带访客id的走主动发起对话流程，需要自己补发消息
+                    LocalDataSource.setMessageBean(message);
+                    if (mView!=null)mView.showReOpen(dataBean);
+                }
+                if (dataBean.get_suc()==0){
+                    String txt = "该顾客正在对话，无法重开对话";
+                    mView.msgUnEnable(txt,key);
+                }
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+            addSubscription(d);
+            }
+        });
+    }
+
+    /**
+     * 主动对话
+     * @param realtimeId
+     */
+    @Override
+    public void pRealtimeActive(String realtimeId) {
+        chatActivityModel.realtimeActive(realtimeId).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                mView.showActive(dataBean);
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
+    @Override
+    public void pPushwechat(String key,String customerId, String historyId, String source, String message,String type, String contents, String entId) {
+        chatActivityModel.pushwechat(key, customerId, historyId, source, message, type, contents, entId).subscribe(new RxSubscribe<IneValuateEntity.DataBean>() {
+            @Override
+            protected void onSuccess(IneValuateEntity.DataBean dataBean) {
+                if (dataBean.get_suc()==0){
+                    String txt = "该顾客正在对话，无法重开对话";
+                    mView.msgUnEnable(txt,key);
+                }
+                if (dataBean.get_suc() == 1){
+                    pReopen(key, customerId, historyId, source, message);
+                }
+            }
+
+            @Override
+            protected void onFailed(int code, String msg) {
+                ToastUtils.showShort(msg);
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                addSubscription(d);
+            }
+        });
+    }
+
 }

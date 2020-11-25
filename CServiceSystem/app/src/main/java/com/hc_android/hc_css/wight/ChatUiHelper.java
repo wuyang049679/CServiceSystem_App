@@ -467,14 +467,14 @@ public class ChatUiHelper {
      * 输入自动匹配快捷回复
      */
     private void setListPopupWindow(){
+        List<QuickEntity.DataBean.ListBean> quickelistall = LocalDataSource.getQUICKELISTALL();
             if (autoCompleteAdapter == null) {
-                List<QuickEntity.DataBean.ListBean> quickelistall = LocalDataSource.getQUICKELISTALL();
                 if (!NullUtils.isEmptyList(quickelistall)) {
                     autoCompleteAdapter = new ChannelCompanyAdapter(quickelistall);
                     mEditText.setDropDownBackgroundDrawable(new BitmapDrawable());
                     mEditText.setAdapter(autoCompleteAdapter);
                     mEditText.setDropDownAnchor(R.id.input_lin);
-                    mEditText.showDropDown();
+//                    mEditText.showDropDown();
                 }
             }
     }

@@ -1,10 +1,15 @@
 package com.hc_android.hc_css.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.media.Image;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -83,6 +88,7 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
     private int POSITION;
     private int mCountAll;
     private CustomDialog customDialog;
+    private PopupWindow popupWindow;
 
     @Override
     public NotReceivedActivityPresenter getPresenter() {
@@ -185,6 +191,44 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
         ButterKnife.bind(this);
     }
 
+    private void showPopupWindow() {
+        if (popupWindow == null) {
+            View view = LayoutInflater.from(this).inflate(R.layout.popup_window_meun, null, false);
+            popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+            popupWindow.setOnDismissListener(() -> {
+                WindowManager.LayoutParams lp1 = getWindow().getAttributes();
+                lp1.alpha = 1.0f;// 0.0-1.0
+                getWindow().setAttributes(lp1);
+            });
+
+            view.findViewById(R.id.screen_lin).setOnClickListener(v -> {
+                if (NullUtils.isEmptyList(notListBean)){
+                    ToastUtils.showShort("您没有未接待对话");
+                }else {
+                    receptionAllDialog(notListBean);
+                }
+                popupWindow.dismiss();
+            });
+            view.findViewById(R.id.end_all).setOnClickListener(v -> {
+                if (NullUtils.isEmptyList(notListBean)){
+                    ToastUtils.showShort("您没有未接待对话");
+                }else {
+                    chooseDialog();
+                }
+                popupWindow.dismiss();
+            });
+        }
+        TextView tv = popupWindow.getContentView().findViewById(R.id.screen_tv);
+        ImageView imageView = popupWindow.getContentView().findViewById(R.id.screen_iv);
+        tv.setText("接待全部对话");
+        imageView.setImageResource(R.mipmap.correct_b);
+        imageView.setPadding(6,0,5,0);
+        WindowManager.LayoutParams lp =getWindow().getAttributes();
+        lp.alpha = 0.5f;// 0.0-1.0
+        getWindow().setAttributes(lp);
+        popupWindow.showAsDropDown(btnChoose);
+    }
 
     /**
      * 点击弹出窗口
@@ -228,7 +272,7 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
      */
     private void chooseDialog() {
 
-        ChoiceDialog choiceDialog = new ChoiceDialog(this, "确定结束全部未接带的对话？", 0);
+        ChoiceDialog choiceDialog = new ChoiceDialog(this, "确定结束全部未接待的对话？", 0);
         choiceDialog.setCancelCallBack(new ChoiceDialog.ChoiceCancelCallBack() {
             @Override
             public void cancelBack() {
@@ -238,7 +282,11 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
             @Override
             public void okBack(String s) {
                 if (s.equals("ok")){
-                    endAllDialog(notListBean);
+                    if (NullUtils.isEmptyList(notListBean)){
+                        ToastUtils.showShort("您没有未接待对话");
+                    }else {
+                        receptionAllDialog(notListBean);
+                    }
                 }
             }
         });
@@ -521,8 +569,9 @@ public class NotReceivedActivity extends BaseActivity<NotReceivedActivityPresent
                 finish();
                 break;
             case R.id.btn_choose:
-                showDiaLog();
+                showPopupWindow();
                 break;
         }
     }
+
 }

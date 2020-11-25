@@ -145,7 +145,7 @@ public class ChannelCompanyAdapter extends BaseAdapter implements Filterable {
                 if (datas.size()>3)datas = datas.subList(0,3);
                 notifyDataSetChanged();
             } else {
-                datas.clear();
+//                datas.clear();
                 notifyDataSetInvalidated();
             }
         }

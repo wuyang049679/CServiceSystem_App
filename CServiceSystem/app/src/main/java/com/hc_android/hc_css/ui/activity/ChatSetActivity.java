@@ -270,12 +270,10 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
         });
         //消息置顶
         switchTop.setChecked(itembean.isTop());
-        tvTop.setText(itembean.isTop()? "取消置顶": "消息置顶");
         switchTop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mPresenter.pTop(itembean.getId(), isChecked);
-                tvTop.setText(isChecked ? "取消置顶": "消息置顶");
                 itembean.setTop(isChecked);
                 LocalDataSource.setITEMBEAN(itembean);
             }
@@ -299,10 +297,12 @@ public class ChatSetActivity extends BaseActivity<ChatSetActivityPresenter, Card
             linZgts.setVisibility(View.GONE);
             linJsdh.setVisibility(View.GONE);
             linDisturb.setVisibility(View.GONE);
+            linTop.setVisibility(View.GONE);
         }
         if (!NullUtils.isNull(INTENT_TYPE) && INTENT_TYPE.equals(Constant.NOTRECEIVEDACT_)) {
             linZgts.setVisibility(View.GONE);
             linDisturb.setVisibility(View.GONE);
+            linTop.setVisibility(View.GONE);
         }
         if (BaseApplication.getUserBean() != null && BaseApplication.getUserBean().getAuthority() != null && !BaseApplication.getUserBean().getAuthority().isAssist()) {
             linZgts.setVisibility(View.GONE);

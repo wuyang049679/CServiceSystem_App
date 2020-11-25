@@ -24,6 +24,10 @@ public interface ChatActivityContract {
         Observable<BaseEntity<IneValuateEntity.DataBean>> msgUndo(String msgId,String serviceId,int entId);//消息撤回
         Observable<BaseEntity<QuickEntity.DataBean>> getQuickList(String serviceId, boolean team);//快捷回复列表
         Observable<BaseEntity<IneValuateEntity.DataBean>> quickUse(String id);//快捷回复使用
+        Observable<BaseEntity<IneValuateEntity.DataBean>> reopen(String key,String customerId, String historyId, String source, String message); //历史对话重开
+        Observable<BaseEntity<IneValuateEntity.DataBean>> realtimeActive(String realtimeId);//主动对话
+        Observable<BaseEntity<IneValuateEntity.DataBean>> pushwechat(String key,String customerId, String historyId, String source, String message,String type, String contents, String entId);//微信小程序历史对话重开消息发送
+
     }
 
     interface View extends BaseView<CustomPathEntity.DataBean> {
@@ -37,6 +41,9 @@ public interface ChatActivityContract {
         void showMsgUndo(IneValuateEntity.DataBean dataBean);
         void showMsgUndoFiled(String msg,String key);
         void showQuickList(QuickEntity.DataBean dataBean);
+        void showReOpen(IneValuateEntity.DataBean dataBean);
+        void showActive(IneValuateEntity.DataBean dataBean);
+        void showPuhWechat(IneValuateEntity.DataBean dataBean);
 
     }
 
@@ -50,5 +57,8 @@ public interface ChatActivityContract {
         void pMsgUndo(String msgId,String serviceId,int entId);
         void pGetQuickList(String serviceId,boolean team);
         void pQuickUse(String id);
+        void pReopen(String key,String customerId, String historyId, String source, String message);
+        void pRealtimeActive(String realtimeId);
+        void pPushwechat(String key,String customerId, String historyId, String source, String message,String type, String contents, String entId);
     }
 }

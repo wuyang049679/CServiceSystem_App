@@ -29,11 +29,11 @@
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/click_ok"
-            android:textStyle="bold"
+
             android:clickable="true"
             android:background="@drawable/item_down_bg"
             android:gravity="center"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:text="确定"
             android:textColor="@color/black"
             android:layout_weight="1"
@@ -45,13 +45,12 @@
             android:layout_height="match_parent"/>
         <TextView
             android:id="@+id/cancel_click"
-            android:textStyle="bold"
             android:clickable="true"
             android:background="@drawable/item_down_bg"
             android:gravity="center"
             android:text="取消"
             android:textColor="@color/black"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"/>

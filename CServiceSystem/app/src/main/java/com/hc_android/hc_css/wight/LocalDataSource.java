@@ -30,6 +30,16 @@ public class LocalDataSource  {
     private static List<TagEntity.DataBean.ListBean> TAGLIST;//全局的tag列表
     private static ScreenSaveEntity SCREEN_LIST;//筛选条件保存
     private static HashMap<String, String> hashMap_screen;
+    public static String messageBean; //对话重开补发消息
+
+
+    public static String getMessageBean() {
+        return messageBean;
+    }
+
+    public static void setMessageBean(String messageBean) {
+        LocalDataSource.messageBean = messageBean;
+    }
 
     /**
      *

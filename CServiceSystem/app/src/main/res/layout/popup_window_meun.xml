@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+     android:background="@color/transparent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/window_margin"
+        android:layout_marginRight="@dimen/window_margin"
+        android:background="@drawable/white_et"
+        android:orientation="vertical"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+    <LinearLayout
+
+        android:layout_marginTop="@dimen/window_margin"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/window_margin_h"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:id="@+id/screen_lin"
+        android:clickable="true"
+        android:background="@drawable/item_down_bg"
+
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <LinearLayout
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content">
+            <ImageView
+
+                android:id="@+id/screen_iv"
+                android:src="@mipmap/screen_b"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/screen_tv"
+            android:layout_marginLeft="5dp"
+            android:text="对话筛选"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginBottom="@dimen/window_margin"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/window_margin_h"
+        android:paddingLeft="@dimen/window_margin_h"
+        android:id="@+id/end_all"
+        android:background="@drawable/item_down_bg"
+        android:clickable="true"
+
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <LinearLayout
+            android:paddingLeft="1dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginLeft="3dp"
+                android:src="@mipmap/endall"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:text="结束全部对话"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
