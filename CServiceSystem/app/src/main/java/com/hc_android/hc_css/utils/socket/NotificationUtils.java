@@ -96,7 +96,7 @@ public class NotificationUtils extends ContextWrapper {
     /**
      * 发送通知
      */
-    public void sendNotification(Context contexts,int unReadCount, String title, String content) {
+    public void sendNotification(Context contexts,int unReadCount, String title, String content, String dialogId) {
         if (isSendNotice()) {//是否开启通知
             playVibrate();//震动
             playSound(contexts);//提示
@@ -107,11 +107,13 @@ public class NotificationUtils extends ContextWrapper {
             if (content != null) text = content;
             if (title != null) tit = title;
             notificationId++;
-            NotificationCompat.Builder builder = getNotification(title,tit+": " + text);
+            NotificationCompat.Builder builder = getNotification(title,tit+": " + text, dialogId);
 //            builder.setOnlyAlertOnce(true);//设置通知声音只响一次
             Notification notification=builder.build();
             ShortcutBadger.applyNotification(getApplicationContext(), notification, unReadCount);
             getManager().notify(notificationId, notification);
+
+
         }
     }
     /**
@@ -132,15 +134,18 @@ public class NotificationUtils extends ContextWrapper {
             if (content != null) text = content;
             if (title != null) tit = title;
             notificationId++;
-            NotificationCompat.Builder builder = getNotification(title, tit+": " +text);
+            NotificationCompat.Builder builder = getNotification(title, tit+": " +text, listBean.getId());
+
 //            builder.setOnlyAlertOnce(true);//设置通知声音只响一次
             Notification notification=builder.build();
             ShortcutBadger.applyNotification(getApplicationContext(), notification, unReadCount);
             getManager().notify(notificationId, notification);
+
+
         }
     }
 
-    private NotificationCompat.Builder getNotification(String title, String content) {
+    private NotificationCompat.Builder getNotification(String title, String content ,String dialogId) {
         NotificationCompat.Builder builder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
@@ -149,7 +154,10 @@ public class NotificationUtils extends ContextWrapper {
             builder.setPriority(PRIORITY_DEFAULT);
         }
         Intent s = new Intent(this, MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, s, 0);
+        s.putExtra(Constant.DIALOGID,dialogId);
+        s.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        int notifyId = (int) System.currentTimeMillis();
+        PendingIntent pi = PendingIntent.getActivity(this, notifyId, s, 0);
         //标题
 //        builder.setContentTitle(title);
         builder.setSound(null);
@@ -168,8 +176,8 @@ public class NotificationUtils extends ContextWrapper {
      * 发送通知
      */
     public void sendNotification(int notifyId, String title, String content) {
-        NotificationCompat.Builder builder = getNotification(title, content);
-        getManager().notify(notifyId, builder.build());
+//        NotificationCompat.Builder builder = getNotification(title, content);
+//        getManager().notify(notifyId, builder.build());
     }
 
     /**

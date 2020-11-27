@@ -36,6 +36,8 @@ public interface EventService {
 
     void disconnect();
 
+    void disconnect(boolean isMinu);
+
     void joinRoom(String roomId);
 
     void joinRoom(String roomId,Ack Ack);

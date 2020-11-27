@@ -1,9 +1,13 @@
 package com.hc_android.hc_css.service;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.hc_android.hc_css.ui.activity.MainActivity;
+import com.hc_android.hc_css.ui.activity.SplashActivity;
+import com.hc_android.hc_css.utils.Constant;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
@@ -11,6 +15,7 @@ import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
 
 import java.util.List;
+import java.util.Map;
 
 public class XMMessageReceiver extends PushMessageReceiver {
     static String TAG="wy_activity";
@@ -34,6 +39,7 @@ public class XMMessageReceiver extends PushMessageReceiver {
         } else if(!TextUtils.isEmpty(message.getUserAccount())) {
             mUserAccount=message.getUserAccount();
         }
+
     }
     @Override
     public void onNotificationMessageClicked(Context context, MiPushMessage message) {
@@ -45,6 +51,12 @@ public class XMMessageReceiver extends PushMessageReceiver {
         } else if(!TextUtils.isEmpty(message.getUserAccount())) {
             mUserAccount=message.getUserAccount();
         }
+        Intent intent = new Intent();
+        intent.setClass(context, SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Constant.DIALOGID,mMessage);
+        context.startActivity(intent);
+
     }
     @Override
     public void onNotificationMessageArrived(Context context, MiPushMessage message) {
@@ -56,9 +68,16 @@ public class XMMessageReceiver extends PushMessageReceiver {
         } else if(!TextUtils.isEmpty(message.getUserAccount())) {
             mUserAccount=message.getUserAccount();
         }
+        Log.i(TAG, "onNotificationMessageArrived"+message);
+        Intent intent = new Intent();
+        intent.setClass(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Constant.DIALOGID,mMessage);
+        context.startActivity(intent);
     }
     @Override
     public void onCommandResult(Context context, MiPushCommandMessage message) {
+        Log.i(TAG, "onCommandResult"+message);
         String command = message.getCommand();
         List<String> arguments = message.getCommandArguments();
         String cmdArg1 = ((arguments != null && arguments.size() > 0) ? arguments.get(0) : null);

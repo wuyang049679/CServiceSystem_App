@@ -211,8 +211,10 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
         return R.layout.chat_list_fragment;
     }
 
+
     @Override
     protected void initView() {
+
         ImmersionBar.with(this)
                 .statusBarColor(R.color.theme_app)
                 .titleBar(R.id.chat_list_include)
@@ -599,6 +601,26 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                     endDialogList(messageEntity);
                     //获取同事成员列表
                     mPresenter.pGetTeamList();
+
+                    //通知栏消息自动跳转到聊天页面
+                    String intentId = ((MainActivity) getActivity()).getDialogId();
+                    Log.i(TAG, "跳转intentId:"+intentId);
+                    if (intentId != null){
+                        if (intentId != null) {
+                            for (int i = 0; i < listUIBeans.size(); i++) {
+                                if (listUIBeans.get(i).getId() != null && listUIBeans.get(i).getId().equals(intentId)) {
+                                    MessageDialogEntity.DataBean.ListBean item = listUIBeans.get(i);
+                                    LocalDataSource.setITEMBEAN(item);
+                                    if (hasPermission()) {
+                                        startActivity(ChatActivity.class);
+                                        needIntentId = null;
+                                        ((MainActivity) getActivity()).setDialogId(null);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
                 }
                 if (limit == 15){ //首次预加载对话列表显示刷新
                     refreshUI(listBeans, null);
@@ -730,7 +752,12 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         MessageDialogEntity.DataBean.ListBean item = listUIBeans.get(i);
                         LocalDataSource.setITEMBEAN(item);
                         if (hasPermission()) {
-                            startActivity(ChatActivity.class);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(ChatActivity.class);
+                                }
+                            },500);
                             needIntentId = null;
                         }
                     }
@@ -1266,7 +1293,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 if (message.getServiceId() != null && message.getServiceId().equals(BaseApplication.getUserBean().getId())) {
                     if (AppConfig.isIsOpenNewDialog()) {
                         NotificationUtils notificationUtils = new NotificationUtils(getHcActivity());
-                        notificationUtils.sendNotification(getHcActivity(), unReadCount, message.getTitle(), message.getBody());
+                        notificationUtils.sendNotification(getHcActivity(), unReadCount, message.getTitle(), message.getBody(),message.getDialogId());
                     }
                 }
                 break;
@@ -1965,6 +1992,25 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                 }
             }
         });
+    }
+
+    //点击通知栏跳转聊天页面
+    public void intentDialog(String intentId){
+
+        if (intentId != null) {
+            for (int i = 0; i < listUIBeans.size(); i++) {
+                if (listUIBeans.get(i).getId() != null && listUIBeans.get(i).getId().equals(intentId)) {
+                    MessageDialogEntity.DataBean.ListBean item = listUIBeans.get(i);
+                    LocalDataSource.setITEMBEAN(item);
+                    if (hasPermission()) {
+                        startActivity(ChatActivity.class);
+                        needIntentId = null;
+                        ((MainActivity) getActivity()).setDialogId(null);
+                    }
+                }
+            }
+
+        }
     }
 
 }

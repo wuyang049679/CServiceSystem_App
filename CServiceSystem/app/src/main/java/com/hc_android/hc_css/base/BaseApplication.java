@@ -32,6 +32,9 @@ import com.hc_android.hc_css.utils.android.app.AppParam;
 import com.hc_android.hc_css.wight.CustomFooter;
 import com.hc_android.hc_css.wight.CustomHeader;
 import com.heytap.mcssdk.PushManager;
+import com.huawei.hmf.tasks.OnCompleteListener;
+import com.huawei.hmf.tasks.Task;
+import com.huawei.hms.push.HmsMessaging;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -156,6 +159,7 @@ public class BaseApplication extends MultiDexApplication {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkChangReceiver, filter);
+
     }
 
     /**

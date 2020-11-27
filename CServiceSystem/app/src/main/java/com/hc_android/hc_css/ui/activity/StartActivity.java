@@ -2,12 +2,14 @@ package com.hc_android.hc_css.ui.activity;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TimeUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.hc_android.hc_css.R;
@@ -25,7 +27,9 @@ import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.SystemUtils;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
+import com.xiaomi.mipush.sdk.PushMessageHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +63,9 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
         UserEntity userEntity = BaseApplication.getUserEntity();
         userEntity.setHash(hash);
         BaseApplication.setUserEntity(userEntity);
+        //oppo服务器推送
+
+
         if (NullUtils.isNull(hash.trim())) {
 //            showDataError("请登录");
             Intent intent = new Intent(StartActivity.this, LoginActivity.class);
@@ -77,6 +84,36 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+
+        if (intent !=null) {
+            // 获取的值做打点统计
+
+            String msgid = intent.getStringExtra("_push_msgid");
+            String cmdType = intent.getStringExtra("_push_cmd_type");
+            int notifyId = intent.getIntExtra("_push_notifyid", -1);
+            Log.i(TAG, "receive data from push, intent = " + intent);
+            // 获取data里的值
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                String androidData = bundle.getString("androidData");
+
+                for (String key : bundle.keySet()) {
+                    String content = bundle.getString(key);
+                    Log.i(TAG, "receive data from push, key = " + key + ", content = " + content);
+                }
+                Log.i(TAG, "receive data from push, androidData = " + androidData);
+            }
+            Log.i(TAG, "receive data from push, msgId = " + msgid + ", cmd = " + cmdType + ", notifyId = " + notifyId);
+
+        } else {
+            Log.i(TAG, "intent is null");
+        }
+    }
+
+    @Override
     protected void initView() {
         //沉浸式状态栏
 //        ImmersionBar.with(this)
@@ -84,6 +121,7 @@ public class StartActivity extends BaseActivity<StartActivityPresenter, LoginEnt
 //                .init();
 
         Log.i(TAG,"获取设备信息"+ android.os.Build.MODEL);
+
     }
 
     @Override

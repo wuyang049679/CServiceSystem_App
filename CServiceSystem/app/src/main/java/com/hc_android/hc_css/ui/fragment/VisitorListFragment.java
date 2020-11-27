@@ -214,7 +214,7 @@ public class VisitorListFragment extends BaseFragment<VisitorListFragmentPresent
                 sortList(listBeans);
             }
             visitorAdapter.notifyDataSetChanged();
-            ((MainActivity) getHcActivity()).getNavigationBar().setMsgPointCount(1, listBeans.size());
+//            ((MainActivity) getHcActivity()).getNavigationBar().setMsgPointCount(1, listBeans.size());
         }
     }
 
@@ -450,7 +450,7 @@ public class VisitorListFragment extends BaseFragment<VisitorListFragmentPresent
             }
         }
 
-            ((MainActivity) getHcActivity()).getNavigationBar().setMsgPointCount(1, listBeans.size());
+//            ((MainActivity) getHcActivity()).getNavigationBar().setMsgPointCount(1, listBeans.size());
 
 
     }
@@ -491,7 +491,7 @@ public class VisitorListFragment extends BaseFragment<VisitorListFragmentPresent
             if (listBeans.size() == 0) {
                 showEmptyView("当前没有在线访客");
             }
-                ((MainActivity) getHcActivity()).getNavigationBar().setMsgPointCount(1, listBeans.size());
+//                ((MainActivity) getHcActivity()).getNavigationBar().setMsgPointCount(1, listBeans.size());
         }
 
 

@@ -528,7 +528,7 @@ public abstract class BaseActivity<T extends BasePresenterIm, V> extends AppComp
             isBackground = true;//记录当前已经进入后台
             Log.i(TAG, "程序进入后台");
             if (RomUtil.isMiui()) {//小米推送,断开连接,后台无推送的消息
-                EventServiceImpl.getInstance().disconnect();
+                EventServiceImpl.getInstance().disconnect(true);
             }
         }
         super.onStop();

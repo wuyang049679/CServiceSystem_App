@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,6 +35,7 @@ import com.hc_android.hc_css.utils.Constant;
 import com.hc_android.hc_css.utils.DateUtils;
 import com.hc_android.hc_css.utils.NullUtils;
 import com.hc_android.hc_css.utils.android.AppUtils;
+import com.hc_android.hc_css.utils.android.RomUtil;
 import com.hc_android.hc_css.utils.android.SharedPreferencesUtils;
 import com.hc_android.hc_css.utils.android.app.CacheData;
 import com.hc_android.hc_css.utils.socket.MessageEvent;
@@ -72,7 +74,19 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
     private List<Fragment> fragments = new ArrayList<>();
     private ProgressDialog pd1;
 
+    public String dialogId;
 
+
+
+    public String getDialogId() {
+        Log.i(TAG, "getDialogId:"+dialogId);
+        return dialogId;
+    }
+
+    public void setDialogId(String dialogId) {
+        Log.i(TAG, "setDialogId:"+dialogId);
+        this.dialogId = dialogId;
+    }
 
     @Override
     public MainActivityPresenter getPresenter() {
@@ -91,6 +105,16 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
         if (intent!=null&&action!=null&&action.equals("FRESH")) {
             if (fragments.get(2)!=null)((MineFragment) fragments.get(2)).setRealName();
         }
+        String id = intent.getStringExtra(Constant.DIALOGID);
+        //小米
+        if (intent !=null && id !=null){
+
+           dialogId = id;
+           //不是小米设备需要主动跳转页面（应该小米退后台关闭socket连接会重连）
+             if (!RomUtil.isMiui() && fragments.get(0)!=null)((ChatListFragment) fragments.get(0)).intentDialog(dialogId);
+        }
+        Log.i(TAG, "dialogId:"+dialogId);
+
     }
 
     @Override
@@ -114,7 +138,24 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, LoginEntit
         CrashReport.putUserData(this,"_serviceId",BaseApplication.getUserBean().getId());
         CacheData.getAllCache();
 
+        Intent intent = getIntent();
+        //小米
+        if (intent !=null)dialogId = getIntent().getStringExtra(Constant.DIALOGID);
+        //华为
+        if (intent !=null && intent.getData()!=null) {
+//            Log.i(TAG, "name1:"+intent.getData());
+            // 方法1（参数之间用“&”相连）设置的数据通过如下方式获取
+            String name1 = intent.getData().getQueryParameter("name");
+//            int age1 = Integer.parseInt(intent.getData().getQueryParameter("age"));
+//            // 方法2（intent直接添加参数）设置的数据通过如下方式获取
+            String name2 = intent.getStringExtra("name");
+//            int age2 = intent.getIntExtra("age", -1);
 
+            dialogId = getIntent().getStringExtra(Constant.DIALOGID);
+
+        }
+        Log.i(TAG, "initView-intent:"+intent.getExtras());
+        Log.i(TAG, "initView-dialogId:"+dialogId);
     }
 
     @Override

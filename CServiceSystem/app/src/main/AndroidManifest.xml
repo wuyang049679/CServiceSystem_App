@@ -61,6 +61,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
+
         <activity android:name=".ui.activity.QuickActivity" />
         <activity android:name=".ui.activity.VerActivity" />
         <activity android:name=".ui.activity.RegisterActivity" />
@@ -120,9 +121,36 @@
             android:name=".ui.activity.LoginActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.hc_android.hc_css.ui.activity.SplashActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.Full"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="com.hc_android.hc_css"
+                    android:path="/deeplink"
+                    android:scheme="pushscheme" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.MainActivity"
-            android:launchMode="singleTask" /> <!-- 自动适配-设计稿尺寸 -->
+            android:launchMode="singleTask">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data-->
+<!--                    android:host="com.hc_android.hc_css"-->
+<!--                    android:path="/deeplink"-->
+<!--                    android:scheme="pushscheme" />-->
+<!--            </intent-filter>-->
+        </activity> <!-- 自动适配-设计稿尺寸 -->
         <!-- 头条适配 -->
         <meta-data
             android:name="design_width_in_dp"

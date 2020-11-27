@@ -100,7 +100,7 @@ public class EventServiceImpl implements EventService {
     private  Socket mSocket;
     private List<String> roomList;
     private boolean isConnect=true;
-    private boolean isFirst = true;
+    public static  boolean isFirst = true;
     private static final int MESSAGE_KEEPLINK=1;
     private static final int OPTIME = 2000;
     private long lasttime = 0;
@@ -182,6 +182,8 @@ public class EventServiceImpl implements EventService {
         mSocket.on(EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.on(EVENT_NEW_MESSAGE, onNewMessage);
         mSocket.connect();
+
+        Log.i(TAG,"open进来了"+isFirst);
     }
 
     /**
@@ -293,7 +295,22 @@ public class EventServiceImpl implements EventService {
             if (!NullUtils.isEmptyList(roomList))roomList.clear();
         }
     }
+    /**
+     * Disconnect from the server.
+     */
+    @Override
+    public synchronized void disconnect(boolean isMinu) {
 
+        if (mSocket != null) {
+            handler.removeMessages(MESSAGE_KEEPLINK);
+            postDelayed.removeCallbacks(runnable);
+            mSocket.disconnect();
+            mSocket.off();
+            mSocket.close();
+            mSocket=null;
+            if (!NullUtils.isEmptyList(roomList))roomList.clear();
+        }
+    }
     /**
      * Send chat message to the server.
      *
@@ -334,6 +351,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public void onTyping() {
+        Log.i(TAG,"onTyping"+isFirst);
         if (!isFirst) {//首次登陆进来不重连
             String hash = BaseApplication.getUserEntity().getHash();
             if (hash == null)hash = (String) SharedPreferencesUtils.getParam(Constant.HASH, "");
@@ -347,8 +365,8 @@ public class EventServiceImpl implements EventService {
                 mSocket.open();
             }
         }
-        isFirst=false;
 
+        isFirst=false;
     }
 
     /**

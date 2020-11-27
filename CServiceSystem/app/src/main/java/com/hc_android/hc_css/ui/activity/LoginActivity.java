@@ -151,9 +151,12 @@ public class LoginActivity extends BaseActivity<LoginActivityPresenter, LoginEnt
         SharedPreferencesUtils.setParam(Constant.HASH, datas.getHash());
         SharedPreferencesUtils.setParam(Constant.USERNAME, usernames);
         SharedPreferencesUtils.setParam(Constant.PASSWORD, passwords);
-        UserEntity userEntity = new UserEntity();
+        UserEntity userEntity = BaseApplication.getUserEntity();
+        LoginEntity.DataBean.InfoBean info = datas.getInfo();
+        if (userEntity.getUserbean()!=null && userEntity.getUserbean().getScreen()!=null)info.setScreen(userEntity.getUserbean().getScreen());
+
         userEntity.setHash(datas.getHash());
-        userEntity.setUserbean(datas.getInfo());
+        userEntity.setUserbean(info);
         BaseApplication.setUserEntity(userEntity);
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
