@@ -205,7 +205,7 @@ public class BaseApplication extends MultiDexApplication {
      */
     public static UserEntity getUserEntity() {
 
-        if (userEntity.getUserbean() == null){
+        if (userEntity == null || userEntity.getUserbean() == null){
             userEntity = new UserEntity();
             LoginEntity.DataBean.InfoBean infoBean = JsonParseUtils.parseToObject((String) SharedPreferencesUtils.getParam("_UserEntity", ""), LoginEntity.DataBean.InfoBean.class);
             userEntity.setUserbean(infoBean == null ? new LoginEntity.DataBean.InfoBean() : infoBean);

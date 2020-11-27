@@ -592,7 +592,7 @@ public class ChatListFragment extends BaseFragment<ChatListFragmentPresenter, Me
                         mPresenter.pShowMessageDialog(limit, skip);
                     }
                 } else {
-                    if (userEntity.getUserbean().getState().equals("on")) {
+                    if (userEntity.getUserbean().getState()!=null && userEntity.getUserbean().getState().equals("on")) {
                         conmonTitleTextView.setText(getResources().getString(R.string.dialog_list));
                     }
                     //最后所有数据请求完成之后刷新
